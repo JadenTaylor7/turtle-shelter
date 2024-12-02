@@ -1,0 +1,25 @@
+{
+  "name": "turtle-shelter",
+  "version": "1.0.0",
+  "description": "For Turtle Shelter Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JadenTaylor7/turtle-shelter.git"
+  },
+  "author": "Lloyd Klippel, Casey Thompson, Jaden Taylor, Leon Buchmiller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JadenTaylor7/turtle-shelter/issues"
+  },
+  "homepage": "https://github.com/JadenTaylor7/turtle-shelter#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "knex": "^3.1.0",
+    "pg": "^8.13.1"
+  }
+}
