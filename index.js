@@ -42,13 +42,14 @@ const knex = require("knex") ({
     connection : {
         host : "localhost",
         user : "postgres",
-        password : "1000Kilometer$",
+        password : "ChooseTheR1ght!", //ChooseTheR1ght! for website, 1000Kilometer$ for localhost
         database : "turtleshelter",
         port : 5432
     }
 })
 
-//Stuff here
+
+//awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
 
 //goes to index.ejs upon website load
 app.get('/', (req, res) => { 
