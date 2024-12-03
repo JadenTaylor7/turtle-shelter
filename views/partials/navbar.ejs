@@ -29,10 +29,14 @@
                     </div>
                 </div>
                 
-                <a href="/login" class="nav-link">Event Admin</a>
+                <a href="/login" class="nav-link" <% if (session && session.userId) { %> style="display: none;" <% } %>>Login</a>
                 
-                <% if (session && session.userId) { %>
+                <% if (session && session.userId && session.role === 'admin') { %>
                     <a href="/requested-events" class="nav-link">Requested Events</a>
+                <% } %>
+
+                <% if (session && session.userId) { %>
+                    <a href="/usersettings" class="nav-link">Settings</a>
                 <% } %>
             </div>
         </div>

@@ -107,6 +107,10 @@ app.get('/hostEvent', (req, res) => {
     res.render("hostEvent")
 });
 
+app.get('/usersettings', (req, res) => { 
+    res.render("usersettings")
+});
+
 app.get('/volunteer', async (req, res) => {
     try {
         // Fetch all events where approveevent is false or null
@@ -223,7 +227,7 @@ app.post('/volunteer', async (req, res) => {
 });
 
 app.post('/users/register', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, adminkey } = req.body;
 
     if (!username || !password) {
         return res.status(400).send('Username and password are required');
@@ -233,15 +237,19 @@ app.post('/users/register', async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Determine the role based on the admin key
+        const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer'; // Replace 'correct-admin-key' with your actual key
+
         // Insert the user into the database
         const [userId] = await knex('users')
             .insert({
                 username: username,
                 password: hashedPassword,
+                role: role, // Set the role based on the provided admin key
             })
-            .returning('id'); // Returning the ID of the new user
+            .returning('userid'); // Returning the ID of the new user
 
-        console.log('New user created with ID:', userId);
+        console.log(`New user created with ID: ${userId} and role: ${role}`);
 
         // Redirect to login page after successful registration
         res.redirect('/');
@@ -274,14 +282,17 @@ app.post('/users/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (isMatch) {
-            // If the passwords match, store the user ID in the session
-            req.session.userId = user.id;
+            // If the passwords match, store the user ID and role in the session
+            req.session.userId = user.userid; // Assuming 'id' is the user's primary key
+            req.session.role = user.role; // Store the role in the session
 
-            // Redirect to the 'access' page after login
+            console.log(`User logged in: ID = ${user.userid}, Role = ${user.role}`);
+
+            // Redirect to the home page after login
             return res.redirect('/');
         } else {
             // If the passwords don't match
-            res.status(400).send('Incorrect password');
+            return res.status(400).send('Incorrect password');
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -306,6 +317,55 @@ app.post('/requested-events', async (req, res) => {
     } catch (error) {
         console.error('Error updating events:', error);
         res.status(500).send('Error processing your request.');
+    }
+});
+
+app.post('/users/change-password', async (req, res) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.status(400).send('All fields are required');
+    }
+
+    if (newPassword !== confirmPassword) {
+        return res.status(400).send('New passwords do not match');
+    }
+
+    try {
+        // Get the current user from the session
+        const userId = req.session.userId;
+
+        if (!userId) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        // Fetch the user from the database
+        const user = await knex('users').where({ userid: userId }).first();
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Verify the current password
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isMatch) {
+            return res.status(400).send('Current password is incorrect');
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the password in the database
+        await knex('users').where({ userid: userId }).update({
+            password: hashedPassword,
+        });
+
+        res.redirect('/');
+        
+    } catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).send('Error updating password');
     }
 });
 
