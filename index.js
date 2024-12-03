@@ -139,8 +139,13 @@ app.post('/volunteer', async (req, res) => {
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
         const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly || 0; // Default to 0 if not provided
-        const participateEvent = req.body.ParticipateEvent || false; // Default to false if not checked
-        const dirid = parseInt(req.body.dirid) || ''; // Default to empty string if not provided
+
+        // Extract ParticipateEvent as an array; ensure it is always an array for consistency
+        const participateEvents = Array.isArray(req.body.ParticipateEvent)
+            ? req.body.ParticipateEvent
+            : req.body.ParticipateEvent
+            ? [req.body.ParticipateEvent]
+            : [];
 
         // Insert volunteer into the 'volunteers' table and capture the inserted row
         const [volunteer] = await knex('volunteers')
@@ -154,17 +159,18 @@ app.post('/volunteer', async (req, res) => {
             })
             .returning('*'); // This returns the inserted volunteer data
 
-        // Check if the checkbox was selected
-        if (participateEvent) {
-            // Insert the relationship into the 'event_volunteers' table
-            await knex('event_volunteers').insert({
+        // Check if there are any selected events
+        if (participateEvents.length > 0) {
+            // Insert a row for each selected event
+            const eventVolunteers = participateEvents.map((dirid) => ({
                 volunteerid: parseInt(volunteer.volunteerid), // Use the volunteerid from the inserted row
-                dirid: dirid  // Make sure dirId is passed from the form
-            });
+                dirid: parseInt(dirid), // Parse dirid to ensure it's an integer
+            }));
+
+            await knex('event_volunteers').insert(eventVolunteers);
         }
 
         // Send a success message or redirect
-        console.log('Thank you for volunteering!');
         res.redirect('/');
 
     } catch (error) {
