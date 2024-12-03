@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<body class="event-page">
+
+    <!-- Hero Section -->
+    <section class="hero" style="background-color: #f4f4f4; padding: 40px 0; text-align: center;">
+        <h1>Host Your Own Event</h1>
+        <h3 style="width: 50%; margin: 0 auto;">Hosting your own event with Turtle Shelter provides a meaningful opportunity to make a difference in the lives of those in need. Whether you’re hosting a sewing event, educational gathering, or something else entirely, we will support you every step of the way to ensure your event is a success.</h3>
+    </section>
+
+    <!-- Event Form Section -->
+    <section class="form-section" style="padding: 40px 0;">
+        <div class="form-container" style="max-width: 900px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2>Event Details</h2>
+            <form action="/hostEvent" method="POST">
+
+                <div class="form-group">
+                    <label for="DirFirstName">First Name:</label>
+                    <input type="text" id="DirFirstName" name="DirFirstName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="DirLastName">Last Name:</label>
+                    <input type="text" id="DirLastName" name="DirLastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="DirEmail">E-Mail:</label>
+                    <input type="email" id="DirEmail" name="DirEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventDate">What date (or possible dates) would you like to schedule the event?</label>
+                    <input type="date" id="EventDate" name="EventDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventStartTime">What time do you want the event to start and how long would you like it to go?</label>
+                    <input type="time" id="EventStartTime" name="EventStartTime" required>
+                    <input type="number" id="EventDurationHours" name="EventDurationHours" placeholder="Duration in hours" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventStrAddress">What’s the street address of the event?</label>
+                    <input type="text" id="EventStrAddress" name="EventStrAddress" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventCity">What’s the city of the event?</label>
+                    <input type="text" id="EventCity" name="EventCity" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventState">What’s the state of the event?</label>
+                    <input type="text" id="EventState" name="EventState" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventZip">What’s the ZIP code of the event?</label>
+                    <input type="text" id="EventZip" name="EventZip" required>
+                </div>
+
+                <div class="form-group">
+                    <label>What is the service type of the event?</label>
+                    <div class="radio-option">
+                      <input type="radio" id="sewing" name="ServiceType" value="sewing">
+                      <label for="sewing">sewing</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="non-sewing" name="ServiceType" value="non-sewing">
+                      <label for="non-sewing">non-sewing</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="both" name="ServiceType" value="both">
+                      <label for="both">both</label>
+                    </div>
+                  </div>
+
+                <div class="form-group">
+                    <label for="Attendance">How many people will be there? (Estimate):</label>
+                    <input type="number" id="Attendance" name="Attendance" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="EventName">What is a good contact name for the event?</label>
+                    <input type="text" id="EventName" name="EventName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="DirPhone">What is a good phone number for the event?</label>
+                    <input type="tel" id="DirPhone" name="DirPhone" required pattern="[0-9]{10}">
+                </div>
+
+                <div class="form-group-jen">
+                    <label for="JenShareStory">I would like Jen to share her story!</label>
+                    <input type="checkbox" id="JenShareStory" name="JenShareStory" value="Yes">
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Event</button>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

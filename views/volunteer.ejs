@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<body class="event-page">
+
+    <!-- Hero Section -->
+    <section class="hero" style="background-color: #f4f4f4; padding: 40px 0; text-align: center;">
+        <h1>Participate at an Event!</h1>
+        <h3 style="width: 50%; margin: 0 auto;">Volunteering at an event with Turtle Shelter provides a meaningful opportunity to make a difference in the lives of those in need. Whether it’s assisting at a sewing event, participating in an educational gathering, or contributing in another way, Turtle Shelter ensures that every volunteer is supported and empowered to help make the event a success.</h3>
+    </section>
+
+    <!-- Event Form Section -->
+    <section class="form-section" style="padding: 40px 0;">
+        <div class="form-container" style="max-width: 900px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2>Event Details</h2>
+            <form action="/volunteer" method="POST">
+
+                <div class="form-group">
+                    <label for="VolFirstName">First Name:</label>
+                    <input type="text" id="VolFirstName" name="VolFirstName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="VolLastName">Last Name:</label>
+                    <input type="text" id="VolLastName" name="VolLastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="VolEmail">E-Mail:</label>
+                    <input type="email" id="VolEmail" name="VolEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Sewing Level</label>
+                    <div class="radio-option">
+                      <input type="radio" id="none" name="SewingLevel" value="none">
+                      <label for="none">none</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="beginner" name="SewingLevel" value="beginner">
+                      <label for="beginner">beginner</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="intermediate" name="SewingLevel" value="intermediate">
+                      <label for="intermediate">intermediate</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="experienced" name="SewingLevel" value="experienced">
+                        <label for="experienced">experienced</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="ReferralType">How did you hear about the opportunity?</label>
+                    <select id="ReferralType" name="ReferralType" required>
+                        <option value="Work">Work</option>
+                        <option value="Turtle Shell Volunteer">Turtle Shell Volunteer</option>
+                        <option value="Search Engine">Search Engine</option>
+                        <option value="Social Media">Social Media</option>
+                        <option value="Friend/Family">Friend/Family</option>
+                        <option value="Blog/Article">Blog/Article</option>
+                        <option value="News/Media">News/Media</option>
+                        <option value="Event/Conference">Event/Conference</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="VolunteerHoursMonthly">Number of hours willing to volunteer per month:</label>
+                    <input type="number" id="VolunteerHoursMonthly" name="VolunteerHoursMonthly" required>
+                </div>
+                    </div>
+                </section>
+                <section class="event-display" style="margin-top: 40px; padding: 20px; background-color: #f9f9f9;">
+                    <h2>Upcoming Events</h2>
+                    <form method="POST" action="/volunteer" id="eventForm">
+                        <div class="flashcard-container" style="display: flex; flex-direction: column; gap: 20px;">
+                            <% events.forEach((event, index) => { %>
+                                <div class="flashcard" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <div class="flashcard-summary" style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <h3 style="margin: 0;"><%= event.eventname %></h3>
+                                            <p style="margin: 5px 0 0;">Date: <%= event.eventdate %></p>
+                                            <p style="margin: 5px 0 0;">Location: <%= event.eventcity %>, <%= event.eventstate %></p>
+                                        </div>
+                                        <div class="form-group" style="display: flex; align-items: center;">
+                                            <label for="ParticipateEvent-<%= index %>" style="margin-right: 10px;">Participate</label>
+                                            <input type="checkbox" id="ParticipateEvent-<%= index %>" name="ParticipateEvent" value="<%= event.dirid %>">
+                                        </div>
+                                    </div>
+                                    <div class="flashcard-details" id="details-<%= index %>" style="margin-top: 15px; display: none;">
+                                        <p>Time: <%= event.eventstarttime %></p>
+                                        <p>Description: <%= event.description || "No description available." %></p>
+                                    </div>
+                                </div>
+                            <% }) %>
+                            <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">
+                                Participate
+                            </button>
+                        </div>
+                    </form>
+                </section>
+                
+                <script>
+                    function toggleDetails(index) {
+                        const details = document.getElementById(`details-${index}`);
+                        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+                    }
+
+                    function toggleHiddenInput() {
+                        const checkbox = document.getElementById('ParticipateEvent'); // Match the case exactly with the ID in HTML
+                        const hiddenInput = document.getElementById('dirid');
+                        
+                        if (checkbox.checked) {
+                            hiddenInput.disabled = false; // Enable hidden input when checkbox is checked
+                        } else {
+                            hiddenInput.disabled = true; // Disable hidden input when checkbox is unchecked
+                        }
+                    }
+    </script>
+</body>
+</html>
