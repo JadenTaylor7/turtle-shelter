@@ -1,0 +1,396 @@
+@import url('https://use.typekit.net/jmk5fap.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navbar Styling */
+/* Navbar Styling */
+/* Navbar Styling */
+/* Navbar Styling */
+.navbar {
+    background-color: transparent; /* Fully transparent background */
+    height: 80px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    padding: 0 5%;
+    border-bottom: none; /* Remove any border */
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Navbar Links and Buttons */
+.nav-link, .dropbtn {
+    color: white !important; /* Force all text to be white */
+    text-decoration: none;
+    padding: 10px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Add text shadow for enhanced visibility */
+}
+
+.nav-link:hover, .dropbtn:hover {
+    color: #007bff !important; /* Interactive color change on hover */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 1); /* Stronger shadow on hover */
+}
+
+/* Update to the existing CSS, focusing on the logo styling */
+.logo a {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    line-height: 1.1;
+    text-align: left;
+    display: inline-block;
+}
+
+.logo a b {
+    display: block;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link, .dropbtn {
+    color: #333;
+    text-decoration: none;
+    padding: 10px;
+    transition: color 0.3s ease;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.nav-link:hover, .dropbtn:hover {
+    color: #007bff;
+}
+
+/* Dropdown Styling */
+.dropdown {
+    position: relative;
+}
+
+.dropbtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 250px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-weight: 400;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Hero Section Styling */
+.index-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/home.jpeg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
+.jen-page .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;  /* Ensure the image covers the container */
+    background-position: top center;  /* Position image at the top */
+    background-repeat: no-repeat;
+    background-image: url('/jen-hero.png'); /* Background image */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+    height: 50vh;  /* Limit the height to 50% of the viewport height */
+    width: 100%; /* Ensure it takes up full width */
+}
+
+.event-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/ownEvent.jpeg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
+.hero-content {
+    padding: 40px;
+    max-width: 80%;
+    width: 100%;
+}
+
+.hero h1 {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero h3 {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 30px;
+    font-style: italic;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.hero-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-weight: 600;
+}
+
+.hero-btn:hover {
+    background-color: #0056b3;
+}
+
+
+.about-section {
+    padding: 50px 5%;
+    background-color: #f4f4f4;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-item {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.about-item img {
+    max-width: 50%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-text h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.about-text p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Form Section Styling */
+.form-section {
+    padding: 40px 0;
+    background-color: #f4f4f9; /* Light background color for the section */
+}
+
+.form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+form {
+  font-family: Arial, sans-serif;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group-jen {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group-jen label {
+    margin-right: 10px; /* Space between the label and checkbox */
+    line-height: 1.2; /* Adjust line-height if necessary */
+}
+
+.form-group-jen input[type="checkbox"] {
+    vertical-align: middle; /* Ensure the checkbox aligns with the text */
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 10px; /* Space between radio button and label */
+}
+
+label {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+input[type="radio"] {
+    margin-right: 8px;
+}
+
+input[type="radio"]:checked {
+    background-color: #007bff;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.submit-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+input[type="checkbox"] {
+    margin-top: 10px;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #007bff;
+}
