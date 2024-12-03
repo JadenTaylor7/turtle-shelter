@@ -116,7 +116,8 @@ app.get('/volunteer', async (req, res) => {
         // Fetch all events where approveevent is false or null
         const events = await knex('hosts')
             .select('*')
-            .where('approveevent', true); // Filter out events where approveevent is true
+            .where('approveevent', true) // Filter out events where approveevent is true
+            .andWhere('openness', 'public');
 
         // Render the EJS template and pass the filtered data
         res.render('volunteer', { events });
@@ -135,9 +136,9 @@ app.get('/accomplishments', (req, res) => {
 });
 
 app.post('/hostEvent', (req, res) => {
-    const DirFirstName = req.body.DirFirstName; // Default to empty string if not provided
-  const DirLastName = req.body.DirLastName; // Convert to integer
-  const DirEmail = req.body.DirEmail; // Default to today
+    const HostFirstName = req.body.HostFirstName; // Default to empty string if not provided
+  const HostLastName = req.body.HostLastName; // Convert to integer
+  const HostEmail = req.body.HostEmail; // Default to today
   const EventDate = req.body.EventDate; // Checkbox returns true or undefined
   const EventStartTime = req.body.EventStartTime; // Default to 'U' for Unknown
   const EventStrAddress = req.body.EventStrAddress; // Convert to integer
@@ -146,15 +147,17 @@ app.post('/hostEvent', (req, res) => {
   const EventZip = req.body.EventZip;
   const ServiceType = req.body.ServiceType;
   const Attendance = req.body.Attendance;
+  const GroupAge = req.body.GroupAge;
+  const Openness = req.body.Openness;
   const EventName = req.body.EventName;
-  const DirPhone = req.body.DirPhone;
+  const HostPhone = req.body.HostPhone;
   const JenShareStory = req.body.JenShareStory;
 
   knex('hosts')
   .insert({
-    dirfirstname: DirFirstName, // Ensure description is uppercase
-    dirlastname: DirLastName,
-    diremail: DirEmail,
+    hostfirstname: HostFirstName, // Ensure description is uppercase
+    hostlastname: HostLastName,
+    hostemail: HostEmail,
     eventdate: EventDate,
     eventstarttime: EventStartTime,
     eventstraddress: EventStrAddress,
@@ -163,8 +166,10 @@ app.post('/hostEvent', (req, res) => {
     eventzip: EventZip,
     servicetype: ServiceType,
     attendance: Attendance,
+    groupage: GroupAge,
+    openness: Openness,
     eventname: EventName,
-    dirphone: DirPhone,
+    hostphone: HostPhone,
     jensharestory: JenShareStory,
   })
   .then(() => {
@@ -209,9 +214,9 @@ app.post('/volunteer', async (req, res) => {
         // Check if there are any selected events
         if (participateEvents.length > 0) {
             // Insert a row for each selected event
-            const eventVolunteers = participateEvents.map((dirid) => ({
+            const eventVolunteers = participateEvents.map((hostid) => ({
                 volunteerid: parseInt(volunteer.volunteerid), // Use the volunteerid from the inserted row
-                dirid: parseInt(dirid), // Parse dirid to ensure it's an integer
+                hostid: parseInt(hostid), // Parse hostid to ensure it's an integer
             }));
 
             await knex('event_volunteers').insert(eventVolunteers);
@@ -308,7 +313,7 @@ app.post('/requested-events', async (req, res) => {
         if (approvedEventIds.length > 0) {
             // Update `approveevent` to true for all selected events
             await knex('hosts')
-                .whereIn('dirid', approvedEventIds)
+                .whereIn('hostid', approvedEventIds)
                 .update({ approveevent: true });
         }
 
@@ -362,7 +367,7 @@ app.post('/users/change-password', async (req, res) => {
         });
 
         res.redirect('/');
-        
+
     } catch (error) {
         console.error('Error updating password:', error);
         res.status(500).send('Error updating password');
