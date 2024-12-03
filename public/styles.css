@@ -188,6 +188,26 @@ body {
     padding-top: 0; /* Remove any padding */
 }
 
+.requested-events-page .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;  /* Ensure the image covers the container */
+    background-position: top center;  /* Position image at the top */
+    background-repeat: no-repeat;
+    background-image: url('/bank.png'); /* Background image */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+    height: 50vh;  /* Limit the height to 50% of the viewport height */
+    width: 100%; /* Ensure it takes up full width */
+}
+
 .hero-content {
     padding: 40px;
     max-width: 80%;

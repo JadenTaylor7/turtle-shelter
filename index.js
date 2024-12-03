@@ -3,6 +3,8 @@
 
 let express = require("express");
 
+let bcrypt = require("bcryptjs")
+
 let app = express();
 
 let path = require("path");
@@ -18,6 +20,21 @@ app.set("views", path.join(__dirname, "views")); //assigns views folder for inde
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.urlencoded({extended: true}));
+
+const session = require('express-session');
+
+// Middleware for handling sessions
+app.use(session({
+    secret: 'JensSecretKey', // Replace with a secure secret
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to `true` if using HTTPS
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
 
 //Connect to pgAdmin
 const knex = require("knex") ({
@@ -43,12 +60,35 @@ app.get('/admin', (req, res) => {
     res.render("admin")
 });
 
+app.get('/register', (req, res) => { 
+    res.render("register")
+});
+
+app.get('/login', (req, res) => { 
+    res.render("login")
+});
+
 app.get('/hostForm', (req, res) => { 
     res.render("hostForm")
 });
 
 app.get('/jen', (req, res) => { 
     res.render("jen")
+});
+
+app.get('/requested-events', async (req, res) => { 
+    try {
+        // Fetch all events where approveevent is false or null
+        const events = await knex('hosts')
+            .select('*')
+            .whereNot('approveevent', true); // Filter out events where approveevent is true
+
+        // Render the EJS template and pass the filtered data
+        res.render('requested-events', { events });
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).send('Error retrieving events from the database');
+    }
 });
 
 app.get('/volunteerForm.ejs', (req, res) => { 
@@ -69,9 +109,12 @@ app.get('/hostEvent', (req, res) => {
 
 app.get('/volunteer', async (req, res) => {
     try {
-        // Fetch all event data from the turtleshelter table
-        const events = await knex.select('*').from('hosts');
-        // Render the EJS template and pass the data
+        // Fetch all events where approveevent is false or null
+        const events = await knex('hosts')
+            .select('*')
+            .where('approveevent', true); // Filter out events where approveevent is true
+
+        // Render the EJS template and pass the filtered data
         res.render('volunteer', { events });
     } catch (error) {
         console.error('Error fetching events:', error);
@@ -176,6 +219,93 @@ app.post('/volunteer', async (req, res) => {
     } catch (error) {
         console.error('Error inserting volunteer:', error);
         res.status(500).send('Error processing your volunteer information.');
+    }
+});
+
+app.post('/users/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).send('Username and password are required');
+    }
+
+    try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert the user into the database
+        const [userId] = await knex('users')
+            .insert({
+                username: username,
+                password: hashedPassword,
+            })
+            .returning('id'); // Returning the ID of the new user
+
+        console.log('New user created with ID:', userId);
+
+        // Redirect to login page after successful registration
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error during registration:', error);
+
+        if (error.code === '23505') {
+            // Handle duplicate username error (specific to PostgreSQL)
+            return res.status(400).send('Username already exists');
+        }
+
+        res.status(500).send('Error registering user');
+    }
+});
+
+app.post('/users/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Find the user by username in the database
+        const user = await knex('users')
+            .where({ username: username })
+            .first(); // Retrieve the first matching row
+
+        if (!user) {
+            return res.status(400).send('Cannot find user');
+        }
+
+        // Compare the password entered by the user with the hashed password in the database
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (isMatch) {
+            // If the passwords match, store the user ID in the session
+            req.session.userId = user.id;
+
+            // Redirect to the 'access' page after login
+            return res.redirect('/');
+        } else {
+            // If the passwords don't match
+            res.status(400).send('Incorrect password');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).send('Error logging in');
+    }
+});
+
+app.post('/requested-events', async (req, res) => {
+    try {
+        // Extract the array of approved event IDs from the request
+        const approvedEventIds = req.body.ApproveEvents || [];
+
+        if (approvedEventIds.length > 0) {
+            // Update `approveevent` to true for all selected events
+            await knex('hosts')
+                .whereIn('dirid', approvedEventIds)
+                .update({ approveevent: true });
+        }
+
+        // Redirect or send a success response
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error updating events:', error);
+        res.status(500).send('Error processing your request.');
     }
 });
 
