@@ -181,7 +181,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('/ownEvent.jpeg'); /* Move background image here */
+    background-image: url('/hostEvent.jpeg'); /* Move background image here */
     background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
     background-blend-mode: darken;
     margin-top: 0; /* Ensure it starts at the very top */
@@ -394,3 +394,47 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
     background-color: #007bff;
 }
+
+.flashcard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center; /* Vertically centers the content */
+    align-items: center; /* Horizontally centers the content */
+    margin: 0 auto; /* Ensures that the container is centered horizontally */
+    width: 100%; /* Ensure full width available for centering */
+}
+
+.flashcard {
+    width: 100%; /* Matches the width of the form */
+    max-width: 900px; /* Same as form container max-width */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.flashcard:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.flashcard-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flashcard-summary h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.flashcard-details {
+    margin-top: 15px;
+    display: none;
+    font-size: 0.95rem;
+    color: #555;
+}
+

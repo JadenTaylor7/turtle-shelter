@@ -63,12 +63,20 @@ app.get('/donate', (req, res) => {
     res.render("donate")
 });
 
-app.get('/ownEvent', (req, res) => { 
-    res.render("ownEvent")
+app.get('/hostEvent', (req, res) => { 
+    res.render("hostEvent")
 });
 
-app.get('/volunteer', (req, res) => { 
-    res.render("volunteer")
+app.get('/volunteer', async (req, res) => {
+    try {
+        // Fetch all event data from the turtleshelter table
+        const events = await knex.select('*').from('hosts');
+        // Render the EJS template and pass the data
+        res.render('volunteer', { events });
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).send('Error retrieving events from the database');
+    }
 });
 
 app.get('/partner', (req, res) => { 
@@ -79,9 +87,9 @@ app.get('/accomplishments', (req, res) => {
     res.render("accomplishments")
 });
 
-app.post('/ownEvent', (req, res) => {
+app.post('/hostEvent', (req, res) => {
     const DirFirstName = req.body.DirFirstName; // Default to empty string if not provided
-  const DirLastName = req.body.base_total; // Convert to integer
+  const DirLastName = req.body.DirLastName; // Convert to integer
   const DirEmail = req.body.DirEmail; // Default to today
   const EventDate = req.body.EventDate; // Checkbox returns true or undefined
   const EventStartTime = req.body.EventStartTime; // Default to 'U' for Unknown
@@ -121,6 +129,48 @@ app.post('/ownEvent', (req, res) => {
   });
   
 });
-// Add similar routes for partner, volunteer, ownEvent, accomplishments, admin
+
+app.post('/volunteer', async (req, res) => {
+    try {
+        // Extract volunteer details from the form
+        const VolFirstName = req.body.VolFirstName || ''; // Default to empty string if not provided
+        const VolLastName = req.body.VolLastName || ''; // Default to empty string if not provided
+        const VolEmail = req.body.VolEmail || ''; // Default to empty string if not provided
+        const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
+        const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
+        const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly || 0; // Default to 0 if not provided
+        const participateEvent = req.body.ParticipateEvent || false; // Default to false if not checked
+        const dirid = parseInt(req.body.dirid) || ''; // Default to empty string if not provided
+
+        // Insert volunteer into the 'volunteers' table and capture the inserted row
+        const [volunteer] = await knex('volunteers')
+            .insert({
+                volfirstname: VolFirstName,
+                vollastname: VolLastName,
+                volemail: VolEmail,
+                sewinglevel: SewingLevel,
+                referraltype: ReferralType,
+                volunteerhoursmonthly: VolunteerHoursMonthly,
+            })
+            .returning('*'); // This returns the inserted volunteer data
+
+        // Check if the checkbox was selected
+        if (participateEvent) {
+            // Insert the relationship into the 'event_volunteers' table
+            await knex('event_volunteers').insert({
+                volunteerid: parseInt(volunteer.volunteerid), // Use the volunteerid from the inserted row
+                dirid: dirid  // Make sure dirId is passed from the form
+            });
+        }
+
+        // Send a success message or redirect
+        console.log('Thank you for volunteering!');
+        res.redirect('/');
+
+    } catch (error) {
+        console.error('Error inserting volunteer:', error);
+        res.status(500).send('Error processing your volunteer information.');
+    }
+});
 
 app.listen(port, () => console.log(`Node.js is listening`));
