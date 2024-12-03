@@ -169,6 +169,25 @@ body {
     width: 100%; /* Ensure it takes up full width */
 }
 
+.event-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/ownEvent.jpeg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
 .hero-content {
     padding: 40px;
     max-width: 80%;
@@ -247,4 +266,131 @@ body {
 .about-text p {
     color: #666;
     line-height: 1.6;
+}
+
+/* Form Section Styling */
+.form-section {
+    padding: 40px 0;
+    background-color: #f4f4f9; /* Light background color for the section */
+}
+
+.form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+form {
+  font-family: Arial, sans-serif;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group-jen {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group-jen label {
+    margin-right: 10px; /* Space between the label and checkbox */
+    line-height: 1.2; /* Adjust line-height if necessary */
+}
+
+.form-group-jen input[type="checkbox"] {
+    vertical-align: middle; /* Ensure the checkbox aligns with the text */
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 10px; /* Space between radio button and label */
+}
+
+label {
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+input[type="radio"] {
+    margin-right: 8px;
+}
+
+input[type="radio"]:checked {
+    background-color: #007bff;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.submit-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+input[type="checkbox"] {
+    margin-top: 10px;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #007bff;
 }

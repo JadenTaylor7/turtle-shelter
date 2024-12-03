@@ -19,20 +19,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.urlencoded({extended: true}));
 
-
-
 //Connect to pgAdmin
 const knex = require("knex") ({
     client : "pg",
     connection : {
         host : "localhost",
         user : "postgres",
-        password : "password", //My password
-        database : "database", //selecting the database I want
-        port : 3207 //change this to 3207!! (can find port in pg admin under properties, then connection)
+        password : "1000Kilometer$",
+        database : "turtleshelter",
+        port : 5432
     }
-});
-
+})
 
 //Stuff here
 
@@ -82,6 +79,48 @@ app.get('/accomplishments', (req, res) => {
     res.render("accomplishments")
 });
 
+app.post('/ownEvent', (req, res) => {
+    const DirFirstName = req.body.DirFirstName; // Default to empty string if not provided
+  const DirLastName = req.body.base_total; // Convert to integer
+  const DirEmail = req.body.DirEmail; // Default to today
+  const EventDate = req.body.EventDate; // Checkbox returns true or undefined
+  const EventStartTime = req.body.EventStartTime; // Default to 'U' for Unknown
+  const EventStrAddress = req.body.EventStrAddress; // Convert to integer
+  const EventCity = req.body.EventCity;
+  const EventState = req.body.EventState;
+  const EventZip = req.body.EventZip;
+  const ServiceType = req.body.ServiceType;
+  const Attendance = req.body.Attendance;
+  const EventName = req.body.EventName;
+  const DirPhone = req.body.DirPhone;
+  const JenShareStory = req.body.JenShareStory;
+
+  knex('hosts')
+  .insert({
+    dirfirstname: DirFirstName, // Ensure description is uppercase
+    dirlastname: DirLastName,
+    diremail: DirEmail,
+    eventdate: EventDate,
+    eventstarttime: EventStartTime,
+    eventstraddress: EventStrAddress,
+    eventcity: EventCity,
+    eventstate: EventState,
+    eventzip: EventZip,
+    servicetype: ServiceType,
+    attendance: Attendance,
+    eventname: EventName,
+    dirphone: DirPhone,
+    jensharestory: JenShareStory,
+  })
+  .then(() => {
+      res.redirect('/'); // Redirect to the Pokémon list page after adding
+  })
+  .catch(error => {
+      console.error('Error adding Pokémon:', error);
+      res.status(500).send('Internal Server Error');
+  });
+  
+});
 // Add similar routes for partner, volunteer, ownEvent, accomplishments, admin
 
 app.listen(port, () => console.log(`Node.js is listening`));
