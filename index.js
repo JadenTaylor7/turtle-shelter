@@ -116,7 +116,7 @@ app.post('/ownEvent', (req, res) => {
       res.redirect('/'); // Redirect to the Pokémon list page after adding
   })
   .catch(error => {
-      console.error('Error adding Pokémon:', error);
+      console.error('Error adding Host:', error);
       res.status(500).send('Internal Server Error');
   });
   
