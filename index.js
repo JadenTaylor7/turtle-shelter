@@ -107,8 +107,8 @@ app.get('/hostEvent', (req, res) => {
     res.render("hostEvent")
 });
 
-app.get('/usersettings', (req, res) => { 
-    res.render("usersettings")
+app.get('/teammembersettings', (req, res) => { 
+    res.render("teammembersettings")
 });
 
 app.get('/teammember', (req, res) => { 
@@ -137,6 +137,18 @@ app.get('/partner', (req, res) => {
 
 app.get('/accomplishments', (req, res) => { 
     res.render("accomplishments")
+});
+
+app.get('/logout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error logging out:', err);
+            return res.status(500).send('Unable to log out');
+        }
+        // Redirect to the homepage or login page after logout
+        res.redirect('/');
+    });
 });
 
 app.post('/hostEvent', (req, res) => {
@@ -198,7 +210,6 @@ app.post('/volunteer', async (req, res) => {
         const VolEmail = req.body.VolEmail || ''; // Default to empty string if not provided
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
-        const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly || 0; // Default to 0 if not provided
         const CreateDat = new Date();
 
         // Extract ParticipateEvent as an array; ensure it is always an array for consistency
@@ -216,7 +227,6 @@ app.post('/volunteer', async (req, res) => {
                 volemail: VolEmail,
                 sewinglevel: SewingLevel,
                 referraltype: ReferralType,
-                volunteerhoursmonthly: VolunteerHoursMonthly,
                 createdat: CreateDat
             })
             .returning('*'); // This returns the inserted volunteer data
@@ -241,7 +251,7 @@ app.post('/volunteer', async (req, res) => {
     }
 });
 
-app.post('/users/register', async (req, res) => {
+app.post('/teammembers/register', async (req, res) => {
     const { username, password, adminkey } = req.body;
 
     if (!username || !password) {
@@ -256,15 +266,15 @@ app.post('/users/register', async (req, res) => {
         const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer'; // Replace 'correct-admin-key' with your actual key
 
         // Insert the user into the database
-        const [userId] = await knex('users')
+        const [teammemberid] = await knex('teammembers')
             .insert({
                 username: username,
                 password: hashedPassword,
                 role: role, // Set the role based on the provided admin key
             })
-            .returning('userid'); // Returning the ID of the new user
+            .returning('teammemberid'); // Returning the ID of the new user
 
-        console.log(`New user created with ID: ${userId} and role: ${role}`);
+        console.log(`New user created with ID: ${teammemberid} and role: ${role}`);
 
         // Redirect to login page after successful registration
         res.redirect('/');
@@ -280,12 +290,12 @@ app.post('/users/register', async (req, res) => {
     }
 });
 
-app.post('/users/login', async (req, res) => {
+app.post('/teammembers/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
         // Find the user by username in the database
-        const user = await knex('users')
+        const user = await knex('teammembers')
             .where({ username: username })
             .first(); // Retrieve the first matching row
 
@@ -298,10 +308,10 @@ app.post('/users/login', async (req, res) => {
 
         if (isMatch) {
             // If the passwords match, store the user ID and role in the session
-            req.session.userId = user.userid; // Assuming 'id' is the user's primary key
+            req.session.teammemberid = user.teammemberid; // Assuming 'id' is the user's primary key
             req.session.role = user.role; // Store the role in the session
 
-            console.log(`User logged in: ID = ${user.userid}, Role = ${user.role}`);
+            console.log(`User logged in: ID = ${user.teammemberid}, Role = ${user.role}`);
 
             // Redirect to the home page after login
             return res.redirect('/');
@@ -335,7 +345,7 @@ app.post('/requested-events', async (req, res) => {
     }
 });
 
-app.post('/users/change-password', async (req, res) => {
+app.post('/teammembers/change-password', async (req, res) => {
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -348,14 +358,14 @@ app.post('/users/change-password', async (req, res) => {
 
     try {
         // Get the current user from the session
-        const userId = req.session.userId;
+        const teammemberid = req.session.teammemberid;
 
-        if (!userId) {
+        if (!teammemberid) {
             return res.status(401).send('Unauthorized');
         }
 
         // Fetch the user from the database
-        const user = await knex('users').where({ userid: userId }).first();
+        const user = await knex('teammembers').where({ teammemberid: teammemberid }).first();
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -372,7 +382,7 @@ app.post('/users/change-password', async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update the password in the database
-        await knex('users').where({ userid: userId }).update({
+        await knex('teammembers').where({ teammemberid: teammemberid }).update({
             password: hashedPassword,
         });
 
@@ -402,8 +412,7 @@ app.post('/teammember', (req, res) => {
     const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly;
     const VolAreas = req.body.VolAreas; // This will be an array of selected areas
     const ReferralType = req.body.ReferralType;
-    const adminkey = req.body.adminkey;
-    const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer';
+    const role = 'volunteer';
 
     // Hash the password using bcrypt
     bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
@@ -416,7 +425,7 @@ app.post('/teammember', (req, res) => {
         }
 
         try {
-            knex('users')
+            knex('teammembers')
                 .insert({
                     first_name: VolFirstName,
                     last_name: VolLastName,
