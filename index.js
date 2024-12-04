@@ -40,9 +40,9 @@ app.use((req, res, next) => {
 const knex = require("knex") ({
     client : "pg",
     connection : {
-        host : "localhost",
+        host : "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
         user : "postgres",
-        password : "1000Kilometer$", //ChooseTheR1ght! for website
+        password : "ChooseTheR1ght!", //ChooseTheR1ght! for website
         database : "turtleshelter",
         port : 5432
     }
