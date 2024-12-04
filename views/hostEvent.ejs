@@ -96,10 +96,16 @@
                     <label for="EventName">What is a good contact name for the event?</label>
                     <input type="text" id="EventName" name="EventName" required>
                 </div>
-
+                
                 <div class="form-group">
                     <label for="HostPhone">What is a good phone number for the event?</label>
-                    <input type="tel" id="HostPhone" name="HostPhone" required pattern="[0-9]{10}">
+                    <input 
+                        type="tel" 
+                        id="HostPhone" 
+                        name="HostPhone" 
+                        required 
+                        pattern="\d{3}-?\d{3}-?\d{4}" 
+                        placeholder="123-456-7890">
                 </div>
 
                 <div class="form-group-jen">
