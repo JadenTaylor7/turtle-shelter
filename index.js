@@ -395,22 +395,22 @@ app.post('/teammembers/change-password', async (req, res) => {
 });
 
 app.post('/teammember', (req, res) => {
-    const VolFirstName = req.body.VolFirstName;
-    const VolLastName = req.body.VolLastName;
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
     const VolUsername = req.body.VolUsername;
     const VolPassword = req.body.VolPassword;
-    const VolEmail = req.body.VolEmail;
-    const VolPhoneNumber = req.body.VolPhoneNumber;
-    const VolStreetAddress = req.body.VolStreetAddress;
-    const VolCity = req.body.VolCity;
-    const VolState = req.body.VolState;
-    const VolZip = req.body.VolZip;
-    const Skills = req.body.Skills; // This will be an array of checked values
-    const SewingLevel = req.body.SewingLevel;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
     const CanTeach = req.body.CanTeach;
     const TakeLead = req.body.TakeLead;
-    const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly;
-    const VolAreas = req.body.VolAreas; // This will be an array of selected areas
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
     const ReferralType = req.body.ReferralType;
     const role = 'volunteer';
 
@@ -427,22 +427,22 @@ app.post('/teammember', (req, res) => {
         try {
             knex('teammembers')
                 .insert({
-                    first_name: VolFirstName,
-                    last_name: VolLastName,
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
                     username: VolUsername,
                     password: hashedPassword, // Save the hashed password
-                    email: VolEmail,
-                    phone_number: VolPhoneNumber,
-                    street_address: VolStreetAddress,
-                    city: VolCity,
-                    state: VolState,
-                    zip_code: VolZip,
-                    skills: JSON.stringify(Skills), // Save skills as a JSON string
-                    sewing_level: SewingLevel,
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: JSON.stringify(MemSkills), // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
                     can_teach: CanTeach,
                     event_lead: TakeLead,
-                    volunteer_hours_monthly: VolunteerHoursMonthly,
-                    areas_willing_to_volunteer: JSON.stringify(VolAreas), // Save selected areas as a JSON string
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
                     referral_type: ReferralType,
                     role: role,
                 })
