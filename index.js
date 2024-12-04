@@ -42,9 +42,10 @@ const knex = require("knex") ({
     connection : {
         host : "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
         user : "postgres",
-        password : "ChooseTheR1ght!", //ChooseTheR1ght! for website
-        database : "turtleshelter",
-        port : 5432
+        password : "postgres", //ChooseTheRight! for website
+        database : "turtleshelterdb",
+        port : 5432,
+        ssl: { rejectUnauthorized: false }
     }
 })
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
@@ -155,6 +156,8 @@ app.post('/hostEvent', (req, res) => {
   const EventName = req.body.EventName;
   const HostPhone = req.body.HostPhone;
   const JenShareStory = req.body.JenShareStory;
+  const ApproveEvent = false;
+  const CreateDat = new Date();
 
   knex('hosts')
   .insert({
@@ -174,6 +177,8 @@ app.post('/hostEvent', (req, res) => {
     eventname: EventName,
     hostphone: HostPhone,
     jensharestory: JenShareStory,
+    approveevent: ApproveEvent,
+    createdat: CreateDat,
   })
   .then(() => {
       res.redirect('/'); // Redirect to the Pokémon list page after adding
@@ -194,6 +199,7 @@ app.post('/volunteer', async (req, res) => {
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
         const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly || 0; // Default to 0 if not provided
+        const CreateDat = new Date();
 
         // Extract ParticipateEvent as an array; ensure it is always an array for consistency
         const participateEvents = Array.isArray(req.body.ParticipateEvent)
@@ -211,6 +217,7 @@ app.post('/volunteer', async (req, res) => {
                 sewinglevel: SewingLevel,
                 referraltype: ReferralType,
                 volunteerhoursmonthly: VolunteerHoursMonthly,
+                createdat: CreateDat
             })
             .returning('*'); // This returns the inserted volunteer data
 
@@ -398,34 +405,64 @@ app.post('/teammember', (req, res) => {
     const adminkey = req.body.adminkey;
     const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer';
 
-    knex('users')
-    .insert({
-        first_name: VolFirstName,
-        last_name: VolLastName,
-        username: VolUsername,
-        password: VolPassword,  // Consider hashing the password before saving
-        email: VolEmail,
-        phone_number: VolPhoneNumber,
-        street_address: VolStreetAddress,
-        city: VolCity,
-        state: VolState,
-        zip_code: VolZip,
-        skills: JSON.stringify(Skills), // Save skills as a JSON string
-        sewing_level: SewingLevel,
-        can_teach: CanTeach,
-        event_lead: TakeLead,
-        volunteer_hours_monthly: VolunteerHoursMonthly,
-        areas_willing_to_volunteer: JSON.stringify(VolAreas), // Save selected areas as a JSON string
-        referral_type: ReferralType,
-        role: role,
-    })
-    .then(() => {
-        res.redirect('/'); // Redirect to a thank you or confirmation page after submission
-    })
-    .catch(error => {
-        console.error('Error adding Volunteer:', error);
-        res.status(500).send('Internal Server Error');
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('users')
+                .insert({
+                    first_name: VolFirstName,
+                    last_name: VolLastName,
+                    username: VolUsername,
+                    password: hashedPassword, // Save the hashed password
+                    email: VolEmail,
+                    phone_number: VolPhoneNumber,
+                    street_address: VolStreetAddress,
+                    city: VolCity,
+                    state: VolState,
+                    zip_code: VolZip,
+                    skills: JSON.stringify(Skills), // Save skills as a JSON string
+                    sewing_level: SewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    volunteer_hours_monthly: VolunteerHoursMonthly,
+                    areas_willing_to_volunteer: JSON.stringify(VolAreas), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role,
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Volunteer:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
     });
 });
-
-app.listen(port, () => console.log(`Node.js is listening`));
+  // Test database connection
+  knex.raw("SELECT 1")
+    .then(() => {
+      console.log("Connected to the database successfully!");
+      app.listen(port, () => console.log(`Node.js is listening on port ${port}`));
+    })
+    .catch((err) => {
+      console.error("Failed to connect to the database:", err.message);
+      process.exit(1); // Exit the process with an error code
+    });
