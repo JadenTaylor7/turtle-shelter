@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+            <!-- Login Form -->
+            <div class="form-container">
+              <h2>Login</h2>
+              <form action="/users/login" method="POST">
+                  <div class="form-group">
+                      <label for="login-username">Username</label>
+                      <input type="text" id="login-username" name="username" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="login-password">Password</label>
+                      <input type="password" id="login-password" name="password" required>
+                  </div>
+                  <button type="submit" class="submit-btn">Login</button>
+              </form>
+              <!-- New button to redirect to the register page -->
+              <div class="register-link" style="margin-top: 15px; text-align: center;">
+                  <a href="/register" class="btn" style="display: inline-block; padding: 10px 15px; background-color: rgb(88, 88, 255); color: white; text-decoration: none; border-radius: 5px;">
+                      Register
+                  </a>
+              </div>
+          </div>
+    </section>
+</body>
+</html>

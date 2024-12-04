@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>User Settings</title>
+</head>
+<body class="usersettings-page">
+    <section class="hero">
+    </section>
+    <div class="settings-page">
+        <!-- Left Navigation Column -->
+        <nav class="settings-nav">
+            <ul>
+                <li><a href="#" class="nav-link active" id="reset-password-link">Reset Password</a></li>
+                <li><a href="#" class="nav-link" id="admin-key-link">Admin Key</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Section -->
+        <section class="settings-content">
+            <div id="reset-password-section" class="settings-section active">
+                <h2>Reset Password</h2>
+                <form action="/users/change-password" method="POST" class="change-password-form">
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Change Password</button>
+                </form>
+            </div>
+
+            <div id="admin-key-section" class="settings-section">
+                <h2>Change Admin Key</h2>
+                <form action="/users/change-admin-key" method="POST" class="change-admin-key-form">
+                    <div class="form-group">
+                        <label for="current-admin-key">Current Admin Key</label>
+                        <input type="text" id="current-admin-key" name="currentAdminKey" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-admin-key">New Admin Key</label>
+                        <input type="text" id="new-admin-key" name="newAdminKey" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Change Admin Key</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // JavaScript to toggle between sections
+        const resetPasswordLink = document.getElementById('reset-password-link');
+        const adminKeyLink = document.getElementById('admin-key-link');
+        const resetPasswordSection = document.getElementById('reset-password-section');
+        const adminKeySection = document.getElementById('admin-key-section');
+
+        resetPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetPasswordSection.classList.add('active');
+            adminKeySection.classList.remove('active');
+            resetPasswordLink.classList.add('active');
+            adminKeyLink.classList.remove('active');
+        });
+
+        adminKeyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            adminKeySection.classList.add('active');
+            resetPasswordSection.classList.remove('active');
+            adminKeyLink.classList.add('active');
+            resetPasswordLink.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

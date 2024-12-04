@@ -21,15 +21,24 @@
                 <div class="dropdown">
                     <button class="dropbtn">How you can help</button>
                     <div class="dropdown-content">
+                        <a href="/teammember">Become a Team Member!</a>
                         <a href="/difference">You can make a difference</a>
                         <a href="/partner">Become a partner or sponsor</a>
                         <a href="/volunteer">Participate in an event</a>
-                        <a href="/hostEvent">Schedule your own event</a>
+                        <a href="/hostEvent">Host your own event</a>
                         <a href="/accomplishments">What has been accomplished</a>
                     </div>
                 </div>
                 
-                <a href="/admin" class="nav-link">Event Admin</a>
+                <a href="/login" class="nav-link" <% if (session && session.userId) { %> style="display: none;" <% } %>>Login</a>
+                
+                <% if (session && session.userId && session.role === 'admin') { %>
+                    <a href="/requested-events" class="nav-link">Requested Events</a>
+                <% } %>
+
+                <% if (session && session.userId) { %>
+                    <a href="/usersettings" class="nav-link">Settings</a>
+                <% } %>
             </div>
         </div>
     </nav>

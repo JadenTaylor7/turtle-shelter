@@ -16,22 +16,22 @@
             <form action="/hostEvent" method="POST">
 
                 <div class="form-group">
-                    <label for="DirFirstName">First Name:</label>
-                    <input type="text" id="DirFirstName" name="DirFirstName" required>
+                    <label for="HostFirstName">First Name:</label>
+                    <input type="text" id="HostFirstName" name="HostFirstName" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="DirLastName">Last Name:</label>
-                    <input type="text" id="DirLastName" name="DirLastName" required>
+                    <label for="HostLastName">Last Name:</label>
+                    <input type="text" id="HostLastName" name="HostLastName" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="DirEmail">E-Mail:</label>
-                    <input type="email" id="DirEmail" name="DirEmail" required>
+                    <label for="HostEmail">E-Mail:</label>
+                    <input type="email" id="HostEmail" name="HostEmail" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="EventDate">What date (or possible dates) would you like to schedule the event?</label>
+                    <label for="EventDate">What date (or possible dates) would you like to host the event?</label>
                     <input type="date" id="EventDate" name="EventDate" required>
                 </div>
 
@@ -83,18 +83,40 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="GroupAge">What’s the group age of the event?</label>
+                    <select id="GroupAge" name="GroupAge" required>
+                        <option value="">Select an age group</option>
+                        <option value="12-18">12-18</option>
+                        <option value="19-30">19-30</option>
+                        <option value="30+">30+</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="EventName">What is a good contact name for the event?</label>
                     <input type="text" id="EventName" name="EventName" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="DirPhone">What is a good phone number for the event?</label>
-                    <input type="tel" id="DirPhone" name="DirPhone" required pattern="[0-9]{10}">
+                    <label for="HostPhone">What is a good phone number for the event?</label>
+                    <input type="tel" id="HostPhone" name="HostPhone" required pattern="[0-9]{10}">
                 </div>
 
                 <div class="form-group-jen">
                     <label for="JenShareStory">I would like Jen to share her story!</label>
                     <input type="checkbox" id="JenShareStory" name="JenShareStory" value="Yes">
+                </div>
+
+                <div class="form-group-jen">
+                    <label>Will this Event be Public or Private?</label>
+                    <div>
+                        <input type="radio" id="Private" name="Openness" value="private" checked required>
+                        <label for="Private">Private</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="Public" name="Openness" value="public">
+                        <label for="Public">Public</label>
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn">Submit Event</button>
