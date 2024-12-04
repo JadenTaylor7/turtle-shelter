@@ -42,13 +42,11 @@ const knex = require("knex") ({
     connection : {
         host : "localhost",
         user : "postgres",
-        password : "ChooseTheR1ght!", //ChooseTheR1ght! for website
+        password : "1000Kilometer$", //ChooseTheR1ght! for website
         database : "turtleshelter",
         port : 5432
     }
 })
-
-
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
 
 //goes to index.ejs upon website load
@@ -110,6 +108,10 @@ app.get('/hostEvent', (req, res) => {
 
 app.get('/usersettings', (req, res) => { 
     res.render("usersettings")
+});
+
+app.get('/teammember', (req, res) => { 
+    res.render("teammember")
 });
 
 app.get('/volunteer', async (req, res) => {
@@ -373,6 +375,57 @@ app.post('/users/change-password', async (req, res) => {
         console.error('Error updating password:', error);
         res.status(500).send('Error updating password');
     }
+});
+
+app.post('/teammember', (req, res) => {
+    const VolFirstName = req.body.VolFirstName;
+    const VolLastName = req.body.VolLastName;
+    const VolUsername = req.body.VolUsername;
+    const VolPassword = req.body.VolPassword;
+    const VolEmail = req.body.VolEmail;
+    const VolPhoneNumber = req.body.VolPhoneNumber;
+    const VolStreetAddress = req.body.VolStreetAddress;
+    const VolCity = req.body.VolCity;
+    const VolState = req.body.VolState;
+    const VolZip = req.body.VolZip;
+    const Skills = req.body.Skills; // This will be an array of checked values
+    const SewingLevel = req.body.SewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly;
+    const VolAreas = req.body.VolAreas; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const adminkey = req.body.adminkey;
+    const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer';
+
+    knex('users')
+    .insert({
+        first_name: VolFirstName,
+        last_name: VolLastName,
+        username: VolUsername,
+        password: VolPassword,  // Consider hashing the password before saving
+        email: VolEmail,
+        phone_number: VolPhoneNumber,
+        street_address: VolStreetAddress,
+        city: VolCity,
+        state: VolState,
+        zip_code: VolZip,
+        skills: JSON.stringify(Skills), // Save skills as a JSON string
+        sewing_level: SewingLevel,
+        can_teach: CanTeach,
+        event_lead: TakeLead,
+        volunteer_hours_monthly: VolunteerHoursMonthly,
+        areas_willing_to_volunteer: JSON.stringify(VolAreas), // Save selected areas as a JSON string
+        referral_type: ReferralType,
+        role: role,
+    })
+    .then(() => {
+        res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+    })
+    .catch(error => {
+        console.error('Error adding Volunteer:', error);
+        res.status(500).send('Internal Server Error');
+    });
 });
 
 app.listen(port, () => console.log(`Node.js is listening`));
