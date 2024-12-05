@@ -7,11 +7,23 @@
     <link rel="stylesheet" href="/styles.css">
     <title>User Settings</title>
 </head>
-<body class="usersettings-page maintain-tm-teammembers-page">
-    <section class="hero">
-    </section>
+<body class="usersettings-page maintain-tm-teammembers-page" data-user-role="<%= role %>">
+    <section class="hero"></section>
+    
+    <!-- Tab navigation -->
+    <div class="tab">
+        <button class="tablinks active" onclick="filterUsers('teammember')">Team Members</button>
+        <button class="tablinks" onclick="filterUsers('admin')">Admins</button>
+    </div>
+
+    <div id="teammemberAddButton" class="add-button-container">
+        <a href="/addteammember" class="add-button">Add Team Member</a>
+    </div>
+    <div id="adminAddButton" class="add-button-container">
+        <a href="/addadmin" class="add-button">Add Admin</a>
+    </div>
+
     <section class="maintain-tm-hero">
-        <h1 class="maintain-tm-page-title">Team Members</h1>
         <table class="maintain-tm-team-members-table">
             <thead>
                 <tr>
@@ -33,9 +45,9 @@
                     <th>Delete</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="userTableBody">
                 <% teamMembers.forEach(function(member) { %>
-                    <tr>
+                    <tr data-role="<%= member.role %>">
                         <td><%= member.memfirstname %></td>
                         <td><%= member.memlastname %></td>
                         <td><%= member.username %></td>
@@ -57,7 +69,6 @@
                         <td><%= member.role %></td>
                         <td><a href="/editteammember/<%= member.teammemberid %>" class="maintain-tm-edit-button">Edit</a></td>
                         <td>
-                            <!-- Delete Form -->
                             <form action="/deleteteammember/<%= member.teammemberid %>" method="POST" class="maintain-tm-delete-form">
                                 <button type="submit" class="maintain-tm-delete-button" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
                             </form>
@@ -67,5 +78,60 @@
             </tbody>
         </table>
     </section>
+
+    <script>
+        function filterUsers(role) {
+            // Get all table rows
+            const rows = document.querySelectorAll('#userTableBody tr');
+
+            // Update tab button styles
+            const tabButtons = document.querySelectorAll('.tablinks');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.toLowerCase() === (role === 'teammember' ? 'team members' : 'admins')) {
+                    button.classList.add('active');
+                }
+            });
+
+            // Filter rows based on role
+            rows.forEach(row => {
+                row.style.display = row.dataset.role === role ? '' : 'none';
+            });
+
+            // Show/hide add buttons based on logged-in user's role
+            const loggedInUserRole = document.body.dataset.userRole;
+            const teammemberAddButton = document.getElementById('teammemberAddButton');
+            const adminAddButton = document.getElementById('adminAddButton');
+
+            if (role === 'teammember') {
+                teammemberAddButton.style.display = loggedInUserRole === 'admin' ? 'block' : 'none';
+                adminAddButton.style.display = 'none';
+            } else if (role === 'admin') {
+                teammemberAddButton.style.display = 'none';
+                adminAddButton.style.display = loggedInUserRole === 'admin' ? 'block' : 'none';
+            }
+        }
+
+        // Default view: show Team Members on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUserRole = document.body.dataset.userRole; // Get role from data attribute
+            const teammemberAddButton = document.getElementById('teammemberAddButton');
+            const adminAddButton = document.getElementById('adminAddButton');
+
+            // Set initial tab to Team Members
+            filterUsers('teammember'); // Show Team Members by default
+
+            // Update add button visibility for Team Members
+            if (loggedInUserRole === 'admin') {
+                teammemberAddButton.style.display = 'block';
+                adminAddButton.style.display = 'none'; // Ensure admin button is hidden initially
+            } else {
+                teammemberAddButton.style.display = 'none';
+                adminAddButton.style.display = 'none'; // Hide both for non-admin users
+            }
+        });
+
+        
+    </script>
 </body>
 </html>

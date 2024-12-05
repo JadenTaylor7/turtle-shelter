@@ -116,10 +116,20 @@ app.get('/maintainteammembers', async (req, res) => {
     }
 
     try {
+        // Fetch the logged-in user's role
+        const teammember = await knex('teammembers')
+            .select('role')
+            .where('teammemberid', teammemberid)
+            .first();
+
+        if (!teammember) {
+            return res.status(404).send('User not found');
+        }
+
         // Fetch all team members data from the 'teammembers' table
         const teamMembers = await knex('teammembers').select(
             'teammemberid', 'memfirstname', 'memlastname', 'username', 'mememail', 'memphone',
-            'memstraddress', 'memcity', 'memstate', 'memzip', 'memsewinglevel', 
+            'memstraddress', 'memcity', 'memstate', 'memzip', 'memsewinglevel',
             'memskills', 'can_teach', 'event_lead', 'memhoursmonthly', 'memvolunteerlocation',
             'referral_type', 'role'
         );
@@ -129,8 +139,8 @@ app.get('/maintainteammembers', async (req, res) => {
             return res.status(404).send('No team members found');
         }
 
-        // Render the maintainteammembers.ejs view and pass the teamMembers data
-        res.render('maintainteammembers', { teamMembers });
+        // Render the maintainteammembers.ejs view with teamMembers and logged-in user's role
+        res.render('maintainteammembers', { teamMembers, role: teammember.role });
     } catch (error) {
         console.error('Error fetching team members data:', error);
         res.status(500).send('Error fetching team members data');
@@ -171,6 +181,14 @@ app.get('/teammembersettings', async (req, res) => {
 
 app.get('/teammember', (req, res) => { 
     res.render("teammember")
+});
+
+app.get('/addteammember', (req, res) => { 
+    res.render("addteammember")
+});
+
+app.get('/addadmin', (req, res) => { 
+    res.render("addadmin")
 });
 
 // Load the edit page for a team member
@@ -500,7 +518,7 @@ app.post('/teammember', (req, res) => {
     const MemHoursMonthly = req.body.MemHoursMonthly;
     const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
     const ReferralType = req.body.ReferralType;
-    const role = 'volunteer';
+    const role = 'teammember';
 
     // Hash the password using bcrypt
     bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
@@ -713,6 +731,150 @@ app.post('/deleteteammember/:teammemberid', async (req, res) => {
         console.error('Error deleting team member:', error);
         res.status(500).send('Error deleting the team member');
     }
+});
+
+app.post('/addteammember', (req, res) => {
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
+    const VolUsername = req.body.VolUsername;
+    const VolPassword = req.body.VolPassword;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const role = 'teammember';
+
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: VolUsername,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: MemSkills, // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role,
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Volunteer:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
+    });
+});
+
+app.post('/addadmin', (req, res) => {
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
+    const VolUsername = req.body.VolUsername;
+    const VolPassword = req.body.VolPassword;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const role = 'admin';
+
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: VolUsername,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: MemSkills, // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role,
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Volunteer:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
+    });
 });
   // Test database connection
   knex.raw("SELECT 1")

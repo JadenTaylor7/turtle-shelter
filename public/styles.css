@@ -604,3 +604,41 @@ input[type="checkbox"]:checked {
     word-wrap: break-word;
     max-width: 200px;
   }
+
+  .tab {
+    display: flex; /* Use flexbox for even distribution */
+    width: 100%; /* Full screen width */
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+.tab button {
+    flex: 1; /* Make buttons take equal space */
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 0; /* Adjust padding for better appearance */
+    transition: 0.3s;
+    font-size: 17px;
+    text-align: center; /* Center text in buttons */
+}
+.tab button:hover {
+    background-color: #ddd;
+}
+.tab button.active {
+    background-color: #ccc;
+}
+.add-button {
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.add-button:hover {
+    background-color: #45a049;
+}
+.add-button-container {
+    display: none;
+}
