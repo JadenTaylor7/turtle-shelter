@@ -5,10 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
-    <title>User Settings</title>
+    <title>Volunteer Settings</title>
 </head>
-<body class="usersettings-page">
-    <section class="hero">
+<body class="usersettings-page maintain-tm-volunteers-page">
+    <section class="hero"></section>
+    
+    <!-- Tab navigation (currently only one tab for Volunteers) -->
+    <div class="tab">
+        <button class="tablinks active" onclick="filterUsers('volunteer')">Volunteers</button>
+    </div>
+
+    <!-- Add Volunteer Button -->
+    <div>
+        <a href="/addvolunteer" class="add-button">Add Volunteer</a>
+    </div>
+
+    <!-- Volunteers Table -->
+    <section class="maintain-tm-hero">
+        <table class="events-table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Sewing Level</th>
+                    <th>Referral Type</th>
+                    <th>Date Created</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <% volunteers.forEach(function(volunteer) { %>
+                    <tr>
+                        <td><%= volunteer.volfirstname %></td>
+                        <td><%= volunteer.vollastname %></td>
+                        <td><%= volunteer.volemail %></td>
+                        <td><%= volunteer.sewinglevel %></td>
+                        <td><%= volunteer.referraltype %></td>
+                        <td><%= new Date(volunteer.createdat).toLocaleDateString() %></td>
+                        <td><a href="/editvolunteer/<%= volunteer.volunteerid %>" class="edit-button">Edit</a></td>
+                        <td>
+                            <form action="/deletevolunteer/<%= volunteer.volunteerid %>" method="POST" class="maintain-tm-delete-form">
+                                <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
     </section>
+
+    <!-- JavaScript for Role-based UI Customization -->
+    <script>
+        function filterUsers() {
+            // Adjust the visibility of the "Add Volunteer" button based on the logged-in user's role
+            const loggedInUserRole = document.body.dataset.userRole; // Role from server-side rendering
+            const addButtonContainer = document.querySelector('.add-button-container');
+
+            // Show or hide the add button based on the role
+            if (loggedInUserRole === 'admin') {
+                addButtonContainer.style.display = 'block';
+            } else {
+                addButtonContainer.style.display = 'none';
+            }
+        }
+
+        // Apply role-based filtering on page load
+        document.addEventListener('DOMContentLoaded', filterUsers);
+    </script>
 </body>
 </html>
