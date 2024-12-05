@@ -94,6 +94,18 @@
                     <a href="/teammembersettings" class="nav-link">Settings</a>
                 <% } %>
 
+                <% if (session && session.teammemberid && session.role === 'admin') { %>
+                    <!-- Maintenance Dropdown Menu -->
+                    <div class="dropdown">
+                        <button class="dropbtn">Maintenance</button>
+                        <div class="dropdown-content">
+                            <a href="/maintainteammembers">Team Members</a>
+                            <a href="/maintainevents">Events</a>
+                            <a href="/maintainvolunteers">Volunteers</a>
+                        </div>
+                    </div>
+                <% } %>
+
                 <% if (session && session.teammemberid) { %>
                     <a href="/logout" class="nav-link">Logout</a>
                 <% } %>
