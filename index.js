@@ -42,9 +42,10 @@ const knex = require("knex") ({
     connection : {
         host : "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
         user : "postgres",
-        password : "ChooseTheR1ght!", //ChooseTheR1ght! for website
-        database : "turtleshelter",
-        port : 5432
+        password : "postgres", //ChooseTheR1ght! for website
+        database : "turtleshelterdb",
+        port : 5432,
+        ssl : {rejectUnauthorized: false}
     }
 })
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
