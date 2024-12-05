@@ -23,6 +23,8 @@ app.use(express.urlencoded({extended: true}));
 
 const session = require('express-session');
 
+const moment = require('moment');
+
 // Middleware for handling sessions
 app.use(session({
     secret: 'JensSecretKey', // Replace with a secure secret
@@ -116,10 +118,20 @@ app.get('/maintainteammembers', async (req, res) => {
     }
 
     try {
+        // Fetch the logged-in user's role
+        const teammember = await knex('teammembers')
+            .select('role')
+            .where('teammemberid', teammemberid)
+            .first();
+
+        if (!teammember) {
+            return res.status(404).send('User not found');
+        }
+
         // Fetch all team members data from the 'teammembers' table
         const teamMembers = await knex('teammembers').select(
             'teammemberid', 'memfirstname', 'memlastname', 'username', 'mememail', 'memphone',
-            'memstraddress', 'memcity', 'memstate', 'memzip', 'memsewinglevel', 
+            'memstraddress', 'memcity', 'memstate', 'memzip', 'memsewinglevel',
             'memskills', 'can_teach', 'event_lead', 'memhoursmonthly', 'memvolunteerlocation',
             'referral_type', 'role'
         );
@@ -129,8 +141,8 @@ app.get('/maintainteammembers', async (req, res) => {
             return res.status(404).send('No team members found');
         }
 
-        // Render the maintainteammembers.ejs view and pass the teamMembers data
-        res.render('maintainteammembers', { teamMembers });
+        // Render the maintainteammembers.ejs view with teamMembers and logged-in user's role
+        res.render('maintainteammembers', { teamMembers, role: teammember.role });
     } catch (error) {
         console.error('Error fetching team members data:', error);
         res.status(500).send('Error fetching team members data');
@@ -141,8 +153,24 @@ app.get('/maintainvolunteers', (req, res) => {
     res.render("maintainvolunteers")
 });
 
-app.get('/maintainevents', (req, res) => { 
-    res.render("maintainevents")
+app.get('/maintainevents', (req, res) => {
+    const today = moment().startOf('day'); // Today's date at midnight
+
+    // Fetch events from the 'hosts' table
+    knex('hosts')
+        .select('*')
+        .then(events => {
+            // Split events into upcoming and past categories
+            const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
+            const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
+
+            // Render the maintain events page with upcoming and past events
+            res.render('maintainevents', { upcomingEvents, pastEvents, moment });
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error);
+            res.status(500).send('Internal Server Error');
+        });
 });
 
 app.get('/teammembersettings', async (req, res) => {
@@ -173,6 +201,18 @@ app.get('/teammember', (req, res) => {
     res.render("teammember")
 });
 
+app.get('/addteammember', (req, res) => { 
+    res.render("addteammember")
+});
+
+app.get('/addevent', (req, res) => { 
+    res.render("addevent")
+});
+
+app.get('/addadmin', (req, res) => { 
+    res.render("addadmin")
+});
+
 // Load the edit page for a team member
 app.get('/editteammember/:teammemberid', async (req, res) => {
     try {
@@ -188,20 +228,19 @@ app.get('/editteammember/:teammemberid', async (req, res) => {
     }
 });
 
-// app.post('/deleteteammember/:teammemberid', async (req, res) => {
-//     try {
-//         const teammemberid = req.params.teammemberid;
-//             knex('teammembers')
-//             .where('teammemberid', teammemberid)
-//             .del() // Deletes the record with the specified ID
-//             .then(() => {
-//         res.redirect('/maintainteammembers'); // Redirect to the Planets list after deletion
-//       })  // Redirect back to the user settings page
-//     } catch (error) {
-//         console.error('Error deleting team member:', error);
-//         res.status(500).send('Error deleting the team member');
-//     }
-// });
+app.get('/editevent/:hostid', async (req, res) => {
+    try {
+        const hostid = req.params.hostid;
+        const event = await knex('hosts')
+            .where('hostid', hostid)
+            .first();
+
+        res.render('editevent', { event });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error loading the edit page');
+    }
+});
 
 app.get('/volunteer', async (req, res) => {
     try {
@@ -500,7 +539,7 @@ app.post('/teammember', (req, res) => {
     const MemHoursMonthly = req.body.MemHoursMonthly;
     const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
     const ReferralType = req.body.ReferralType;
-    const role = 'volunteer';
+    const role = 'teammember';
 
     // Hash the password using bcrypt
     bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
@@ -714,6 +753,253 @@ app.post('/deleteteammember/:teammemberid', async (req, res) => {
         res.status(500).send('Error deleting the team member');
     }
 });
+
+app.post('/addteammember', (req, res) => {
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
+    const VolUsername = req.body.VolUsername;
+    const VolPassword = req.body.VolPassword;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const role = 'teammember';
+
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: VolUsername,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: MemSkills, // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role,
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Volunteer:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
+    });
+});
+
+app.post('/addadmin', (req, res) => {
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
+    const VolUsername = req.body.VolUsername;
+    const VolPassword = req.body.VolPassword;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const role = 'admin';
+
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: VolUsername,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: MemSkills, // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role,
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Volunteer:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
+    });
+});
+
+app.post('/editevent/:hostid', (req, res) => {
+    const hostid = req.params.hostid;
+    const updatedEventData = {
+        hostfirstname: req.body.HostFirstName,
+        hostlastname: req.body.HostLastName,
+        hostemail: req.body.HostEmail,
+        eventdate: req.body.EventDate,
+        eventstarttime: req.body.EventStartTime,
+        eventstraddress: req.body.EventStrAddress,
+        eventcity: req.body.EventCity,
+        eventstate: req.body.EventState,
+        eventzip: req.body.EventZip,
+        servicetype: req.body.ServiceType,
+        attendance: req.body.Attendance,
+        groupage: req.body.GroupAge,
+        eventname: req.body.EventName,
+        hostphone: req.body.HostPhone,
+        jensharestory: req.body.JenShareStory ? 'Yes' : 'No',
+        openness: req.body.Openness,
+    };
+
+    knex('hosts')
+        .where({ hostid: hostid })
+        .update(updatedEventData)
+        .then(() => {
+            res.redirect('/maintainevents'); // Redirect after update
+        })
+        .catch(error => {
+            console.error('Error updating event:', error);
+            res.status(500).send('Internal Server Error');
+        });
+    });
+
+    app.post('/deleteevent/:hostid', async (req, res) => {
+        try {
+            const hostid = req.params.hostid;  // Retrieve the hostid from the route parameter
+            knex('hosts')                      // Query the 'hosts' table
+                .where('hostid', hostid)       // Specify the hostid to delete
+                .del()                          // Delete the record
+                .then(() => {
+                    res.redirect('/maintainevents');  // Redirect to the page showing all hosts after deletion
+                }) 
+                .catch(error => {
+                    console.error('Error deleting host:', error);  // Log any errors that occur during deletion
+                    res.status(500).send('Error deleting the host');  // Return an error response if deletion fails
+                });
+        } catch (error) {
+            console.error('Error deleting host:', error);  // Log any errors that occur outside the query
+            res.status(500).send('Error deleting the host');
+        }
+    });
+
+    app.post('/addevent', (req, res) => {
+        const HostFirstName = req.body.HostFirstName; // Default to empty string if not provided
+      const HostLastName = req.body.HostLastName; // Convert to integer
+      const HostEmail = req.body.HostEmail; // Default to today
+      const EventDate = req.body.EventDate; // Checkbox returns true or undefined
+      const EventStartTime = req.body.EventStartTime; // Default to 'U' for Unknown
+      const EventStrAddress = req.body.EventStrAddress; // Convert to integer
+      const EventCity = req.body.EventCity;
+      const EventState = req.body.EventState;
+      const EventZip = req.body.EventZip;
+      const ServiceType = req.body.ServiceType;
+      const Attendance = req.body.Attendance;
+      const GroupAge = req.body.GroupAge;
+      const Openness = req.body.Openness;
+      const EventName = req.body.EventName;
+      const HostPhone = req.body.HostPhone;
+      const JenShareStory = req.body.JenShareStory;
+      const ApproveEvent = false;
+      const CreateDat = new Date();
+    
+      knex('hosts')
+      .insert({
+        hostfirstname: HostFirstName, // Ensure description is uppercase
+        hostlastname: HostLastName,
+        hostemail: HostEmail,
+        eventdate: EventDate,
+        eventstarttime: EventStartTime,
+        eventstraddress: EventStrAddress,
+        eventcity: EventCity,
+        eventstate: EventState,
+        eventzip: EventZip,
+        servicetype: ServiceType,
+        attendance: Attendance,
+        groupage: GroupAge,
+        openness: Openness,
+        eventname: EventName,
+        hostphone: HostPhone,
+        jensharestory: JenShareStory,
+        approveevent: ApproveEvent,
+        createdat: CreateDat,
+      })
+      .then(() => {
+          res.redirect('/maintainevents'); // Redirect to the Pokémon list page after adding
+      })
+      .catch(error => {
+          console.error('Error adding Host:', error);
+          res.status(500).send('Internal Server Error');
+      });
+      
+    });
   // Test database connection
   knex.raw("SELECT 1")
     .then(() => {
