@@ -1,1 +1,1 @@
-sudo certbot -n -d turtleshelterprojectdev.com --nginx --agree-tos --email lk273@byu.edu
+sudo certbot -n -d turtle-dev-env.eba-tcisefdb.us-east-1.elasticbeanstalk.com --nginx --agree-tos --email lk273@byu.edu
