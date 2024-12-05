@@ -522,6 +522,78 @@ app.post('/teammembers/edit-account', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+app.post('/teammembers/add-admin', (req, res) => {
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
+    const username = req.body.username;
+    const VolPassword = req.body.VolPassword;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const role = 'admin'; // Set the role to admin
+
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: username,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: JSON.stringify(MemSkills), // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role, // Admin role here
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Admin:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
+    });
+});
   // Test database connection
   knex.raw("SELECT 1")
     .then(() => {
