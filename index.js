@@ -9,7 +9,7 @@ let app = express();
 
 let path = require("path");
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 let security = false;
 
@@ -42,10 +42,10 @@ const knex = require("knex") ({
     connection : {
         host : "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
         user : "postgres",
-        password : "postgres", //ChooseTheRight! for website
+        password : "postgres", //ChooseTheR1ght! for website
         database : "turtleshelterdb",
         port : 5432,
-        ssl: { rejectUnauthorized: false }
+        ssl : {rejectUnauthorized: false}
     }
 })
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
