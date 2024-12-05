@@ -107,8 +107,28 @@ app.get('/hostEvent', (req, res) => {
     res.render("hostEvent")
 });
 
-app.get('/teammembersettings', (req, res) => { 
-    res.render("teammembersettings")
+app.get('/teammembersettings', async (req, res) => {
+    const teammemberid = req.session.teammemberid;
+
+    if (!teammemberid) {
+        return res.redirect('/login');  // Redirect to login if not logged in
+    }
+
+    try {
+        const user = await knex('teammembers')
+            .where({ teammemberid })
+            .first();  // Fetch the user data
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Render the EJS view and pass the user data
+        res.render('teammembersettings', { user });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Error fetching user data');
+    }
 });
 
 app.get('/teammember', (req, res) => { 
@@ -464,6 +484,28 @@ app.post('/teammember', (req, res) => {
             });
         }
     });
+});
+
+app.post('/teammembers/edit-account', async (req, res) => {
+    try {
+        const {
+            MemFirstName, MemLastName, VolUsername, MemEmail,
+            MemPhoneNumber, MemStrAddress, MemCity, MemState, MemZip,
+            // Add other fields
+        } = req.body;
+
+        // Validate inputs and update the user's details in the database
+        await User.updateOne({ _id: req.user.id }, {
+            MemFirstName, MemLastName, VolUsername, MemEmail,
+            MemPhoneNumber, MemStrAddress, MemCity, MemState, MemZip,
+            // Update other fields
+        });
+
+        res.redirect('/teammembersettings'); // Redirect to the settings page
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
   // Test database connection
   knex.raw("SELECT 1")
