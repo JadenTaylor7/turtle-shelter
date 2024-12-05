@@ -489,21 +489,36 @@ app.post('/teammember', (req, res) => {
 app.post('/teammembers/edit-account', async (req, res) => {
     try {
         const {
-            MemFirstName, MemLastName, VolUsername, MemEmail,
-            MemPhoneNumber, MemStrAddress, MemCity, MemState, MemZip,
+            memfirstname, memlastname, username, mememail,
+            memohonenumber, memstraddress, memcity, memstate, memzip,
             // Add other fields
         } = req.body;
 
-        // Validate inputs and update the user's details in the database
-        await User.updateOne({ _id: req.user.id }, {
-            MemFirstName, MemLastName, VolUsername, MemEmail,
-            MemPhoneNumber, MemStrAddress, MemCity, MemState, MemZip,
-            // Update other fields
-        });
+        const teammemberid = req.session.teammemberid;  // Assuming you're storing the user ID in the session
 
-        res.redirect('/teammembersettings'); // Redirect to the settings page
+        if (!teammemberid) {
+            return res.status(401).send('User not logged in');
+        }
+
+        // Validate inputs and update the user's details in the database using Knex
+        await knex('teammembers')  // Replace with the correct table name
+            .where({ teammemberid })  // Use the correct user ID column
+            .update({
+                memfirstname: memfirstname,
+                memlastname: memlastname,
+                username: username,
+                mememail: mememail,
+                memohonenumber: memohonenumber,
+                memstraddress: memstraddress,
+                memcity: memcity,
+                memstate: memstate,
+                memzip: memzip,
+                // Update other fields if necessary
+            });
+
+        res.redirect('/teammembersettings');  // Redirect to the settings page
     } catch (err) {
-        console.error(err);
+        console.error('Error updating user details:', err);
         res.status(500).send('Server Error');
     }
 });
