@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>User Settings</title>
+</head>
+<body class="usersettings-page maintain-tm-teammembers-page">
+    <section class="hero">
+    </section>
+    <section class="maintain-tm-hero">
+        <h1 class="maintain-tm-page-title">Team Members</h1>
+        <table class="maintain-tm-team-members-table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Sewing Level</th>
+                    <th>Skills</th>
+                    <th>Teach</th>
+                    <th>Lead</th>
+                    <th>Monthly Hours</th>
+                    <th>Location</th>
+                    <th>Referral Type</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% teamMembers.forEach(function(member) { %>
+                    <tr>
+                        <td><%= member.memfirstname %></td>
+                        <td><%= member.memlastname %></td>
+                        <td><%= member.username %></td>
+                        <td><%= member.mememail %></td>
+                        <td><%= member.memphone %></td>
+                        <td>
+                            <%= member.memstraddress %>, 
+                            <%= member.memcity %>, 
+                            <%= member.memstate %>, 
+                            <%= member.memzip %>
+                        </td>
+                        <td><%= member.memsewinglevel %></td>
+                        <td><%= member.memskills %></td>
+                        <td><%= member.can_teach %></td>
+                        <td><%= member.event_lead %></td>
+                        <td><%= member.memhoursmonthly %></td>
+                        <td><%= member.memvolunteerlocation.join(', ') %></td>
+                        <td><%= member.referral_type %></td>
+                        <td><%= member.role %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>

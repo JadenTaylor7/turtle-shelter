@@ -555,3 +555,52 @@ input[type="checkbox"]:checked {
 .settings-section.active {
     display: block; /* Show the active section */
 }
+
+/* General page styles */
+.maintain-tm-teammembers-page {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .maintain-tm-hero {
+    margin: 20px;
+    text-align: center;
+  }
+  
+  .maintain-tm-page-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styling */
+  .maintain-tm-team-members-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    background-color: #fff;
+  }
+  
+  .maintain-tm-team-members-table th, .maintain-tm-team-members-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .maintain-tm-team-members-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .maintain-tm-team-members-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Address formatting */
+  .maintain-tm-team-members-table td {
+    word-wrap: break-word;
+    max-width: 200px;
+  }
