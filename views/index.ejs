@@ -3,23 +3,151 @@
 <%- include('partials/navbar') %>
 <body class="index-page">
     <section class="hero">
-        <div class="hero-content">
-            <h1>Helping to save lives of people experiencing homelessness</h1>
-            <h3>*Starts with you*</h3>
-            <a href="#about" class="hero-btn">Learn more</a>
+        <div class="hero-content" style="position: relative; top: 30px;"> <!-- Adjusted for spacing -->
+            <h1 style="font-size: 30px; font-family: 'Georgia', serif; font-size: 24px; font-style: italic; position: relative; top: 20px;">Helping to save lives of people experiencing homelessness</h1>
+            <h3 style="font-family: Arial, Helvetica, sans-serif; font-size: 70px; font-weight: bold; text-transform: uppercase; color: white;"><b>STARTS WITH YOU</b></h3>
+            <!-- Button container -->
+            <div class="button-group" style="position: relative; top: -30px;"> <!-- Moved buttons up -->
+                <!-- Learn More Button -->
+                <a href="/jen" class="hero-btn learn-more-btn">Learn more</a>
+                <!-- Donate Now Button -->
+                <a href="https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0" target="_blank" class="hero-btn donate-btn">Donate Now</a>
+            </div>
         </div>
     </section>
 
+    <style>
+        /* General layout for About Section */
+        .about-container {
+            display: flex;
+            flex-direction: row; /* Arrange items horizontally */
+            align-items: flex-start; /* Align items to the top */
+            gap: 40px; /* Add spacing between image and text */
+        }
+
+        .about-item {
+            display: flex;
+            flex-direction: column; /* Stack images vertically */
+            align-items: center; /* Center images horizontally */
+        }
+
+        /* Styling for Images */
+        .about-item img {
+            max-width: 100%; /* Ensure images are responsive */
+            width: 400px; /* Increase image size */
+            margin-bottom: 20px; /* Add spacing between images */
+        }
+
+        /* Styling for Text Content */
+        .about-text {
+            max-width: 700px; /* Limit width of text area */
+            margin-left: 50px; /* Move text further to the right */
+        }
+
+        .about-text h2 {
+            position: relative;
+            top: 15px; /* Shift down "Our Mission" h2 tag by 15px */
+        }
+
+        .about-text p:first-of-type {
+            position: relative;
+            top: 13px; /* Shift down the first paragraph by 13px */
+        }
+
+        /* Button Group Styling */
+        .button-group {
+            display: flex;
+            gap: 10px; /* Spacing between buttons */
+            justify-content: center; /* Center the buttons */
+        }
+
+        /* Learn More Button Styling */
+        .learn-more-btn {
+            background-color: #4a90e2; /* Softer blue */
+            color: black; /* Default black text */
+            padding: 10px 20px; /* Padding for better size */
+            text-decoration: none; /* Remove underline */
+            border-radius: 5px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+            border: none; /* No border initially */
+        }
+
+        /* Learn More Button Hover Effect */
+        .learn-more-btn:hover {
+            background-color: #428bca; /* Slightly darker blue on hover */
+            color: white; /* Make text turn white */
+            border: 2px solid white; /* Add a white border on hover */
+        }
+
+        /* Donate Button Styling */
+        .donate-btn {
+            background-color: #f9dc5c; /* Softer yellow */
+            color: black; /* Black text for contrast */
+            padding: 10px 20px; /* Padding for better size */
+            text-decoration: none; /* Remove underline */
+            border-radius: 5px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+            border: 2px solid black; /* Add a black border for emphasis */
+        }
+
+        /* Donate Button Hover Effect */
+        .donate-btn:hover {
+            background-color: #f7c846; /* Slightly darker yellow on hover */
+            color: white; /* White text on hover */
+            border-color: white; /* Change border color on hover */
+        }
+    </style>
+
     <section id="about" class="about-section">
         <div class="about-container">
+            <!-- Image Section -->
             <div class="about-item">
-                <img src="/home.jpeg" alt="Turtle Shelter Project Mission">
-                <div class="about-text">
-                    <h2>Our Mission</h2>
-                    <p>Explanation of the Turtle Shelter Project's mission and goals goes here. This section provides context about what the organization does and why it matters.</p>
-                </div>
+                <img src="/vest.png" alt="Turtle Shelter Project Mission">
+                <img src="/vest2.png" alt="Turtle Shelter Project Mission">
             </div>
-            <!-- Add more about items as needed -->
+            <!-- Text Section -->
+            <div class="about-text">
+                <h2>Our Mission</h2>
+                <p>Warming lives, one vest at a time. The Turtle Shelter Project is devoted to spreading
+                    warmth and preventing Hypothermia for the homeless that do not have the option to stay warm.
+                    Around 700 homeless individuals freeze to death every year, and with these highly developed vests,
+                    we will be able to bring that number down to 0. Our goal is to be present all over the world,
+                    and with the help of donations and service minded people, we will reach that goal! Every day is
+                    is a day to help others and make a difference.<br><br></p>
+                       
+                <h2><b>Our Tech</b></h2>
+                <p>Foam clothing technology was invented by outdoor survival expert Jim Phillips. He has done
+                    extensive testing using open-cell polyurethane foam as the insulation layer in jackets, hoods,
+                    pants, boots, gloves, and sleeping bags. <br><br>
+
+
+                    Jim Phillips' foam clothing is brilliant technology because of what it can do to help save a
+                    person's life in freezing temperatures. The insulation layer foam clothing provides is so
+                    effective that even if a person gets wet it will keep them warm -- BUT, wearing synthetic
+                    fabrics is an important layer to include with the foam clothing. Foam clothing can be effective
+                    while wearing cotton if the wearer stays dry, but if the wearer gets wet, the cotton will absorb
+                    and hold water and keep the wearer cold.  If a person is not wearing any cotton with the foam
+                    clothing, and they happen to get wet, they will still be able to maintain their core body temperature.
+                    The reason why this works is because the shell and lining fabrics and the foam are all synthetic
+                    and breathable - providing moisture wicking properties and allowing perspiration and other moisture
+                    to evaporate. <br><br>
+
+
+                    <b>Foam clothing dramatically reduces moisture as being a threat to a person's life in the cold!</b> <br><br>
+
+
+                    Foam clothing is marketed to emergency preparedness and extreme sports audiences because of its
+                    ability to keep you warm in winter conditions.  Being cold is one thing, but being cold and wet
+                    is miserable. Being cold, wet, and without shelter can be life threatening. <br><br>
+
+
+                    This technology is usually sold in emergency preparedness venues and super expensive.
+                    It does make sense because the technology is super valuable that the clothing should cost
+                    a lot, but we disagree:  nobody likes to be cold and people function a lot better when
+                    they are not freezing to death!  So we created a foam vest that covers the core and we
+                    called the Turtle Shelter because it acts like a shelter and harnesses the wearer's body
+                    heat even while wet and even in freezing temperatures. <br><br>
+            </div>
         </div>
     </section>
 </body>
