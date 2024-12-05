@@ -1,14 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include('partials/navbar') %>
+<%- include('partials/navbar') %>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
-    <title>User Settings</title>
+    <title>Maintain Events</title>
 </head>
 <body class="usersettings-page">
-    <section class="hero">
+    <section class="hero"></section>
+
+    <!-- Tab navigation -->
+    <div class="tab">
+        <button class="tablinks active" onclick="filterEvents('upcoming')">Upcoming Events</button>
+        <button class="tablinks" onclick="filterEvents('past')">Past Events</button>
+    </div>
+
+    <div>
+        <a href="/addevent" class="add-button">Add Event</a>
+    </div>
+
+    <!-- Upcoming Events Section -->
+    <section id="upcomingEventsSection" class="events-section">
+        <table class="events-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>Host Name</th>
+                    <th>Address</th>
+                    <th>Service Type</th>
+                    <th>Attendance</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="eventTableBody">
+                <% upcomingEvents.forEach(function(event) { %>
+                <tr>
+                    <td><%= event.eventname %></td>
+                    <td><%= moment(event.eventdate).format('YYYY-MM-DD') %></td>
+                    <td><%= event.eventstarttime %></td>
+                    <td><%= event.hostfirstname %> <%= event.hostlastname %></td>
+                    <td>
+                        <%= event.eventstraddress %>, 
+                        <%= event.eventcity %>, 
+                        <%= event.eventstate %>, 
+                        <%= event.eventzip %>
+                    </td>
+                    <td><%= event.servicetype %></td>
+                    <td><%= event.attendance %></td>
+                    <td><a href="/editevent/<%= event.hostid %>" class="edit-button">Edit</a></td>
+                    <td>
+                        <form action="/deleteevent/<%= event.hostid %>" method="POST" class="delete-form">
+                            <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this event?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
     </section>
+
+    <!-- Past Events Section -->
+    <section id="pastEventsSection" class="events-section" style="display: none;">
+        <table class="events-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>Host Name</th>
+                    <th>Address</th>
+                    <th>Service Type</th>
+                    <th>Attendance</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="eventTableBody">
+                <% pastEvents.forEach(function(event) { %>
+                <tr>
+                    <td><%= event.eventname %></td>
+                    <td><%= moment(event.eventdate).format('YYYY-MM-DD') %></td>
+                    <td><%= event.eventstarttime %></td>
+                    <td><%= event.hostfirstname %> <%= event.hostlastname %></td>
+                    <td>
+                        <%= event.eventstraddress %>, 
+                        <%= event.eventcity %>, 
+                        <%= event.eventstate %>, 
+                        <%= event.eventzip %>
+                    </td>
+                    <td><%= event.servicetype %></td>
+                    <td><%= event.attendance %></td>
+                    <td><a href="/editevent/<%= event.hostid %>" class="edit-button">Edit</a></td>
+                    <td>
+                        <form action="/deleteevent/<%= event.hostid %>" method="POST" class="delete-form">
+                            <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this event?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function filterEvents(category) {
+            const upcomingSection = document.getElementById('upcomingEventsSection');
+            const pastSection = document.getElementById('pastEventsSection');
+
+            if (category === 'upcoming') {
+                upcomingSection.style.display = 'block';
+                pastSection.style.display = 'none';
+            } else if (category === 'past') {
+                upcomingSection.style.display = 'none';
+                pastSection.style.display = 'block';
+            }
+
+            // Update tab button styles
+            const tabButtons = document.querySelectorAll('.tablinks');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.tablinks[onclick="filterEvents('${category}')"]`).classList.add('active');
+        }
+
+        // Default to "Upcoming Events" on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            filterEvents('upcoming');
+        });
+    </script>
 </body>
 </html>

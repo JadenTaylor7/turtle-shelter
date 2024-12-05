@@ -21,15 +21,69 @@
                 <div class="dropdown">
                     <button class="dropbtn">How you can help</button>
                     <div class="dropdown-content">
-                        <a href="/teammember">Become a Team Member!</a>
-                        <a href="/difference">You can make a difference</a>
+                        <a href="/volunteer">Volunteer at an event</a>
+                        <a href="/teammember">Become a Team Member</a>
                         <a href="/partner">Become a partner or sponsor</a>
-                        <a href="/volunteer">Participate in an event</a>
                         <a href="/hostEvent">Host your own event</a>
-                        <a href="/accomplishments">What has been accomplished</a>
+                        <!-- <a href="/accomplishments">What has been accomplished</a> -->
                     </div>
                 </div>
-
+                
+                <style>
+                    /* Dropdown container */
+                    .dropdown {
+                        position: relative;
+                        display: inline-block;
+                    }
+                
+                    /* Dropdown button styling */
+                    .dropbtn {
+                        background-color: transparent; /* Transparent background for navbar aesthetics */
+                        color: black; /* Neutral black text */
+                        padding: 10px 20px; /* Spacing inside the button */
+                        font-size: 16px; /* Button text size */
+                        border: none; /* No border */
+                        cursor: pointer; /* Pointer cursor on hover */
+                    }
+                
+                    /* Dropdown button hover effect */
+                    .dropbtn:hover {
+                        color: #007BFF; /* Subtle blue text on hover */
+                    }
+                
+                    /* Dropdown content styling */
+                    .dropdown-content {
+                        display: none; /* Hidden by default */
+                        position: absolute; /* Positioned relative to the button */
+                        background-color: #333; /* Dark gray background */
+                        min-width: 200px; /* Minimum width for the dropdown */
+                        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+                        z-index: 1; /* Ensure dropdown appears on top */
+                        border-radius: 5px; /* Rounded corners for dropdown */
+                        overflow: hidden; /* Prevent overflow for long content */
+                    }
+                
+                    /* Show dropdown content on hover */
+                    .dropdown:hover .dropdown-content {
+                        display: block; /* Show dropdown */
+                    }
+                
+                    /* Styling for dropdown links */
+                    .dropdown-content a {
+                        color: white; /* White text for dropdown items */
+                        padding: 10px 15px; /* Spacing for links */
+                        text-decoration: none; /* Remove underline */
+                        display: block; /* Block layout for each link */
+                        white-space: nowrap; /* Prevent text wrapping */
+                    }
+                
+                    /* Hover effect for dropdown links */
+                    .dropdown-content a:hover {
+                        background-color: #444; /* Slightly lighter gray on hover */
+                    }
+                </style>
+                
+                
                 <a href="/login" class="nav-link" <% if (session && session.teammemberid) { %> style="display: none;" <% } %>>Login</a>
                 
                 <% if (session && session.teammemberid && session.role === 'admin') { %>

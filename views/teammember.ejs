@@ -6,7 +6,11 @@
     <!-- Hero Section -->
     <section class="hero" style="background-color: #f4f4f4; padding: 40px 0; text-align: center;">
         <h1>Become a Team Member!</h1>
-        <h3 style="width: 50%; margin: 0 auto;">Volunteering at an event with Turtle Shelter provides a meaningful opportunity to make a difference in the lives of those in need. Whether it’s assisting at a sewing event, participating in an educational gathering, or contributing in another way, Turtle Shelter ensures that every volunteer is supported and empowered to help make the event a success.</h3>
+        <h3 style="width: 50%; margin: 0 auto;">Becoming a member of the Turtle Shelter Project means that 
+            you are willing to devote your time and energy to serving those in need. Whether it’s assisting
+            at a sewing event, participating in an educational gathering, or contributing in any other way, 
+            you will be a leader and guide to the other participants. Being a Team Member means becoming 
+            part of the Turtle Shelter family!  </h3>
     </section>
 
     <!-- Event Form Section -->
@@ -142,52 +146,67 @@
                 <div class="form-group">
                     <label for="MemVolunteerLocation">What areas of Utah are you willing to volunteer in?</label>
                     <div id="MemVolunteerLocation">
-                        <div>
-                            <input type="checkbox" id="Provo" name="MemVolunteerLocation[]" value="Provo">
+                        <div class="checkbox-group">
                             <label for="Provo">Provo</label>
+                            <input type="checkbox" id="Provo" name="MemVolunteerLocation[]" value="Provo">
                         </div>
-                        <div>
-                            <input type="checkbox" id="AmericanFork" name="MemVolunteerLocation[]" value="American Fork">
+                        <div class="checkbox-group">
                             <label for="AmericanFork">American Fork</label>
+                            <input type="checkbox" id="AmericanFork" name="MemVolunteerLocation[]" value="American Fork">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Riverton" name="MemVolunteerLocation[]" value="Riverton">
+                        <div class="checkbox-group">
                             <label for="Riverton">Riverton</label>
+                            <input type="checkbox" id="Riverton" name="MemVolunteerLocation[]" value="Riverton">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Sandy" name="MemVolunteerLocation[]" value="Sandy">
+                        <div class="checkbox-group">
                             <label for="Sandy">Sandy</label>
+                            <input type="checkbox" id="Sandy" name="MemVolunteerLocation[]" value="Sandy">
                         </div>
-                        <div>
-                            <input type="checkbox" id="SaltLakeCity" name="MemVolunteerLocation[]" value="Salt Lake City">
+                        <div class="checkbox-group">
                             <label for="SaltLakeCity">Salt Lake City</label>
+                            <input type="checkbox" id="SaltLakeCity" name="MemVolunteerLocation[]" value="Salt Lake City">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Bountiful" name="MemVolunteerLocation[]" value="Bountiful">
+                        <div class="checkbox-group">
                             <label for="Bountiful">Bountiful</label>
+                            <input type="checkbox" id="Bountiful" name="MemVolunteerLocation[]" value="Bountiful">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Farmington" name="MemVolunteerLocation[]" value="Farmington">
+                        <div class="checkbox-group">
                             <label for="Farmington">Farmington</label>
+                            <input type="checkbox" id="Farmington" name="MemVolunteerLocation[]" value="Farmington">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Layton" name="MemVolunteerLocation[]" value="Layton">
+                        <div class="checkbox-group">
                             <label for="Layton">Layton</label>
+                            <input type="checkbox" id="Layton" name="MemVolunteerLocation[]" value="Layton">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Ogden" name="MemVolunteerLocation[]" value="Ogden">
+                        <div class="checkbox-group">
                             <label for="Ogden">Ogden</label>
+                            <input type="checkbox" id="Ogden" name="MemVolunteerLocation[]" value="Ogden">
                         </div>
-                        <div>
-                            <input type="checkbox" id="BrighamCity" name="MemVolunteerLocation[]" value="Brigham City">
+                        <div class="checkbox-group">
                             <label for="BrighamCity">Brigham City</label>
+                            <input type="checkbox" id="BrighamCity" name="MemVolunteerLocation[]" value="Brigham City">
                         </div>
-                        <div>
-                            <input type="checkbox" id="Logan" name="MemVolunteerLocation[]" value="Logan">
+                        <div class="checkbox-group">
                             <label for="Logan">Logan</label>
+                            <input type="checkbox" id="Logan" name="MemVolunteerLocation[]" value="Logan">
                         </div>
                     </div>
                 </div>
+
+                <style>
+                    .checkbox-group {
+                        display: flex;
+                        align-items: center; /* Align label and checkbox vertically */
+                        justify-content: space-between; /* Add spacing between label and checkbox */
+                        margin-bottom: 10px; /* Add spacing between rows */
+                        max-width: 300px; /* Optional: control the width of each group */
+                    }
+
+                    label {
+                        margin-right: 10px; /* Add spacing between label and checkbox */
+                    }
+                </style>
+
     
                 <!-- Referral Type (How did you hear about the opportunity?) -->
                 <div class="form-group">
@@ -205,10 +224,32 @@
                     </select>
                 </div>
     
-                <!-- Submit Button -->
-                <div class="form-group">
-                    <button type="submit">Submit</button>
-                </div>
+               <!-- Submit Button -->
+<div class="form-group">
+    <button type="submit" class="register-button">Register</button>
+</div>
+
+<style>
+    /* Style for the Register Button */
+    .register-button {
+        padding: 12px 24px; /* Add padding to make the button larger */
+        font-size: 18px; /* Increase font size for readability */
+        background-color: #007BFF; /* Blue background */
+        color: white; /* White text for contrast */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        transition: background-color 0.3s ease; /* Smooth hover transition */
+        display: block; /* Ensure the button behaves as a block element */
+        margin: 20px auto; /* Horizontally center the button and add top/bottom spacing */
+    }
+
+    /* Hover Effect */
+    .register-button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+</style>
+
             </form>
         </div>
     </section>

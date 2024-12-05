@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/navbar') %>
+<body class="usersettings-page">
+
+    <!-- Hero Section -->
+    <section class="hero" style="background-color: #f4f4f4; padding: 40px 0; text-align: center;">
+        <h1>Edit Volunteer Details</h1>
+        <h3 style="width: 50%; margin: 0 auto;">
+            Update the details of your volunteer below. Make any necessary changes and submit to save.
+        </h3>
+    </section>
+
+    <!-- Volunteer Form Section -->
+    <section class="form-section" style="padding: 40px 0;">
+        <div class="form-container" style="max-width: 900px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2>Volunteer Details</h2>
+            <form action="/editvolunteer/<%= volunteer.volunteerid %>" method="POST">
+
+                <div class="form-group">
+                    <label for="VolFirstName">First Name:</label>
+                    <input type="text" id="VolFirstName" name="VolFirstName" value="<%= volunteer.volfirstname %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="VolLastName">Last Name:</label>
+                    <input type="text" id="VolLastName" name="VolLastName" value="<%= volunteer.vollastname %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="VolEmail">E-Mail:</label>
+                    <input type="email" id="VolEmail" name="VolEmail" value="<%= volunteer.volemail %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Sewing Level</label>
+                    <div class="radio-option">
+                        <input type="radio" id="none" name="SewingLevel" value="none" <%= volunteer.sewinglevel === 'none' ? 'checked' : '' %>>
+                        <label for="none">none</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="beginner" name="SewingLevel" value="beginner" <%= volunteer.sewinglevel === 'beginner' ? 'checked' : '' %>>
+                        <label for="beginner">beginner</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="intermediate" name="SewingLevel" value="intermediate" <%= volunteer.sewinglevel === 'intermediate' ? 'checked' : '' %>>
+                        <label for="intermediate">intermediate</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="experienced" name="SewingLevel" value="experienced" <%= volunteer.sewinglevel === 'experienced' ? 'checked' : '' %>>
+                        <label for="experienced">experienced</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ReferralType">How did you hear about the opportunity?</label>
+                    <select id="ReferralType" name="ReferralType" required>
+                        <option value="Work" <%= volunteer.referraltype === 'Work' ? 'selected' : '' %>>Work</option>
+                        <option value="Turtle Shell Volunteer" <%= volunteer.referraltype === 'Turtle Shell Volunteer' ? 'selected' : '' %>>Turtle Shell Volunteer</option>
+                        <option value="Search Engine" <%= volunteer.referraltype === 'Search Engine' ? 'selected' : '' %>>Search Engine</option>
+                        <option value="Social Media" <%= volunteer.referraltype === 'Social Media' ? 'selected' : '' %>>Social Media</option>
+                        <option value="Friend/Family" <%= volunteer.referraltype === 'Friend/Family' ? 'selected' : '' %>>Friend/Family</option>
+                        <option value="Blog/Article" <%= volunteer.referraltype === 'Blog/Article' ? 'selected' : '' %>>Blog/Article</option>
+                        <option value="News/Media" <%= volunteer.referraltype === 'News/Media' ? 'selected' : '' %>>News/Media</option>
+                        <option value="Event/Conference" <%= volunteer.referraltype === 'Event/Conference' ? 'selected' : '' %>>Event/Conference</option>
+                        <option value="Other" <%= volunteer.referraltype === 'Other' ? 'selected' : '' %>>Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </section>
+
+</body>
+</html>
