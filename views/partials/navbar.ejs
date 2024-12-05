@@ -30,14 +30,18 @@
                     </div>
                 </div>
                 
-                <a href="/login" class="nav-link" <% if (session && session.userId) { %> style="display: none;" <% } %>>Login</a>
+                <a href="/login" class="nav-link" <% if (session && session.teammemberid) { %> style="display: none;" <% } %>>Login</a>
                 
-                <% if (session && session.userId && session.role === 'admin') { %>
+                <% if (session && session.teammemberid && session.role === 'admin') { %>
                     <a href="/requested-events" class="nav-link">Requested Events</a>
                 <% } %>
 
-                <% if (session && session.userId) { %>
-                    <a href="/usersettings" class="nav-link">Settings</a>
+                <% if (session && session.teammemberid) { %>
+                    <a href="/teammembersettings" class="nav-link">Settings</a>
+                <% } %>
+
+                <% if (session && session.teammemberid) { %>
+                    <a href="/logout" class="nav-link">Logout</a>
                 <% } %>
             </div>
         </div>

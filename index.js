@@ -42,9 +42,10 @@ const knex = require("knex") ({
     connection : {
         host : "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
         user : "postgres",
-        password : "ChooseTheR1ght!", //ChooseTheR1ght! for website
-        database : "turtleshelter",
-        port : 5432
+        password : "postgres", //ChooseTheRight! for website
+        database : "turtleshelterdb",
+        port : 5432,
+        ssl: { rejectUnauthorized: false }
     }
 })
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
@@ -106,8 +107,28 @@ app.get('/hostEvent', (req, res) => {
     res.render("hostEvent")
 });
 
-app.get('/usersettings', (req, res) => { 
-    res.render("usersettings")
+app.get('/teammembersettings', async (req, res) => {
+    const teammemberid = req.session.teammemberid;
+
+    if (!teammemberid) {
+        return res.redirect('/login');  // Redirect to login if not logged in
+    }
+
+    try {
+        const user = await knex('teammembers')
+            .where({ teammemberid })
+            .first();  // Fetch the user data
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Render the EJS view and pass the user data
+        res.render('teammembersettings', { user });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Error fetching user data');
+    }
 });
 
 app.get('/teammember', (req, res) => { 
@@ -138,6 +159,18 @@ app.get('/accomplishments', (req, res) => {
     res.render("accomplishments")
 });
 
+app.get('/logout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error logging out:', err);
+            return res.status(500).send('Unable to log out');
+        }
+        // Redirect to the homepage or login page after logout
+        res.redirect('/');
+    });
+});
+
 app.post('/hostEvent', (req, res) => {
     const HostFirstName = req.body.HostFirstName; // Default to empty string if not provided
   const HostLastName = req.body.HostLastName; // Convert to integer
@@ -155,6 +188,8 @@ app.post('/hostEvent', (req, res) => {
   const EventName = req.body.EventName;
   const HostPhone = req.body.HostPhone;
   const JenShareStory = req.body.JenShareStory;
+  const ApproveEvent = false;
+  const CreateDat = new Date();
 
   knex('hosts')
   .insert({
@@ -174,6 +209,8 @@ app.post('/hostEvent', (req, res) => {
     eventname: EventName,
     hostphone: HostPhone,
     jensharestory: JenShareStory,
+    approveevent: ApproveEvent,
+    createdat: CreateDat,
   })
   .then(() => {
       res.redirect('/'); // Redirect to the Pokémon list page after adding
@@ -193,7 +230,7 @@ app.post('/volunteer', async (req, res) => {
         const VolEmail = req.body.VolEmail || ''; // Default to empty string if not provided
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
-        const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly || 0; // Default to 0 if not provided
+        const CreateDat = new Date();
 
         // Extract ParticipateEvent as an array; ensure it is always an array for consistency
         const participateEvents = Array.isArray(req.body.ParticipateEvent)
@@ -210,7 +247,7 @@ app.post('/volunteer', async (req, res) => {
                 volemail: VolEmail,
                 sewinglevel: SewingLevel,
                 referraltype: ReferralType,
-                volunteerhoursmonthly: VolunteerHoursMonthly,
+                createdat: CreateDat
             })
             .returning('*'); // This returns the inserted volunteer data
 
@@ -234,7 +271,7 @@ app.post('/volunteer', async (req, res) => {
     }
 });
 
-app.post('/users/register', async (req, res) => {
+app.post('/teammembers/register', async (req, res) => {
     const { username, password, adminkey } = req.body;
 
     if (!username || !password) {
@@ -249,15 +286,15 @@ app.post('/users/register', async (req, res) => {
         const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer'; // Replace 'correct-admin-key' with your actual key
 
         // Insert the user into the database
-        const [userId] = await knex('users')
+        const [teammemberid] = await knex('teammembers')
             .insert({
                 username: username,
                 password: hashedPassword,
                 role: role, // Set the role based on the provided admin key
             })
-            .returning('userid'); // Returning the ID of the new user
+            .returning('teammemberid'); // Returning the ID of the new user
 
-        console.log(`New user created with ID: ${userId} and role: ${role}`);
+        console.log(`New user created with ID: ${teammemberid} and role: ${role}`);
 
         // Redirect to login page after successful registration
         res.redirect('/');
@@ -273,12 +310,12 @@ app.post('/users/register', async (req, res) => {
     }
 });
 
-app.post('/users/login', async (req, res) => {
+app.post('/teammembers/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
         // Find the user by username in the database
-        const user = await knex('users')
+        const user = await knex('teammembers')
             .where({ username: username })
             .first(); // Retrieve the first matching row
 
@@ -291,10 +328,10 @@ app.post('/users/login', async (req, res) => {
 
         if (isMatch) {
             // If the passwords match, store the user ID and role in the session
-            req.session.userId = user.userid; // Assuming 'id' is the user's primary key
+            req.session.teammemberid = user.teammemberid; // Assuming 'id' is the user's primary key
             req.session.role = user.role; // Store the role in the session
 
-            console.log(`User logged in: ID = ${user.userid}, Role = ${user.role}`);
+            console.log(`User logged in: ID = ${user.teammemberid}, Role = ${user.role}`);
 
             // Redirect to the home page after login
             return res.redirect('/');
@@ -328,7 +365,7 @@ app.post('/requested-events', async (req, res) => {
     }
 });
 
-app.post('/users/change-password', async (req, res) => {
+app.post('/teammembers/change-password', async (req, res) => {
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -341,14 +378,14 @@ app.post('/users/change-password', async (req, res) => {
 
     try {
         // Get the current user from the session
-        const userId = req.session.userId;
+        const teammemberid = req.session.teammemberid;
 
-        if (!userId) {
+        if (!teammemberid) {
             return res.status(401).send('Unauthorized');
         }
 
         // Fetch the user from the database
-        const user = await knex('users').where({ userid: userId }).first();
+        const user = await knex('teammembers').where({ teammemberid: teammemberid }).first();
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -365,7 +402,7 @@ app.post('/users/change-password', async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update the password in the database
-        await knex('users').where({ userid: userId }).update({
+        await knex('teammembers').where({ teammemberid: teammemberid }).update({
             password: hashedPassword,
         });
 
@@ -378,54 +415,192 @@ app.post('/users/change-password', async (req, res) => {
 });
 
 app.post('/teammember', (req, res) => {
-    const VolFirstName = req.body.VolFirstName;
-    const VolLastName = req.body.VolLastName;
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
     const VolUsername = req.body.VolUsername;
     const VolPassword = req.body.VolPassword;
-    const VolEmail = req.body.VolEmail;
-    const VolPhoneNumber = req.body.VolPhoneNumber;
-    const VolStreetAddress = req.body.VolStreetAddress;
-    const VolCity = req.body.VolCity;
-    const VolState = req.body.VolState;
-    const VolZip = req.body.VolZip;
-    const Skills = req.body.Skills; // This will be an array of checked values
-    const SewingLevel = req.body.SewingLevel;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
     const CanTeach = req.body.CanTeach;
     const TakeLead = req.body.TakeLead;
-    const VolunteerHoursMonthly = req.body.VolunteerHoursMonthly;
-    const VolAreas = req.body.VolAreas; // This will be an array of selected areas
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
     const ReferralType = req.body.ReferralType;
-    const adminkey = req.body.adminkey;
-    const role = adminkey === 'JensAdminKey' ? 'admin' : 'volunteer';
+    const role = 'volunteer';
 
-    knex('users')
-    .insert({
-        first_name: VolFirstName,
-        last_name: VolLastName,
-        username: VolUsername,
-        password: VolPassword,  // Consider hashing the password before saving
-        email: VolEmail,
-        phone_number: VolPhoneNumber,
-        street_address: VolStreetAddress,
-        city: VolCity,
-        state: VolState,
-        zip_code: VolZip,
-        skills: JSON.stringify(Skills), // Save skills as a JSON string
-        sewing_level: SewingLevel,
-        can_teach: CanTeach,
-        event_lead: TakeLead,
-        volunteer_hours_monthly: VolunteerHoursMonthly,
-        areas_willing_to_volunteer: JSON.stringify(VolAreas), // Save selected areas as a JSON string
-        referral_type: ReferralType,
-        role: role,
-    })
-    .then(() => {
-        res.redirect('/'); // Redirect to a thank you or confirmation page after submission
-    })
-    .catch(error => {
-        console.error('Error adding Volunteer:', error);
-        res.status(500).send('Internal Server Error');
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: VolUsername,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: JSON.stringify(MemSkills), // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role,
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Volunteer:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
     });
 });
 
-app.listen(port, () => console.log(`Node.js is listening`));
+app.post('/teammembers/edit-account', async (req, res) => {
+    try {
+        const {
+            memfirstname, memlastname, username, mememail,
+            memohonenumber, memstraddress, memcity, memstate, memzip,
+            // Add other fields
+        } = req.body;
+
+        const teammemberid = req.session.teammemberid;  // Assuming you're storing the user ID in the session
+
+        if (!teammemberid) {
+            return res.status(401).send('User not logged in');
+        }
+
+        // Validate inputs and update the user's details in the database using Knex
+        await knex('teammembers')  // Replace with the correct table name
+            .where({ teammemberid })  // Use the correct user ID column
+            .update({
+                memfirstname: memfirstname,
+                memlastname: memlastname,
+                username: username,
+                mememail: mememail,
+                memohonenumber: memohonenumber,
+                memstraddress: memstraddress,
+                memcity: memcity,
+                memstate: memstate,
+                memzip: memzip,
+                // Update other fields if necessary
+            });
+
+        res.redirect('/teammembersettings');  // Redirect to the settings page
+    } catch (err) {
+        console.error('Error updating user details:', err);
+        res.status(500).send('Server Error');
+    }
+});
+
+app.post('/teammembers/add-admin', (req, res) => {
+    const MemFirstName = req.body.MemFirstName;
+    const MemLastName = req.body.MemLastName;
+    const username = req.body.username;
+    const VolPassword = req.body.VolPassword;
+    const MemEmail = req.body.MemEmail;
+    const MemPhoneNumber = req.body.MemPhoneNumber;
+    const MemStrAddress = req.body.MemStrAddress;
+    const MemCity = req.body.MemCity;
+    const MemState = req.body.MemState;
+    const MemZip = req.body.MemZip;
+    const MemSkills = req.body.MemSkills; // This will be an array of checked values
+    const MemSewingLevel = req.body.MemSewingLevel;
+    const CanTeach = req.body.CanTeach;
+    const TakeLead = req.body.TakeLead;
+    const MemHoursMonthly = req.body.MemHoursMonthly;
+    const MemVolunteerLocation = req.body.MemVolunteerLocation; // This will be an array of selected areas
+    const ReferralType = req.body.ReferralType;
+    const role = 'admin'; // Set the role to admin
+
+    // Hash the password using bcrypt
+    bcrypt.hash(VolPassword, 10, (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing password:', err);
+            return res.status(500).send({
+                message: 'Internal Server Error',
+                error: err.message || err
+            });
+        }
+
+        try {
+            knex('teammembers')
+                .insert({
+                    memfirstname: MemFirstName,
+                    memlastname: MemLastName,
+                    username: username,
+                    password: hashedPassword, // Save the hashed password
+                    mememail: MemEmail,
+                    memphone: MemPhoneNumber,
+                    memstraddress: MemStrAddress,
+                    memcity: MemCity,
+                    memstate: MemState,
+                    memzip: MemZip,
+                    memskills: JSON.stringify(MemSkills), // Save skills as a JSON string
+                    memsewinglevel: MemSewingLevel,
+                    can_teach: CanTeach,
+                    event_lead: TakeLead,
+                    memhoursmonthly: MemHoursMonthly,
+                    memvolunteerlocation: JSON.stringify(MemVolunteerLocation), // Save selected areas as a JSON string
+                    referral_type: ReferralType,
+                    role: role, // Admin role here
+                })
+                .then(() => {
+                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                })
+                .catch((error) => {
+                    console.error('Error adding Admin:', error);
+                    res.status(500).send({
+                        message: 'Internal Server Error',
+                        error: error.message || error
+                    });
+                });
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send({
+                message: 'Internal Server Error',
+                error: error.message || error
+            });
+        }
+    });
+});
+  // Test database connection
+  knex.raw("SELECT 1")
+    .then(() => {
+      console.log("Connected to the database successfully!");
+      app.listen(port, () => console.log(`Node.js is listening on port ${port}`));
+    })
+    .catch((err) => {
+      console.error("Failed to connect to the database:", err.message);
+      process.exit(1); // Exit the process with an error code
+    });

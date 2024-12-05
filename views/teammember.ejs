@@ -17,14 +17,14 @@
     
                 <!-- First Name -->
                 <div class="form-group">
-                    <label for="VolFirstName">First Name:</label>
-                    <input type="text" id="VolFirstName" name="VolFirstName" required>
+                    <label for="MemFirstName">First Name:</label>
+                    <input type="text" id="MemFirstName" name="MemFirstName" required>
                 </div>
     
                 <!-- Last Name -->
                 <div class="form-group">
-                    <label for="VolLastName">Last Name:</label>
-                    <input type="text" id="VolLastName" name="VolLastName" required>
+                    <label for="MemLastName">Last Name:</label>
+                    <input type="text" id="MemLastName" name="MemLastName" required>
                 </div>
     
                 <!-- Username -->
@@ -41,65 +41,65 @@
     
                 <!-- E-Mail -->
                 <div class="form-group">
-                    <label for="VolEmail">E-Mail:</label>
-                    <input type="email" id="VolEmail" name="VolEmail" required>
+                    <label for="MemEmail">E-Mail:</label>
+                    <input type="email" id="MemEmail" name="MemEmail" required>
                 </div>
     
                 <!-- Phone Number -->
                 <div class="form-group">
-                    <label for="VolPhoneNumber">Phone Number:</label>
-                    <input type="tel" id="VolPhoneNumber" name="VolPhoneNumber" required>
+                    <label for="MemPhoneNumber">Phone Number:</label>
+                    <input type="tel" id="MemPhoneNumber" name="MemPhoneNumber" required>
                 </div>
     
                 <!-- Street Address -->
                 <div class="form-group">
-                    <label for="VolStreetAddress">Street Address:</label>
-                    <input type="text" id="VolStreetAddress" name="VolStreetAddress" required>
+                    <label for="MemStrAddress">Street Address:</label>
+                    <input type="text" id="MemStrAddress" name="MemStrAddress" required>
                 </div>
     
                 <!-- City -->
                 <div class="form-group">
-                    <label for="VolCity">City:</label>
-                    <input type="text" id="VolCity" name="VolCity" required>
+                    <label for="MemCity">City:</label>
+                    <input type="text" id="MemCity" name="MemCity" required>
                 </div>
     
                 <!-- State -->
                 <div class="form-group">
-                    <label for="VolState">State:</label>
-                    <input type="text" id="VolState" name="VolState" required>
+                    <label for="MemState">State:</label>
+                    <input type="text" id="MemState" name="MemState" required>
                 </div>
     
                 <!-- ZIP Code -->
                 <div class="form-group">
-                    <label for="VolZip">ZIP Code:</label>
-                    <input type="text" id="VolZip" name="VolZip" required>
+                    <label for="MemZip">ZIP Code:</label>
+                    <input type="text" id="MemZip" name="MemZip" required>
                 </div>
-    
-                <!-- Skills (Checkboxes) -->
-                <div class="form-group">
-                    <label for="Skills">Skills other than sewing (optional)</label>
-                    <input type="text" id="Skills" name="Skills">
-                </div>
+                
     
                 <!-- Sewing Level (Radio buttons) -->
                 <div class="form-group">
                     <label>Sewing Level:</label>
                     <div class="radio-option">
-                        <input type="radio" id="none" name="SewingLevel" value="none" required>
+                        <input type="radio" id="none" name="MemSewingLevel" value="none" required>
                         <label for="none">None</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="beginner" name="SewingLevel" value="beginner">
+                        <input type="radio" id="beginner" name="MemSewingLevel" value="beginner">
                         <label for="beginner">Beginner</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="intermediate" name="SewingLevel" value="intermediate">
+                        <input type="radio" id="intermediate" name="MemSewingLevel" value="intermediate">
                         <label for="intermediate">Intermediate</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="experienced" name="SewingLevel" value="experienced">
+                        <input type="radio" id="experienced" name="MemSewingLevel" value="experienced">
                         <label for="experienced">Experienced</label>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="MemSkills">Skills other than sewing (optional)</label>
+                    <input type="text" id="MemSkills" name="MemSkills">
                 </div>
     
                 <!-- Can you teach others to sew? (Radio buttons) -->
@@ -134,56 +134,56 @@
     
                 <!-- Volunteer Hours per Month -->
                 <div class="form-group">
-                    <label for="VolunteerHoursMonthly">Number of hours willing to volunteer per month:</label>
-                    <input type="number" id="VolunteerHoursMonthly" name="VolunteerHoursMonthly" required>
+                    <label for="MemHoursMonthly">Number of hours willing to volunteer per month:</label>
+                    <input type="number" id="MemHoursMonthly" name="MemHoursMonthly" required>
                 </div>
     
                 <!-- Areas of Utah willing to volunteer in -->
                 <div class="form-group">
-                    <label for="VolAreas">What areas of Utah are you willing to volunteer in?</label>
-                    <div id="VolAreas">
+                    <label for="MemVolunteerLocation">What areas of Utah are you willing to volunteer in?</label>
+                    <div id="MemVolunteerLocation">
                         <div>
-                            <input type="checkbox" id="Provo" name="VolAreas[]" value="Provo">
+                            <input type="checkbox" id="Provo" name="MemVolunteerLocation[]" value="Provo">
                             <label for="Provo">Provo</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="AmericanFork" name="VolAreas[]" value="American Fork">
+                            <input type="checkbox" id="AmericanFork" name="MemVolunteerLocation[]" value="American Fork">
                             <label for="AmericanFork">American Fork</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Riverton" name="VolAreas[]" value="Riverton">
+                            <input type="checkbox" id="Riverton" name="MemVolunteerLocation[]" value="Riverton">
                             <label for="Riverton">Riverton</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Sandy" name="VolAreas[]" value="Sandy">
+                            <input type="checkbox" id="Sandy" name="MemVolunteerLocation[]" value="Sandy">
                             <label for="Sandy">Sandy</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="SaltLakeCity" name="VolAreas[]" value="Salt Lake City">
+                            <input type="checkbox" id="SaltLakeCity" name="MemVolunteerLocation[]" value="Salt Lake City">
                             <label for="SaltLakeCity">Salt Lake City</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Bountiful" name="VolAreas[]" value="Bountiful">
+                            <input type="checkbox" id="Bountiful" name="MemVolunteerLocation[]" value="Bountiful">
                             <label for="Bountiful">Bountiful</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Farmington" name="VolAreas[]" value="Farmington">
+                            <input type="checkbox" id="Farmington" name="MemVolunteerLocation[]" value="Farmington">
                             <label for="Farmington">Farmington</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Layton" name="VolAreas[]" value="Layton">
+                            <input type="checkbox" id="Layton" name="MemVolunteerLocation[]" value="Layton">
                             <label for="Layton">Layton</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Ogden" name="VolAreas[]" value="Ogden">
+                            <input type="checkbox" id="Ogden" name="MemVolunteerLocation[]" value="Ogden">
                             <label for="Ogden">Ogden</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="BrighamCity" name="VolAreas[]" value="Brigham City">
+                            <input type="checkbox" id="BrighamCity" name="MemVolunteerLocation[]" value="Brigham City">
                             <label for="BrighamCity">Brigham City</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Logan" name="VolAreas[]" value="Logan">
+                            <input type="checkbox" id="Logan" name="MemVolunteerLocation[]" value="Logan">
                             <label for="Logan">Logan</label>
                         </div>
                     </div>
@@ -203,11 +203,6 @@
                         <option value="Event/Conference">Event/Conference</option>
                         <option value="Other">Other</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="adminkey">Admin Key</label>
-                    <input type="text" id="adminkey" name="adminkey" required>
                 </div>
     
                 <!-- Submit Button -->
