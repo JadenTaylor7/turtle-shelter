@@ -67,10 +67,10 @@
                         <td><%= member.memvolunteerlocation.join(', ') %></td>
                         <td><%= member.referral_type %></td>
                         <td><%= member.role %></td>
-                        <td><a href="/editteammember/<%= member.teammemberid %>" class="maintain-tm-edit-button">Edit</a></td>
+                        <td><a href="/editteammember/<%= member.teammemberid %>" class="edit-button">Edit</a></td>
                         <td>
                             <form action="/deleteteammember/<%= member.teammemberid %>" method="POST" class="maintain-tm-delete-form">
-                                <button type="submit" class="maintain-tm-delete-button" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
+                                <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
                             </form>
                         </td>
                     </tr>
