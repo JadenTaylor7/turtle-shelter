@@ -479,63 +479,79 @@ input[type="checkbox"]:checked {
 }
 
 .settings-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-}
-
-.settings-container h2 {
-    text-align: center;
-}
-
-.settings-page {
-    display: flex;
-    width: 100%;
+    display: flex; /* Flex container for side-by-side layout */
+    height: 100vh; /* Full height of the viewport */
+    max-width: 1200px; /* Optional: Restrict the maximum width */
+    margin: 0 auto; /* Center the settings container horizontally */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for a professional touch */
+    background-color: #ffffff; /* White background for the container */
 }
 
 .settings-nav {
-    width: 20%;
-    background-color: #f4f4f4;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    width: 20%; /* Navigation takes up 20% of the width */
+    background-color: #eeeeee; /* Subtle gray background */
+    padding: 0; /* Remove extra padding */
+    border-right: 1px solid #ddd; /* Separate the nav and content */
+    display: flex;
+    flex-direction: column; /* Stack the nav items vertically */
 }
 
 .settings-nav ul {
-    list-style: none;
-    padding: 0;
+    list-style: none; /* Remove bullet points */
     margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Arrange list items vertically */
 }
 
 .settings-nav li {
-    margin-bottom: 10px;
+    margin: 0; /* No extra space between list items */
 }
 
 .settings-nav .nav-link {
     display: block;
-    padding: 10px;
-    color: #333;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: 15px 20px; /* Comfortable padding for clickable links */
+    color: #333; /* Neutral text color */
+    text-decoration: none; /* Remove underlines */
+    font-size: 16px; /* Readable font size */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.settings-nav .nav-link:hover, .settings-nav .nav-link.active {
-    background-color: #007bff;
-    color: #fff;
+.settings-nav .nav-link:hover {
+    background-color: #007bff; /* Highlighted blue background on hover */
+    color: #ffffff; /* White text for contrast */
+}
+
+.settings-nav .nav-link.active {
+    background-color: #0056b3; /* Darker blue for active state */
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .settings-content {
-    flex-grow: 1;
-    padding: 20px;
+    flex: 1; /* Allow content to take up remaining space */
+    padding: 40px; /* Comfortable spacing for content */
+    background-color: #ffffff; /* White background for contrast with gray nav */
+    overflow-y: auto; /* Handle overflow gracefully */
 }
 
+.settings-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333; /* Keep consistent text color */
+}
+
+.settings-content p {
+    font-size: 16px;
+    line-height: 1.6; /* Improve readability */
+    color: #555; /* Subtle gray for secondary text */
+}
+
+/* Sections */
 .settings-section {
-    display: none;
+    display: none; /* Hidden by default */
 }
 
 .settings-section.active {
-    display: block;
+    display: block; /* Show the active section */
 }
