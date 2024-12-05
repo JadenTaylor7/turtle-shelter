@@ -107,6 +107,44 @@ app.get('/hostEvent', (req, res) => {
     res.render("hostEvent")
 });
 
+app.get('/maintainteammembers', async (req, res) => {
+    const teammemberid = req.session.teammemberid;
+
+    // Check if the user is logged in
+    if (!teammemberid) {
+        return res.redirect('/login');  // Redirect to login if not logged in
+    }
+
+    try {
+        // Fetch all team members data from the 'teammembers' table
+        const teamMembers = await knex('teammembers').select(
+            'memfirstname', 'memlastname', 'username', 'mememail', 'memphone',
+            'memstraddress', 'memcity', 'memstate', 'memzip', 'memsewinglevel', 
+            'memskills', 'can_teach', 'event_lead', 'memhoursmonthly', 'memvolunteerlocation',
+            'referral_type', 'role'
+        );
+
+        // If no team members are found
+        if (!teamMembers || teamMembers.length === 0) {
+            return res.status(404).send('No team members found');
+        }
+
+        // Render the maintainteammembers.ejs view and pass the teamMembers data
+        res.render('maintainteammembers', { teamMembers });
+    } catch (error) {
+        console.error('Error fetching team members data:', error);
+        res.status(500).send('Error fetching team members data');
+    }
+});
+
+app.get('/maintainvolunteers', (req, res) => { 
+    res.render("maintainvolunteers")
+});
+
+app.get('/maintainevents', (req, res) => { 
+    res.render("maintainevents")
+});
+
 app.get('/teammembersettings', async (req, res) => {
     const teammemberid = req.session.teammemberid;
 
@@ -457,7 +495,7 @@ app.post('/teammember', (req, res) => {
                     memcity: MemCity,
                     memstate: MemState,
                     memzip: MemZip,
-                    memskills: JSON.stringify(MemSkills), // Save skills as a JSON string
+                    memskills: MemSkills, // Save skills as a JSON string
                     memsewinglevel: MemSewingLevel,
                     can_teach: CanTeach,
                     event_lead: TakeLead,
@@ -566,7 +604,7 @@ app.post('/teammembers/add-admin', (req, res) => {
                     memcity: MemCity,
                     memstate: MemState,
                     memzip: MemZip,
-                    memskills: JSON.stringify(MemSkills), // Save skills as a JSON string
+                    memskills: MemSkills, // Save skills as a JSON string
                     memsewinglevel: MemSewingLevel,
                     can_teach: CanTeach,
                     event_lead: TakeLead,
