@@ -64,7 +64,7 @@
                         <td><%= member.can_teach %></td>
                         <td><%= member.event_lead %></td>
                         <td><%= member.memhoursmonthly %></td>
-                        <td><%= member.memvolunteerlocation.join(', ') %></td>
+                        <td><%= (member.memvolunteerlocation || []).join(', ') %></td>
                         <td><%= member.referral_type %></td>
                         <td><%= member.role %></td>
                         <td><a href="/editteammember/<%= member.teammemberid %>" class="edit-button">Edit</a></td>
