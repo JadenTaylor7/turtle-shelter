@@ -268,42 +268,35 @@ body {
 }
 
 
-.about-section {
-    padding: 50px 5%;
-    background-color: #f4f4f4;
+
+/* styling for jen.ejs */
+.about-container{
+    margin-left: 77px;
+    margin-right: 70px;
 }
 
-.about-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.about-item {
+.about-image {
     display: flex;
-    align-items: center;
-    gap: 30px;
-    margin-bottom: 30px;
+    flex-direction: column; /* Stacks h2 and img vertically */
+    float: left; /* allows for text to be wrapped. */
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
 }
 
-.about-item img {
-    max-width: 50%;
-    height: auto;
-    border-radius: 10px;
+.about-image img {
+    border-radius: 7%;
 }
 
-.about-text {
-    flex: 1;
+.about-container p {
+    text-align: justify;
+    color: #667;
+    padding: 40px;
 }
+/* end jen.ejs styling */
 
-.about-text h2 {
-    margin-bottom: 15px;
-    color: #333;
-}
 
-.about-text p {
-    color: #666;
-    line-height: 1.6;
-}
 
 /* Form Section Styling */
 .form-section {
