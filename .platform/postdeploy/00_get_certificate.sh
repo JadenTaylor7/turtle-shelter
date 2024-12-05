@@ -13,4 +13,4 @@ for DOMAIN in "${DOMAINS[@]}"; do
 done
 
 # Run certbot with the constructed domain arguments and --expand flag
-sudo certbot -n --nginx $DOMAIN_ARGS --expand --agree-tos --email turnerklippel@gmail.com
+sudo certbot -n --nginx $DOMAIN_ARGS --expand --agree-tos --email lk273@byu.edu
