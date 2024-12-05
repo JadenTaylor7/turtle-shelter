@@ -107,8 +107,28 @@ app.get('/hostEvent', (req, res) => {
     res.render("hostEvent")
 });
 
-app.get('/teammembersettings', (req, res) => { 
-    res.render("teammembersettings")
+app.get('/teammembersettings', async (req, res) => {
+    const teammemberid = req.session.teammemberid;
+
+    if (!teammemberid) {
+        return res.redirect('/login');  // Redirect to login if not logged in
+    }
+
+    try {
+        const user = await knex('teammembers')
+            .where({ teammemberid })
+            .first();  // Fetch the user data
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Render the EJS view and pass the user data
+        res.render('teammembersettings', { user });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Error fetching user data');
+    }
 });
 
 app.get('/teammember', (req, res) => { 
@@ -464,6 +484,43 @@ app.post('/teammember', (req, res) => {
             });
         }
     });
+});
+
+app.post('/teammembers/edit-account', async (req, res) => {
+    try {
+        const {
+            memfirstname, memlastname, username, mememail,
+            memohonenumber, memstraddress, memcity, memstate, memzip,
+            // Add other fields
+        } = req.body;
+
+        const teammemberid = req.session.teammemberid;  // Assuming you're storing the user ID in the session
+
+        if (!teammemberid) {
+            return res.status(401).send('User not logged in');
+        }
+
+        // Validate inputs and update the user's details in the database using Knex
+        await knex('teammembers')  // Replace with the correct table name
+            .where({ teammemberid })  // Use the correct user ID column
+            .update({
+                memfirstname: memfirstname,
+                memlastname: memlastname,
+                username: username,
+                mememail: mememail,
+                memohonenumber: memohonenumber,
+                memstraddress: memstraddress,
+                memcity: memcity,
+                memstate: memstate,
+                memzip: memzip,
+                // Update other fields if necessary
+            });
+
+        res.redirect('/teammembersettings');  // Redirect to the settings page
+    } catch (err) {
+        console.error('Error updating user details:', err);
+        res.status(500).send('Server Error');
+    }
 });
   // Test database connection
   knex.raw("SELECT 1")
