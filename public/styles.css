@@ -601,3 +601,102 @@ input[type="checkbox"]:checked {
     word-wrap: break-word;
     max-width: 200px;
   }
+
+  /* Tab navigation */
+.tab {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tab button {
+    flex: 1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 0;
+    transition: 0.3s;
+    font-size: 17px;
+    text-align: center;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #ccc;
+}
+
+.add-button {
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #45a049;
+}
+
+.add-button-container {
+    display: none;
+}
+
+/* Table styling to match the tab styling */
+.events-table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are collapsed for a clean table */
+    margin-top: 20px; /* Adds spacing between the sections and table */
+}
+
+.events-table th,
+.events-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.events-table th {
+    background-color: #f2f2f2; /* Light gray background for the table header */
+    font-weight: bold;
+}
+
+.events-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors */
+}
+
+.events-table tr:hover {
+    background-color: #f1f1f1; /* Hover effect for rows */
+}
+
+.edit-button,
+.delete-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none; /* Removes underline from links */
+}
+
+.edit-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}
+
+.delete-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #e53935;
+}
