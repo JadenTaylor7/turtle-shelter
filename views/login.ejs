@@ -1,34 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include('partials/navbar') %>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login - My Application</title>
+    <style>
+        /* Body background and general text styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #333; /* Dark gray background */
+            color: white; /* Default text color to white */
+        }
+
+        /* Blue "Home" Button */
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #5863f8; /* Same color as the login button */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background-color: #3546a8;
+        }
+
+        /* Main container styling */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 60px; /* Leaves space for the Home button */
+            height: 100vh;
+        }
+
+        /* Form Section Styling */
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            background: #444; /* Slightly lighter gray for the form container */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: white;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            background-color: #222; /* Dark input background */
+            color: white; /* White text for inputs */
+        }
+
+        input::placeholder {
+            color: #bbb; /* Subtle gray for placeholders */
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #5c85d6; /* Blue border on focus */
+            box-shadow: 0 0 5px rgba(92, 133, 214, 0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            background-color: #5863f8; /* Login button color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #3546a8;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-btn {
+            display: inline-block;
+            width: 100%; /* Ensures it matches the login button width */
+            padding: 10px;
+            background-color: #5cb85c;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .register-btn:hover {
+            background-color: #3e8e41;
+        }
+    </style>
 </head>
 <body>
-    <section>
+    <!-- Blue "Home" Button -->
+    <a href="/" class="home-btn">Home</a>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <section class="form-container">
             <!-- Login Form -->
-            <div class="form-container">
-              <h2>Login</h2>
-              <form action="/teammembers/login" method="POST">
-                  <div class="form-group">
-                      <label for="login-username">Username</label>
-                      <input type="text" id="login-username" name="username" required>
-                  </div>
-                  <div class="form-group">
-                      <label for="login-password">Password</label>
-                      <input type="password" id="login-password" name="password" required>
-                  </div>
-                  <button type="submit" class="submit-btn">Login</button>
-              </form>
-              <!-- New button to redirect to the register page -->
-              <div class="register-link" style="margin-top: 15px; text-align: center;">
-                  <a href="/register" class="btn" style="display: inline-block; padding: 10px 15px; background-color: rgb(88, 88, 255); color: white; text-decoration: none; border-radius: 5px;">
-                      Register
-                  </a>
-              </div>
-          </div>
-    </section>
+            <h2>Login</h2>
+            <form action="/teammembers/login" method="POST" class="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input 
+                        type="text" 
+                        id="login-username" 
+                        name="username" 
+                        placeholder="Enter your username" 
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input 
+                        type="password" 
+                        id="login-password" 
+                        name="password" 
+                        placeholder="Enter your password" 
+                        required>
+                </div>
+                <button type="submit" class="btn submit-btn">Login</button>
+            </form>
+
+            <!-- Register Button -->
+            <div class="register-link">
+                <button class="register-btn" onclick="location.href='/teammember'">Become a Team Member</button>
+            </div>
+            
+        </section>
+    </div>
 </body>
 </html>
