@@ -40,14 +40,14 @@ app.use((req, res, next) => {
 const knex = require("knex") ({
     client : "pg",
     connection : {
-        host : process.env.RDS_HOSTNAME || "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
+        host : process.env.RDS_HOSTNAME || "awseb-e-7wj76fmcti-stack-awsebrdsdatabase-84lkxtpjkbgf.cumdalvhwixf.us-east-1.rds.amazonaws.com",
         user : process.env.RDS_USERNAME || "postgres",
         password : process.env.RDS_PASSWORD || "postgres", 
         database : process.env.RDS_DB_NAME || "ebdb",
         port : process.env.RDS_PORT || 5432,
-        ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false || {require : true}
+        ssl: { rejectUnauthorized: false }
     }
-})
+});
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
 
 //goes to index.ejs upon website load
