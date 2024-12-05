@@ -75,7 +75,7 @@
                                     <div class="flashcard-summary" style="display: flex; justify-content: space-between; align-items: center;">
                                         <div>
                                             <h3 style="margin: 0;"><%= event.eventname %></h3>
-                                            <p style="margin: 5px 0 0;">Date: <%= event.eventdate %></p>
+                                            <p style="margin: 5px 0 0;">Date: <%= moment(event.eventdate).format('YYYY-MM-DD') %></p>
                                             <p style="margin: 5px 0 0;">Location: <%= event.eventcity %>, <%= event.eventstate %></p>
                                         </div>
                                         <div class="form-group" style="display: flex; align-items: center;">

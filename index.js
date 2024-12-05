@@ -277,14 +277,21 @@ app.get('/editevent/:hostid', async (req, res) => {
 
 app.get('/volunteer', async (req, res) => {
     try {
-        // Fetch all events where approveevent is false or null
+        const today = moment().startOf('day'); // Today's date at midnight
+
+        // Fetch events with approveevent true and openness public
         const events = await knex('hosts')
             .select('*')
-            .where('approveevent', true) // Filter out events where approveevent is true
+            .where('approveevent', true)
             .andWhere('openness', 'public');
 
-        // Render the EJS template and pass the filtered data
-        res.render('volunteer', { events });
+        // Filter events for today or future dates
+        const upcomingEvents = events.filter(event => 
+            moment(event.eventdate).isSameOrAfter(today)
+        );
+
+        // Render the EJS template with filtered events
+        res.render('volunteer', { events: upcomingEvents, moment });
     } catch (error) {
         console.error('Error fetching events:', error);
         res.status(500).send('Error retrieving events from the database');
