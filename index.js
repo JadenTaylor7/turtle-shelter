@@ -149,28 +149,45 @@ app.get('/maintainteammembers', async (req, res) => {
     }
 });
 
-app.get('/maintainvolunteers', (req, res) => { 
-    res.render("maintainvolunteers")
-});
+app.get('/maintainvolunteers', async (req, res) => {
+    const teammemberid = req.session.teammemberid;
 
-app.get('/maintainevents', (req, res) => {
-    const today = moment().startOf('day'); // Today's date at midnight
+    // Check if the user is logged in
+    if (!teammemberid) {
+        return res.redirect('/login');  // Redirect to login if not logged in
+    }
 
-    // Fetch events from the 'hosts' table
-    knex('hosts')
-        .select('*')
-        .then(events => {
-            // Split events into upcoming and past categories
-            const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
-            const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
+    try {
+        // Fetch the logged-in user's role
+        const teammember = await knex('teammembers')
+            .select('role')
+            .where('teammemberid', teammemberid)
+            .first();
 
-            // Render the maintain events page with upcoming and past events
-            res.render('maintainevents', { upcomingEvents, pastEvents, moment });
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error);
-            res.status(500).send('Internal Server Error');
-        });
+        if (!teammember) {
+            return res.status(404).send('User not found');
+        }
+
+        // Debugging line to check role value
+        console.log(teammember.role); // This will output the role in your server's console
+
+        // Fetch all volunteer data from the 'volunteers' table
+        const volunteers = await knex('volunteers').select(
+            'volunteerid', 'volfirstname', 'vollastname', 'volemail', 'sewinglevel', 
+            'referraltype', 'createdat'
+        );
+
+        // If no volunteers are found
+        if (!volunteers || volunteers.length === 0) {
+            return res.status(404).send('No volunteers found');
+        }
+
+        // Render the maintainvolunteers.ejs view with volunteers and logged-in user's role
+        res.render('maintainvolunteers', { volunteers, role: teammember.role });
+    } catch (error) {
+        console.error('Error fetching volunteer data:', error);
+        res.status(500).send('Error fetching volunteer data');
+    }
 });
 
 app.get('/teammembersettings', async (req, res) => {
@@ -211,6 +228,22 @@ app.get('/addevent', (req, res) => {
 
 app.get('/addadmin', (req, res) => { 
     res.render("addadmin")
+});
+
+app.get('/addvolunteer', async (req, res) => {
+    try {
+        // Fetch all events where approveevent is false or null
+        const events = await knex('hosts')
+            .select('*')
+            .where('approveevent', true) // Filter out events where approveevent is true
+            .andWhere('openness', 'public');
+
+        // Render the EJS template and pass the filtered data
+        res.render('addvolunteer', { events });
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).send('Error retrieving events from the database');
+    }
 });
 
 // Load the edit page for a team member
@@ -999,6 +1032,108 @@ app.post('/editevent/:hostid', (req, res) => {
           res.status(500).send('Internal Server Error');
       });
       
+    });
+
+    app.get('/maintainevents', (req, res) => {
+        const today = moment().startOf('day'); // Today's date at midnight
+    
+        // Fetch events from the 'hosts' table
+        knex('hosts')
+            .select('*')
+            .then(events => {
+                console.log(events); // Log the events to check if eventid is there
+                const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
+                const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
+    
+                // Render the maintain events page with upcoming and past events
+                res.render('maintainevents', { upcomingEvents, pastEvents, moment });
+            })
+            .catch(error => {
+                console.error('Error fetching events:', error);
+                res.status(500).send('Internal Server Error');
+            });
+    });
+
+    app.get('/maintainvolunteers', async (req, res) => {
+        try {
+            // Fetch all volunteers data from the 'volunteers' table
+            const volunteers = await knex('volunteers').select(
+                'volunteerid', 'volfirstname', 'vollastname', 'volemail', 'volphone',
+                'voladdress', 'sewinglevel', 'referraltype', 'createdat'
+            );
+    
+            // If no volunteers are found
+            if (!volunteers || volunteers.length === 0) {
+                return res.status(404).send('No volunteers found');
+            }
+    
+            // Render the maintainvolunteers.ejs view with the volunteers data
+            res.render('maintainvolunteers', { volunteers });
+        } catch (error) {
+            console.error('Error fetching volunteers data:', error);
+            res.status(500).send('Error fetching volunteers data');
+        }
+    });
+
+    app.post('/editvolunteer/:volunteerid', (req, res) => {
+        const volunteerid = req.params.volunteerid;
+        const updatedVolunteerData = {
+            firstname: req.body.FirstName,
+            lastname: req.body.LastName,
+            email: req.body.Email,
+            phone: req.body.Phone,
+            availability: req.body.Availability,
+            skills: req.body.Skills,
+            experience: req.body.Experience,
+        };
+    
+        knex('volunteers')
+            .where({ volunteerid: volunteerid })
+            .update(updatedVolunteerData)
+            .then(() => {
+                res.redirect('/maintainvolunteers'); // Redirect after update
+            })
+            .catch(error => {
+                console.error('Error updating volunteer:', error);
+                res.status(500).send('Internal Server Error');
+            });
+    });
+
+    app.get('/editvolunteer/:volunteerid', async (req, res) => {
+        try {
+            const volunteerid = req.params.volunteerid; // Extract the volunteer ID from the route parameter
+            const volunteer = await knex('volunteers') // Replace 'volunteers' with your table name if different
+                .where('volunteerid', volunteerid) // Fetch the volunteer's data based on the volunteer ID
+                .first(); // Get the first matching record
+    
+            if (!volunteer) {
+                return res.status(404).send('Volunteer not found'); // Handle case where the volunteer doesn't exist
+            }
+    
+            res.render('editvolunteer', { volunteer }); // Render the editvolunteer page with the fetched data
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error loading the edit volunteer page');
+        }
+    });
+
+    app.post('/deletevolunteer/:volunteerid', async (req, res) => {
+        try {
+            const volunteerid = req.params.volunteerid;  // Retrieve the volunteerid from the route parameter
+            knex('volunteers')                           // Query the 'volunteers' table
+                .where('volunteerid', volunteerid)       // Specify the volunteerid to delete
+                .del()                                   // Delete the record
+                .then(() => {
+                    res.redirect('/maintainvolunteers'); // Redirect to the page showing all volunteers after deletion
+                })
+                .catch(error => {
+                    console.error('Error deleting volunteer:', error);  // Log any errors that occur during deletion
+                    res.status(500).send('Error deleting the volunteer'); // Return an error response if deletion fails
+                });
+        } catch (error) {
+            console.error('Error deleting volunteer:', error); // Log any errors that occur outside the query
+            res.status(500).send('Error deleting the volunteer');
+        }
     });
   // Test database connection
   knex.raw("SELECT 1")
