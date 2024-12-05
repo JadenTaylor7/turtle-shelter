@@ -40,14 +40,14 @@ app.use((req, res, next) => {
 const knex = require("knex") ({
     client : "pg",
     connection : {
-        host : "turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com",
-        user : "postgres",
-        password : "postgres", //ChooseTheR1ght! for website
-        database : "turtleshelterdb",
-        port : 5432,
-        ssl : {rejectUnauthorized: false}
+        host : process.env.RDS_HOSTNAME || "awseb-e-7wj76fmcti-stack-awsebrdsdatabase-84lkxtpjkbgf.cumdalvhwixf.us-east-1.rds.amazonaws.com",
+        user : process.env.RDS_USERNAME || "postgres", 
+        password : process.env.RDS_PASSWORD || "postgres", 
+        database : process.env.RDS_DB_NAME || "ebdb",
+        port : process.env.RDS_PORT || 5432,
+        ssl: { rejectUnauthorized: false }
     }
-})
+});
 //awd RDS endpoint: turtleshelter.cumdalvhwixf.us-east-1.rds.amazonaws.com
 
 //goes to index.ejs upon website load
@@ -118,7 +118,7 @@ app.get('/maintainteammembers', async (req, res) => {
     try {
         // Fetch all team members data from the 'teammembers' table
         const teamMembers = await knex('teammembers').select(
-            'memfirstname', 'memlastname', 'username', 'mememail', 'memphone',
+            'teammemberid', 'memfirstname', 'memlastname', 'username', 'mememail', 'memphone',
             'memstraddress', 'memcity', 'memstate', 'memzip', 'memsewinglevel', 
             'memskills', 'can_teach', 'event_lead', 'memhoursmonthly', 'memvolunteerlocation',
             'referral_type', 'role'
@@ -172,6 +172,36 @@ app.get('/teammembersettings', async (req, res) => {
 app.get('/teammember', (req, res) => { 
     res.render("teammember")
 });
+
+// Load the edit page for a team member
+app.get('/editteammember/:teammemberid', async (req, res) => {
+    try {
+        const teammemberid = req.params.teammemberid;
+        const member = await knex('teammembers')
+            .where('teammemberid', teammemberid)
+            .first();
+
+        res.render('editteammember', { member });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error loading the edit page');
+    }
+});
+
+// app.post('/deleteteammember/:teammemberid', async (req, res) => {
+//     try {
+//         const teammemberid = req.params.teammemberid;
+//             knex('teammembers')
+//             .where('teammemberid', teammemberid)
+//             .del() // Deletes the record with the specified ID
+//             .then(() => {
+//         res.redirect('/maintainteammembers'); // Redirect to the Planets list after deletion
+//       })  // Redirect back to the user settings page
+//     } catch (error) {
+//         console.error('Error deleting team member:', error);
+//         res.status(500).send('Error deleting the team member');
+//     }
+// });
 
 app.get('/volunteer', async (req, res) => {
     try {
@@ -631,6 +661,58 @@ app.post('/teammembers/add-admin', (req, res) => {
             });
         }
     });
+});
+
+// Updating a team member
+app.post('/update-teammember/:teammemberid', async (req, res) => {
+    try {
+        const memberId = req.params.teammemberid;
+        const {
+            memfirstname, memlastname, username, mememail,
+            memphone, memstraddress, memcity, memstate, memzip,
+            memsewinglevel, memskills, can_teach, event_lead,
+            memhoursmonthly, memvolunteerlocation, referral_type, role
+        } = req.body;
+
+        // Convert memvolunteerlocation to a JSON array if it's a string
+        const volunteerLocations = Array.isArray(memvolunteerlocation) 
+            ? memvolunteerlocation  // If it's already an array, use it as is
+            : memvolunteerlocation.split(',').map(location => location.trim()); // Convert CSV string to array
+
+        const updatedData = {
+            memfirstname, memlastname, username, mememail,
+            memphone, memstraddress, memcity, memstate, memzip,
+            memsewinglevel, memskills, can_teach, event_lead,
+            memhoursmonthly, memvolunteerlocation: JSON.stringify(volunteerLocations), // Make sure to stringify
+            referral_type, role
+        };
+
+        // Update the database
+        await knex('teammembers')
+            .where('teammemberid', memberId)
+            .update(updatedData);
+
+        res.redirect('/maintainteammembers'); // Redirect after update
+    } catch (error) {
+        console.error('Error updating team member:', error);
+        res.status(500).send('Error updating the team member');
+    }
+});
+
+// Deleting a team member
+app.post('/deleteteammember/:teammemberid', async (req, res) => {
+    try {
+        const teammemberid = req.params.teammemberid;
+            knex('teammembers')
+            .where('teammemberid', teammemberid)
+            .del() // Deletes the record with the specified ID
+            .then(() => {
+        res.redirect('/maintainteammembers'); // Redirect to the Planets list after deletion
+      })  // Redirect back to the user settings page
+    } catch (error) {
+        console.error('Error deleting team member:', error);
+        res.status(500).send('Error deleting the team member');
+    }
 });
   // Test database connection
   knex.raw("SELECT 1")
