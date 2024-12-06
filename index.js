@@ -277,14 +277,21 @@ app.get('/editevent/:hostid', async (req, res) => {
 
 app.get('/volunteer', async (req, res) => {
     try {
-        // Fetch all events where approveevent is false or null
+        const today = moment().startOf('day'); // Today's date at midnight
+
+        // Fetch events with approveevent true and openness public
         const events = await knex('hosts')
             .select('*')
-            .where('approveevent', true) // Filter out events where approveevent is true
+            .where('approveevent', true)
             .andWhere('openness', 'public');
 
-        // Render the EJS template and pass the filtered data
-        res.render('volunteer', { events });
+        // Filter events for today or future dates
+        const upcomingEvents = events.filter(event => 
+            moment(event.eventdate).isSameOrAfter(today)
+        );
+
+        // Render the EJS template with filtered events
+        res.render('volunteer', { events: upcomingEvents, moment });
     } catch (error) {
         console.error('Error fetching events:', error);
         res.status(500).send('Error retrieving events from the database');
@@ -370,6 +377,7 @@ app.post('/volunteer', async (req, res) => {
         const VolEmail = req.body.VolEmail || ''; // Default to empty string if not provided
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
+        const Newsletter = req.body.newsletter === 'true'; 
         const CreateDat = new Date();
 
         // Extract ParticipateEvent as an array; ensure it is always an array for consistency
@@ -387,7 +395,8 @@ app.post('/volunteer', async (req, res) => {
                 volemail: VolEmail,
                 sewinglevel: SewingLevel,
                 referraltype: ReferralType,
-                createdat: CreateDat
+                createdat: CreateDat,
+                newsletter: Newsletter
             })
             .returning('*'); // This returns the inserted volunteer data
 
@@ -630,7 +639,7 @@ app.post('/teammembers/edit-account', async (req, res) => {
     try {
         const {
             memfirstname, memlastname, username, mememail,
-            memohonenumber, memstraddress, memcity, memstate, memzip,
+            memohonenumber, memstraddress, memcity, memstate, memzip, memsewinglevel, memskills, can_teach, event_lead, memhoursmonthly, memvolunteerlocation, referral_type
             // Add other fields
         } = req.body;
 
@@ -653,6 +662,13 @@ app.post('/teammembers/edit-account', async (req, res) => {
                 memcity: memcity,
                 memstate: memstate,
                 memzip: memzip,
+                memsewinglevel: memsewinglevel,
+                memskills: memskills,
+                can_teach: can_teach,
+                event_lead: event_lead,
+                memhoursmonthly: memhoursmonthly,
+                memvolunteerlocation: JSON.stringify(memvolunteerlocation),
+                referral_type: referral_type,
                 // Update other fields if necessary
             });
 
@@ -1036,21 +1052,29 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/maintainevents', (req, res) => {
         const today = moment().startOf('day'); // Today's date at midnight
-    
-        // Fetch events from the 'hosts' table
+     
+        // Fetch events from the 'hosts' table and join with the 'event_volunteers' table to count volunteers
         knex('hosts')
-            .select('*')
+            .leftJoin('event_volunteers', 'hosts.hostid', '=', 'event_volunteers.hostid')  // Join with event_volunteers to count volunteers
+            .leftJoin('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid') // Join with volunteers
+            .select(
+                'hosts.*',
+                knex.raw('COUNT(DISTINCT volunteers.volunteerid) as volunteer_count')  // Count distinct volunteers for each event
+            )
+            .groupBy('hosts.hostid')  // Group by event to get the volunteer count per event
             .then(events => {
-                console.log(events); // Log the events to check if eventid is there
+                const today = moment().startOf('day');  // Today's date at midnight
+
+                // Filter events into upcoming and past
                 const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
                 const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
-    
-                // Render the maintain events page with upcoming and past events
+
+                // Render the maintain events page with upcoming and past events and volunteer count
                 res.render('maintainevents', { upcomingEvents, pastEvents, moment });
             })
             .catch(error => {
-                console.error('Error fetching events:', error);
-                res.status(500).send('Internal Server Error');
+                console.error('Error fetching events:', error);  // Log the error
+                res.status(500).send('Internal Server Error');  // Send a 500 response on error
             });
     });
 
@@ -1134,6 +1158,139 @@ app.post('/editevent/:hostid', (req, res) => {
             console.error('Error deleting volunteer:', error); // Log any errors that occur outside the query
             res.status(500).send('Error deleting the volunteer');
         }
+    });
+
+    app.get('/eventvolunteer/:hostid', async (req, res) => {
+        try {
+            const hostid = req.params.hostid; // Get the hostid (event ID) from the URL
+            
+            // Fetch volunteers for the given event (hostid) by joining 'event_volunteers' with 'volunteers'
+            const volunteers = await knex('event_volunteers')
+                .join('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid')
+                .where('event_volunteers.hostid', hostid)  // Filter by the event ID (hostid)
+                .select(
+                    'volunteers.volfirstname',
+                    'volunteers.vollastname',
+                    'volunteers.volemail',
+                    'volunteers.sewinglevel',
+                    'volunteers.referraltype',
+                    'volunteers.createdat',
+                    'volunteers.volunteerid'
+                );
+
+            const host = await knex('hosts')
+            .where('hostid', hostid)
+            .first();
+            
+            // Render the template with the filtered list of volunteers
+            res.render('eventvolunteer', { volunteers, hostid, moment, host });
+        } catch (error) {
+            console.error('Error fetching volunteers:', error);
+            res.status(500).send('Error retrieving volunteers from the database');
+        }
+    });
+
+    app.get('/helpatevent', async (req, res) => {
+        try {
+            const today = moment().startOf('day'); // Today's date at midnight
+    
+            // Fetch events with approveevent true and openness public
+            const events = await knex('hosts')
+                .select('*')
+                .where('approveevent', true)
+                .andWhere('openness', 'public');
+    
+            // Filter events for today or future dates
+            const upcomingEvents = events.filter(event => 
+                moment(event.eventdate).isSameOrAfter(today)
+            );
+    
+            // Check if a team member is logged in
+            if (!req.session.teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+    
+            // Render the EJS template with filtered events and team member ID
+            res.render('helpatevent', { 
+                events: upcomingEvents, 
+                moment,
+                teammemberid: req.session.teammemberid
+            });
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            res.status(500).send('Error retrieving events from the database');
+        }
+    });
+
+    app.post('/helpatevent', async (req, res) => {
+        try {
+            const teamMemberID = req.session.teammemberid;
+            if (!teamMemberID) {
+                return res.status(403).send('You must be logged in to participate.');
+            }
+    
+            // Extract event participation details
+            const participateEvents = Array.isArray(req.body.ParticipateEvent)
+                ? req.body.ParticipateEvent
+                : req.body.ParticipateEvent
+                ? [req.body.ParticipateEvent]
+                : [];
+    
+            // Insert participation data into the 'event_volunteers' table
+            if (participateEvents.length > 0) {
+                const eventVolunteers = participateEvents.map((hostid) => ({
+                    volunteerid: teamMemberID, // Use the logged-in team member ID
+                    hostid: parseInt(hostid), // Parse hostid to ensure it's an integer
+                }));
+    
+                await knex('event_volunteers').insert(eventVolunteers);
+            }
+    
+            // Redirect or send a success message
+            res.redirect('/helpatevent'); // Redirect to the same page after success
+        } catch (error) {
+            console.error('Error processing volunteer participation:', error);
+            res.status(500).send('Error processing your participation at the event.');
+        }
+    });
+
+    app.get('/completedproducts/:hostid', async (req, res) => {
+        try {
+            const hostid = req.params.hostid;
+            const event = await knex('hosts')
+                .where('hostid', hostid)
+                .first();
+    
+            res.render('completedproducts', { event, hostid });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error loading the edit page');
+        }
+    });
+
+    app.post('/completedproducts/:hostid', (req, res) => {
+        const hostid = req.params.hostid;
+    
+        // Create an object with the updated fields
+        const updatedProductData = {
+            pocketsproduced: req.body.pocketsproduced,
+            collarsproduced: req.body.collarsproduced,
+            envelopesproduced: req.body.envelopesproduced,
+            vestsproduced: req.body.vestsproduced,
+            completeproduced: req.body.completeproduced,
+        };
+    
+        // Update the record in the database
+        knex('hosts')
+            .where({ hostid: hostid }) // Find the record by host ID
+            .update(updatedProductData) // Update the fields
+            .then(() => {
+                res.redirect('/maintainevents'); // Redirect after successful update
+            })
+            .catch(error => {
+                console.error('Error updating completed products:', error);
+                res.status(500).send('Internal Server Error');
+            });
     });
   // Test database connection
   knex.raw("SELECT 1")
