@@ -1362,6 +1362,47 @@ app.post('/editevent/:hostid', (req, res) => {
             res.status(500).send('Error unsubscribing from event');
         }
     });
+
+    app.get('/eventteammembers/:hostid', async (req, res) => {
+        try {
+            const hostid = req.params.hostid; // Get the hostid (event ID) from the URL
+        
+            // Fetch members for the given event (hostid)
+            const members = await knex('event_team_members')
+                .join('teammembers', 'event_team_members.teammemberid', '=', 'teammembers.teammemberid')
+                .where('event_team_members.hostid', hostid)  // Filter by the event ID (hostid)
+                .select(
+                    'teammembers.memfirstname',
+                    'teammembers.memlastname',
+                    'teammembers.username',
+                    'teammembers.mememail',
+                    'teammembers.memphone',
+                    'teammembers.memstraddress',
+                    'teammembers.memcity',
+                    'teammembers.memstate',
+                    'teammembers.memzip',
+                    'teammembers.memskills',
+                    'teammembers.can_teach',
+                    'teammembers.event_lead',
+                    'teammembers.memcity',
+                    'teammembers.memhoursmonthly',
+                    'teammembers.memvolunteerlocation',
+                    'teammembers.referral_type',
+                    'teammembers.role',
+                );
+        
+            // Fetch host details for the event
+            const host = await knex('hosts')
+                .where('hostid', hostid)
+                .first();
+        
+            // Render the template with the filtered list of members
+            res.render('eventteammembers', { members, hostid, moment, host });
+        } catch (error) {
+            console.error('Error fetching members:', error);
+            res.status(500).send('Error retrieving members from the database');
+        }
+    });
   // Test database connection
   knex.raw("SELECT 1")
     .then(() => {
