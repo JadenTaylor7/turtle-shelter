@@ -1050,20 +1050,22 @@ app.post('/editevent/:hostid', (req, res) => {
             .leftJoin('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid') // Join with volunteers
             .select(
                 'hosts.*',
-                knex.raw('COUNT(volunteers.volunteerid) as volunteer_count')  // Count the volunteers for each event
+                knex.raw('COUNT(DISTINCT volunteers.volunteerid) as volunteer_count')  // Count distinct volunteers for each event
             )
             .groupBy('hosts.hostid')  // Group by event to get the volunteer count per event
             .then(events => {
+                const today = moment().startOf('day');  // Today's date at midnight
+
                 // Filter events into upcoming and past
                 const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
                 const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
-     
+
                 // Render the maintain events page with upcoming and past events and volunteer count
                 res.render('maintainevents', { upcomingEvents, pastEvents, moment });
             })
             .catch(error => {
-                console.error('Error fetching events:', error); // Log the error
-                res.status(500).send('Internal Server Error'); // Send a 500 response on error
+                console.error('Error fetching events:', error);  // Log the error
+                res.status(500).send('Internal Server Error');  // Send a 500 response on error
             });
     });
 
