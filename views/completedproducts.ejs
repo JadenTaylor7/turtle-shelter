@@ -16,33 +16,33 @@
             <form action="/completedproducts/<%= hostid %>" method="POST">
 
                 <div class="form-group">
-                    <label for="actualattendance">Pockets Produced:</label>
-                    <input type="number" id="actualattendance" name="actualattendance" value="<%= event.actualattendance %>" >
+                    <label for="actualattendance">Actual Attendance:</label>
+                    <input type="number" id="actualattendance" name="actualattendance" value="<%= event.actualattendance %>" min="0">
                 </div>
 
                 <div class="form-group">
                     <label for="pocketsproduced">Pockets Produced:</label>
-                    <input type="number" id="pocketsproduced" name="pocketsproduced" value="<%= event.pocketsproduced %>" >
+                    <input type="number" id="pocketsproduced" name="pocketsproduced" value="<%= event.pocketsproduced %>" min="0">
                 </div>
 
                 <div class="form-group">
                     <label for="collarsproduced">Collars Produced:</label>
-                    <input type="number" id="collarsproduced" name="collarsproduced" value="<%= event.collarsproduced %>" >
+                    <input type="number" id="collarsproduced" name="collarsproduced" value="<%= event.collarsproduced %>" min="0">
                 </div>
 
                 <div class="form-group">
                     <label for="envelopesproduced">Envelopes Produced:</label>
-                    <input type="number" id="envelopesproduced" name="envelopesproduced" value="<%= event.envelopesproduced %>" >
+                    <input type="number" id="envelopesproduced" name="envelopesproduced" value="<%= event.envelopesproduced %>" min="0">
                 </div>
 
                 <div class="form-group">
                     <label for="vestsproduced">Vests Produced:</label>
-                    <input type="number" id="vestsproduced" name="vestsproduced" value="<%= event.vestsproduced %>" >
+                    <input type="number" id="vestsproduced" name="vestsproduced" value="<%= event.vestsproduced %>" min="0">
                 </div>
 
                 <div class="form-group">
                     <label for="completeproduced">Completed Vests:</label>
-                    <input type="number" id="completeproduced" name="completeproduced" value="<%= event.completeproduced %>" >
+                    <input type="number" id="completeproduced" name="completeproduced" value="<%= event.completeproduced %>" min="0">
                 </div>
 
                 <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">

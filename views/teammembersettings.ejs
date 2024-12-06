@@ -73,9 +73,65 @@
                         <label for="edit-city">City</label>
                         <input type="text" id="edit-city" name="memcity" value="<%= user?.memcity || '' %>" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="edit-state">State</label>
                         <input type="text" id="edit-state" name="memstate" value="<%= user?.memstate || '' %>" required>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="edit-state">What’s the state of the event?</label>
+                        <select id="edit-state" name="memstate" required>
+                            <option value="" disabled>Select a state</option>
+                            <option value="AL" <%= user?.memstate === 'AL' ? 'selected' : '' %>>Alabama</option>
+                            <option value="AK" <%= user?.memstate === 'AK' ? 'selected' : '' %>>Alaska</option>
+                            <option value="AZ" <%= user?.memstate === 'AZ' ? 'selected' : '' %>>Arizona</option>
+                            <option value="AR" <%= user?.memstate === 'AR' ? 'selected' : '' %>>Arkansas</option>
+                            <option value="CA" <%= user?.memstate === 'CA' ? 'selected' : '' %>>California</option>
+                            <option value="CO" <%= user?.memstate === 'CO' ? 'selected' : '' %>>Colorado</option>
+                            <option value="CT" <%= user?.memstate === 'CT' ? 'selected' : '' %>>Connecticut</option>
+                            <option value="DE" <%= user?.memstate === 'DE' ? 'selected' : '' %>>Delaware</option>
+                            <option value="FL" <%= user?.memstate === 'FL' ? 'selected' : '' %>>Florida</option>
+                            <option value="GA" <%= user?.memstate === 'GA' ? 'selected' : '' %>>Georgia</option>
+                            <option value="HI" <%= user?.memstate === 'HI' ? 'selected' : '' %>>Hawaii</option>
+                            <option value="ID" <%= user?.memstate === 'ID' ? 'selected' : '' %>>Idaho</option>
+                            <option value="IL" <%= user?.memstate === 'IL' ? 'selected' : '' %>>Illinois</option>
+                            <option value="IN" <%= user?.memstate === 'IN' ? 'selected' : '' %>>Indiana</option>
+                            <option value="IA" <%= user?.memstate === 'IA' ? 'selected' : '' %>>Iowa</option>
+                            <option value="KS" <%= user?.memstate === 'KS' ? 'selected' : '' %>>Kansas</option>
+                            <option value="KY" <%= user?.memstate === 'KY' ? 'selected' : '' %>>Kentucky</option>
+                            <option value="LA" <%= user?.memstate === 'LA' ? 'selected' : '' %>>Louisiana</option>
+                            <option value="ME" <%= user?.memstate === 'ME' ? 'selected' : '' %>>Maine</option>
+                            <option value="MD" <%= user?.memstate === 'MD' ? 'selected' : '' %>>Maryland</option>
+                            <option value="MA" <%= user?.memstate === 'MA' ? 'selected' : '' %>>Massachusetts</option>
+                            <option value="MI" <%= user?.memstate === 'MI' ? 'selected' : '' %>>Michigan</option>
+                            <option value="MN" <%= user?.memstate === 'MN' ? 'selected' : '' %>>Minnesota</option>
+                            <option value="MS" <%= user?.memstate === 'MS' ? 'selected' : '' %>>Mississippi</option>
+                            <option value="MO" <%= user?.memstate === 'MO' ? 'selected' : '' %>>Missouri</option>
+                            <option value="MT" <%= user?.memstate === 'MT' ? 'selected' : '' %>>Montana</option>
+                            <option value="NE" <%= user?.memstate === 'NE' ? 'selected' : '' %>>Nebraska</option>
+                            <option value="NV" <%= user?.memstate === 'NV' ? 'selected' : '' %>>Nevada</option>
+                            <option value="NH" <%= user?.memstate === 'NH' ? 'selected' : '' %>>New Hampshire</option>
+                            <option value="NJ" <%= user?.memstate === 'NJ' ? 'selected' : '' %>>New Jersey</option>
+                            <option value="NM" <%= user?.memstate === 'NM' ? 'selected' : '' %>>New Mexico</option>
+                            <option value="NY" <%= user?.memstate === 'NY' ? 'selected' : '' %>>New York</option>
+                            <option value="NC" <%= user?.memstate === 'NC' ? 'selected' : '' %>>North Carolina</option>
+                            <option value="ND" <%= user?.memstate === 'ND' ? 'selected' : '' %>>North Dakota</option>
+                            <option value="OH" <%= user?.memstate === 'OH' ? 'selected' : '' %>>Ohio</option>
+                            <option value="OK" <%= user?.memstate === 'OK' ? 'selected' : '' %>>Oklahoma</option>
+                            <option value="OR" <%= user?.memstate === 'OR' ? 'selected' : '' %>>Oregon</option>
+                            <option value="PA" <%= user?.memstate === 'PA' ? 'selected' : '' %>>Pennsylvania</option>
+                            <option value="RI" <%= user?.memstate === 'RI' ? 'selected' : '' %>>Rhode Island</option>
+                            <option value="SC" <%= user?.memstate === 'SC' ? 'selected' : '' %>>South Carolina</option>
+                            <option value="SD" <%= user?.memstate === 'SD' ? 'selected' : '' %>>South Dakota</option>
+                            <option value="TN" <%= user?.memstate === 'TN' ? 'selected' : '' %>>Tennessee</option>
+                            <option value="TX" <%= user?.memstate === 'TX' ? 'selected' : '' %>>Texas</option>
+                            <option value="UT" <%= user?.memstate === 'UT' ? 'selected' : '' %>>Utah</option>
+                            <option value="VT" <%= user?.memstate === 'VT' ? 'selected' : '' %>>Vermont</option>
+                            <option value="VA" <%= user?.memstate === 'VA' ? 'selected' : '' %>>Virginia</option>
+                            <option value="WA" <%= user?.memstate === 'WA' ? 'selected' : '' %>>Washington</option>
+                            <option value="WV" <%= user?.memstate === 'WV' ? 'selected' : '' %>>West Virginia</option>
+                            <option value="WI" <%= user?.memstate === 'WI' ? 'selected' : '' %>>Wisconsin</option>
+                            <option value="WY" <%= user?.memstate === 'WY' ? 'selected' : '' %>>Wyoming</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="edit-zip">ZIP Code</label>
@@ -139,7 +195,7 @@
 
                     <div class="form-group">
                         <label for="MemHoursMonthly">Number of hours willing to volunteer per month:</label>
-                        <input type="number" id="MemHoursMonthly" name="memhoursmonthly" value="<%= user?.memhoursmonthly || '' %>" required>
+                        <input type="number" id="MemHoursMonthly" name="memhoursmonthly" value="<%= user?.memhoursmonthly || '' %>" min="0" required>
                     </div>
 
                     <div class="form-group">
@@ -233,15 +289,6 @@
                 });
             });
         });
-    </script>
-
-    <footer>
-        <a href="https://www.facebook.com/turtleshelterproject/" target="_blank" class="footer-link"> 
-            <img src="facebook-logo.jpg" alt="Facebook" class="footer-img"> </a> 
-        <p>
-            Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com 
-        </p>
-    </footer>
-    
+    </script>    
 </body>
 </html>
