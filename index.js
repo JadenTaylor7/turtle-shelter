@@ -1308,6 +1308,60 @@ app.post('/editevent/:hostid', (req, res) => {
                 res.status(500).send('Internal Server Error');
             });
     });
+
+    app.get('/myevents', async (req, res) => {
+        try {
+            const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+            if (!teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+    
+            // Get all the events that the logged-in team member is associated with
+            const events = await knex('event_team_members')
+                .join('hosts', 'hosts.hostid', '=', 'event_team_members.hostid') // Join the events table (hosts)
+                .select('hosts.*') // Get all host columns
+                .where('event_team_members.teammemberid', teammemberid); // Filter by logged-in team member ID
+            
+            res.render('myevents', { 
+                events, 
+                moment,
+                teammemberid
+            });
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            res.status(500).send('Error retrieving events from the database');
+        }
+    });
+    
+    app.post('/deleteevent', async (req, res) => {
+        try {
+            const { DeleteEvent } = req.body;  // Array of hostids
+            const teammemberid = req.session.teammemberid; // The logged-in user’s ID
+    
+            if (!teammemberid) {
+                return res.redirect('/login'); // Ensure the user is logged in
+            }
+    
+            if (!DeleteEvent || DeleteEvent.length === 0) {
+                return res.status(400).send('No events selected to unsubscribe.');
+            }
+    
+            // Loop through the selected events and delete them
+            for (const hostid of DeleteEvent) {
+                await knex('event_team_members')
+                    .where('hostid', hostid)
+                    .andWhere('teammemberid', teammemberid)
+                    .del();
+            }
+    
+            res.redirect('/myevents'); // Redirect after unsubscribing
+        } catch (error) {
+            console.error('Error unsubscribing from event:', error);
+            res.status(500).send('Error unsubscribing from event');
+        }
+    });
   // Test database connection
   knex.raw("SELECT 1")
     .then(() => {

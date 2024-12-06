@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Events</title>
+</head>
+<body class="usersettings-page">
+    <section class="hero"></section>
+
+    <section class="event-display" style="margin-top: 40px; padding: 20px; background-color: #f9f9f9;">
+        <h2>My Events</h2>
+        <form method="POST" action="/deleteevent" id="eventForm">
+            <div class="flashcard-container" style="display: flex; flex-direction: column; gap: 20px;">
+                <% events.forEach((event, index) => { %>
+                    <div class="flashcard" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <div class="flashcard-summary" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="margin: 0;"><%= event.eventname %></h3>
+                                <p style="margin: 5px 0 0;">Date: <%= moment(event.eventdate).format('YYYY-MM-DD') %></p>
+                                <p style="margin: 5px 0 0;">Start Time: <%= moment(event.eventstarttime, 'HH:mm:ss').format('HH:mm') %></p>
+                                <p style="margin: 5px 0 0;">Location: <%= event.eventstraddress %>, <%= event.eventcity %>, <%= event.eventstate %>, <%= event.eventzip %></p>
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: center;">
+                                <label for="DeleteEvent-<%= index %>" style="margin-right: 10px;">Unsubscribe</label>
+                                <input type="checkbox" id="DeleteEvent-<%= index %>" name="DeleteEvent[]" value="<%= event.hostid %>">
+                            </div>
+                        </div>
+                        <div class="flashcard-details" id="details-<%= index %>" style="margin-top: 15px; display: none;">
+                            <p>Description: <%= event.description || "No description available." %></p>
+                        </div>
+                    </div>
+                <% }) %>
+                <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">
+                    Unsubscribe
+                </button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>
