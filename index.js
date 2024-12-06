@@ -964,7 +964,7 @@ app.post('/editevent/:hostid', (req, res) => {
         groupage: req.body.GroupAge,
         eventname: req.body.EventName,
         hostphone: req.body.HostPhone,
-        jensharestory: req.body.JenShareStory ? 'Yes' : 'No',
+        jensharestory: req.body.JenShareStory === 'true', // Convert to boolean
         openness: req.body.Openness,
     };
 
@@ -1086,8 +1086,11 @@ app.post('/editevent/:hostid', (req, res) => {
                         });
     
                         // Filter events into upcoming and past
-                        const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
-                        const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
+                        const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today))
+                            .sort((a, b) => moment(a.eventdate).isBefore(moment(b.eventdate)) ? 1 : -1);  // Sort upcoming events by closest date first
+    
+                        const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today))
+                            .sort((a, b) => moment(a.eventdate).isBefore(moment(b.eventdate)) ? 1 : -1);  // Sort past events by closest date first
     
                         // Render the maintain events page with upcoming and past events, and counts
                         res.render('maintainevents', { upcomingEvents, pastEvents, moment });
@@ -1314,6 +1317,7 @@ app.post('/editevent/:hostid', (req, res) => {
     
         // Create an object with the updated fields
         const updatedProductData = {
+            actualattendance: req.body.actualattendance,
             pocketsproduced: req.body.pocketsproduced,
             collarsproduced: req.body.collarsproduced,
             envelopesproduced: req.body.envelopesproduced,

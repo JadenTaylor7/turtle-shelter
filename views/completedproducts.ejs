@@ -16,6 +16,11 @@
             <form action="/completedproducts/<%= hostid %>" method="POST">
 
                 <div class="form-group">
+                    <label for="actualattendance">Pockets Produced:</label>
+                    <input type="number" id="actualattendance" name="actualattendance" value="<%= event.actualattendance %>" >
+                </div>
+
+                <div class="form-group">
                     <label for="pocketsproduced">Pockets Produced:</label>
                     <input type="number" id="pocketsproduced" name="pocketsproduced" value="<%= event.pocketsproduced %>" >
                 </div>
