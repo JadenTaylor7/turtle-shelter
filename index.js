@@ -62,11 +62,15 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/login', (req, res) => { 
-    res.render("login")
+    res.render('login', { errorMessage: null });
 });
 
 app.get('/jen', (req, res) => { 
     res.render("jen")
+});
+
+app.get('/tableaudashboard', (req, res) => { 
+    res.render("tableaudashboard")
 });
 
 app.get('/requested-events', async (req, res) => { 
@@ -479,10 +483,10 @@ app.post('/teammembers/login', async (req, res) => {
         // Find the user by username in the database
         const user = await knex('teammembers')
             .where({ username: username })
-            .first(); // Retrieve the first matching row
+            .first();
 
         if (!user) {
-            return res.status(400).send('Cannot find user');
+            return res.render('login', { errorMessage: 'Incorrect username and password' });
         }
 
         // Compare the password entered by the user with the hashed password in the database
@@ -490,8 +494,8 @@ app.post('/teammembers/login', async (req, res) => {
 
         if (isMatch) {
             // If the passwords match, store the user ID and role in the session
-            req.session.teammemberid = user.teammemberid; // Assuming 'id' is the user's primary key
-            req.session.role = user.role; // Store the role in the session
+            req.session.teammemberid = user.teammemberid;
+            req.session.role = user.role;
 
             console.log(`User logged in: ID = ${user.teammemberid}, Role = ${user.role}`);
 
@@ -499,7 +503,7 @@ app.post('/teammembers/login', async (req, res) => {
             return res.redirect('/');
         } else {
             // If the passwords don't match
-            return res.status(400).send('Incorrect password');
+            return res.render('login', { errorMessage: 'Incorrect username and password' });
         }
     } catch (error) {
         console.error('Error during login:', error);
