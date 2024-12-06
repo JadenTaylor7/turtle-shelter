@@ -915,7 +915,7 @@ app.post('/addteammember', (req, res) => {
                     role: role,
                 })
                 .then(() => {
-                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                    res.redirect('/maintainteammembers'); // Redirect to a thank you or confirmation page after submission
                 })
                 .catch((error) => {
                     console.error('Error adding Volunteer:', error);
@@ -994,7 +994,7 @@ app.post('/addadmin', (req, res) => {
                     role: role,
                 })
                 .then(() => {
-                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                    res.redirect('/maintainteammembers'); // Redirect to a thank you or confirmation page after submission
                 })
                 .catch((error) => {
                     console.error('Error adding Volunteer:', error);
