@@ -115,6 +115,10 @@
                     </div>
                 <% } %>
 
+                <% if (session && session.teammemberid && session.role === 'admin') { %>
+                    <a href="/tableaudashboard" class="nav-link">Dashboard</a>
+                <% } %>
+
                 <% if (session && session.teammemberid) { %>
                     <a href="/logout" class="nav-link">Logout</a>
                 <% } %>
