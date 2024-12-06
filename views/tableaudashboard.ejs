@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('partials/navbar') %>
-<body class="event-page">
-    <!-- Hero Section -->
-    <section class="hero" style="background-color: #f4f4f4; padding: 40px 0; text-align: center;">
-        <h1>Dashboard</h1>
+<body class="tableau-page">
+    <section class="hero"></section>
+    <h1 style="
+        text-align: center;
+        color: #2C3E50;
+        font-size: 3rem;
+        font-weight: 700;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        letter-spacing: 1.5px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+        Dashboard
+    </h1>
     </section>
     <div style="width: 90%; margin: 0 auto; padding: 25px;">
         <div class='tableauPlaceholder' id='viz1733498732979' style='position: relative'>
@@ -36,7 +45,5 @@
                 scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
                 vizElement.parentNode.insertBefore(scriptElement, vizElement);
             </script>
-    </div>
-
 </body>
 </html>
