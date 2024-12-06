@@ -1189,6 +1189,70 @@ app.post('/editevent/:hostid', (req, res) => {
             res.status(500).send('Error retrieving volunteers from the database');
         }
     });
+
+    app.get('/helpatevent', async (req, res) => {
+        try {
+            const today = moment().startOf('day'); // Today's date at midnight
+    
+            // Fetch events with approveevent true and openness public
+            const events = await knex('hosts')
+                .select('*')
+                .where('approveevent', true)
+                .andWhere('openness', 'public');
+    
+            // Filter events for today or future dates
+            const upcomingEvents = events.filter(event => 
+                moment(event.eventdate).isSameOrAfter(today)
+            );
+    
+            // Check if a team member is logged in
+            if (!req.session.teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+    
+            // Render the EJS template with filtered events and team member ID
+            res.render('helpatevent', { 
+                events: upcomingEvents, 
+                moment,
+                teammemberid: req.session.teammemberid
+            });
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            res.status(500).send('Error retrieving events from the database');
+        }
+    });
+
+    app.post('/helpatevent', async (req, res) => {
+        try {
+            const teamMemberID = req.session.teammemberid;
+            if (!teamMemberID) {
+                return res.status(403).send('You must be logged in to participate.');
+            }
+    
+            // Extract event participation details
+            const participateEvents = Array.isArray(req.body.ParticipateEvent)
+                ? req.body.ParticipateEvent
+                : req.body.ParticipateEvent
+                ? [req.body.ParticipateEvent]
+                : [];
+    
+            // Insert participation data into the 'event_volunteers' table
+            if (participateEvents.length > 0) {
+                const eventVolunteers = participateEvents.map((hostid) => ({
+                    volunteerid: teamMemberID, // Use the logged-in team member ID
+                    hostid: parseInt(hostid), // Parse hostid to ensure it's an integer
+                }));
+    
+                await knex('event_volunteers').insert(eventVolunteers);
+            }
+    
+            // Redirect or send a success message
+            res.redirect('/helpatevent'); // Redirect to the same page after success
+        } catch (error) {
+            console.error('Error processing volunteer participation:', error);
+            res.status(500).send('Error processing your participation at the event.');
+        }
+    });
   // Test database connection
   knex.raw("SELECT 1")
     .then(() => {

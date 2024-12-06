@@ -21,7 +21,11 @@
                 <div class="dropdown">
                     <button class="dropbtn">How you can help</button>
                     <div class="dropdown-content">
-                        <a href="/volunteer">Volunteer at an event</a>
+                        <% if (session && session.teammemberid) { %>
+                            <a href="/helpatevent">Help at an Event</a>
+                        <% } else { %>
+                            <a href="/volunteer">Volunteer at an event</a>
+                        <% } %>
                         <% if (!session || !session.teammemberid) { %>
                             <a href="/teammember">Become a Team Member</a>
                         <% } %>
