@@ -69,7 +69,15 @@ app.get('/jen', (req, res) => {
     res.render("jen")
 });
 
-app.get('/tableaudashboard', (req, res) => { 
+app.get('/tableaudashboard', (req, res) => {
+     
+    const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+            if (!teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+
     res.render("tableaudashboard")
 });
 
