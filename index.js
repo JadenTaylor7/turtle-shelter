@@ -1224,8 +1224,8 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.post('/helpatevent', async (req, res) => {
         try {
-            const teamMemberID = req.session.teammemberid;
-            if (!teamMemberID) {
+            const teammemberid = req.session.teammemberid;
+            if (!teammemberid) {
                 return res.status(403).send('You must be logged in to participate.');
             }
     
@@ -1236,20 +1236,36 @@ app.post('/editevent/:hostid', (req, res) => {
                 ? [req.body.ParticipateEvent]
                 : [];
     
-            // Insert participation data into the 'event_volunteers' table
             if (participateEvents.length > 0) {
-                const eventVolunteers = participateEvents.map((hostid) => ({
-                    volunteerid: teamMemberID, // Use the logged-in team member ID
-                    hostid: parseInt(hostid), // Parse hostid to ensure it's an integer
-                }));
+                // Fetch existing event-team member pairs
+                const existingParticipations = await knex('event_team_members')
+                    .select('hostid')
+                    .whereIn('hostid', participateEvents.map(Number))
+                    .andWhere('teammemberid', teammemberid);
     
-                await knex('event_volunteers').insert(eventVolunteers);
+                // Extract host IDs from existing participations
+                const existingHostIds = new Set(existingParticipations.map(entry => entry.hostid));
+    
+                // Filter out events already registered
+                const newParticipations = participateEvents
+                    .map(Number) // Ensure all IDs are numbers
+                    .filter(hostid => !existingHostIds.has(hostid));
+    
+                if (newParticipations.length > 0) {
+                    // Prepare and insert new participation entries
+                    const eventVolunteers = newParticipations.map(hostid => ({
+                        teammemberid: teammemberid,
+                        hostid: hostid
+                    }));
+    
+                    await knex('event_team_members').insert(eventVolunteers);
+                }
             }
     
-            // Redirect or send a success message
-            res.redirect('/helpatevent'); // Redirect to the same page after success
+            // Redirect to the same page after success
+            res.redirect('/helpatevent');
         } catch (error) {
-            console.error('Error processing volunteer participation:', error);
+            console.error('Error processing event participation:', error);
             res.status(500).send('Error processing your participation at the event.');
         }
     });
