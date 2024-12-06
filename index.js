@@ -842,25 +842,25 @@ app.post('/update-teammember/:teammemberid', async (req, res) => {
 // Deleting a team member
 app.post('/deleteteammember/:teammemberid', async (req, res) => {
     try {
-        // Retrieve the teammemberid from the request parameters first
-        const teammemberid = req.params.teammemberid;
+        // Retrieve the teammemberid from the request parameters
+        const teammemberidToDelete = req.params.teammemberid;
 
-        // Check if teammemberid exists in the session
-        if (!teammemberid || !req.session.teammemberid) {
-            return res.redirect('/login'); // Redirect to login if not logged in or ID not found
+        // Check if the user is logged in
+        if (!req.session.teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
         }
 
-        // Use the teammemberid from the session to delete the record
-        knex('teammembers')
-            .where('teammemberid', req.params.teammemberid)
-            .del() // Deletes the record with the specified ID
-            .then(() => {
-                res.redirect('/maintainteammembers'); // Redirect after deletion
-            })
-            .catch((error) => {
-                console.error('Error deleting team member:', error);
-                res.status(500).send('Error deleting the team member');
-            });
+        // Check if the teammember being deleted is the same as the logged-in admin
+        if (teammemberidToDelete === req.session.teammemberid.toString()) {
+            return res.redirect('/maintainteammembers'); // Prevent self-deletion and redirect
+        }
+
+        // Proceed to delete the team member
+        await knex('teammembers')
+            .where('teammemberid', teammemberidToDelete)
+            .del(); // Deletes the record with the specified ID
+
+        res.redirect('/maintainteammembers'); // Redirect after successful deletion
     } catch (error) {
         console.error('Error deleting team member:', error);
         res.status(500).send('Error deleting the team member');
