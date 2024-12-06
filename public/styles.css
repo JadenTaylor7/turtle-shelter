@@ -674,6 +674,28 @@ input[type="checkbox"]:checked {
     max-width: 200px;
   }
 
+.tab {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #F1F1F1;
+}
+.tab button {
+    flex: 1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 0;
+    transition: 0.3s;
+    font-size: 17px;
+    text-align: center;
+}
+.tab button:hover {
+    background-color: #ddd;
+}
+.tab button.active {
+    background-color: #ccc;
+}
 
 .add-button {
     margin: 10px 0;
