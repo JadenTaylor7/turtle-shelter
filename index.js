@@ -1052,29 +1052,54 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/maintainevents', (req, res) => {
         const today = moment().startOf('day'); // Today's date at midnight
-     
-        // Fetch events from the 'hosts' table and join with the 'event_volunteers' table to count volunteers
+    
+        // Fetch events from the 'hosts' table
         knex('hosts')
-            .leftJoin('event_volunteers', 'hosts.hostid', '=', 'event_volunteers.hostid')  // Join with event_volunteers to count volunteers
-            .leftJoin('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid') // Join with volunteers
-            .select(
-                'hosts.*',
-                knex.raw('COUNT(DISTINCT volunteers.volunteerid) as volunteer_count')  // Count distinct volunteers for each event
-            )
-            .groupBy('hosts.hostid')  // Group by event to get the volunteer count per event
+            .select('*')
             .then(events => {
-                const today = moment().startOf('day');  // Today's date at midnight
-
-                // Filter events into upcoming and past
-                const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
-                const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
-
-                // Render the maintain events page with upcoming and past events and volunteer count
-                res.render('maintainevents', { upcomingEvents, pastEvents, moment });
+                // Fetch volunteer counts separately for each event
+                const volunteerCountsQuery = knex('event_volunteers')
+                    .leftJoin('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid') // Join with volunteers to count distinct volunteers
+                    .select('event_volunteers.hostid', knex.raw('COUNT(DISTINCT volunteers.volunteerid) as volunteer_count'))
+                    .groupBy('event_volunteers.hostid');  // Group by hostid
+    
+                // Fetch team member counts separately for each event
+                const teamMemberCountsQuery = knex('event_team_members')
+                    .leftJoin('teammembers', 'event_team_members.teammemberid', '=', 'teammembers.teammemberid') // Join with teammembers to count distinct team members
+                    .select('event_team_members.hostid', knex.raw('COUNT(DISTINCT event_team_members.teammemberid) as teammember_count'))
+                    .groupBy('event_team_members.hostid');  // Group by hostid
+    
+                // Execute both queries in parallel
+                Promise.all([volunteerCountsQuery, teamMemberCountsQuery])
+                    .then(([volunteerCounts, teamMemberCounts]) => {
+                        // Add the volunteer and team member counts to each event
+                        events = events.map(event => {
+                            // Find the volunteer count for the current event
+                            const volunteerCount = volunteerCounts.find(v => v.hostid === event.hostid);
+                            const teamMemberCount = teamMemberCounts.find(t => t.hostid === event.hostid);
+    
+                            // Add the counts to the event object
+                            event.volunteer_count = volunteerCount ? volunteerCount.volunteer_count : 0;
+                            event.teammember_count = teamMemberCount ? teamMemberCount.teammember_count : 0;
+    
+                            return event;
+                        });
+    
+                        // Filter events into upcoming and past
+                        const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
+                        const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
+    
+                        // Render the maintain events page with upcoming and past events, and counts
+                        res.render('maintainevents', { upcomingEvents, pastEvents, moment });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching volunteer or team member counts:', error);
+                        res.status(500).send('Internal Server Error');
+                    });
             })
             .catch(error => {
-                console.error('Error fetching events:', error);  // Log the error
-                res.status(500).send('Internal Server Error');  // Send a 500 response on error
+                console.error('Error fetching events:', error);
+                res.status(500).send('Internal Server Error');
             });
     });
 
