@@ -1253,6 +1253,45 @@ app.post('/editevent/:hostid', (req, res) => {
             res.status(500).send('Error processing your participation at the event.');
         }
     });
+
+    app.get('/completedproducts/:hostid', async (req, res) => {
+        try {
+            const hostid = req.params.hostid;
+            const event = await knex('hosts')
+                .where('hostid', hostid)
+                .first();
+    
+            res.render('completedproducts', { event, hostid });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error loading the edit page');
+        }
+    });
+
+    app.post('/completedproducts/:hostid', (req, res) => {
+        const hostid = req.params.hostid;
+    
+        // Create an object with the updated fields
+        const updatedProductData = {
+            pocketsproduced: req.body.pocketsproduced,
+            collarsproduced: req.body.collarsproduced,
+            envelopesproduced: req.body.envelopesproduced,
+            vestsproduced: req.body.vestsproduced,
+            completeproduced: req.body.completeproduced,
+        };
+    
+        // Update the record in the database
+        knex('hosts')
+            .where({ hostid: hostid }) // Find the record by host ID
+            .update(updatedProductData) // Update the fields
+            .then(() => {
+                res.redirect('/maintainevents'); // Redirect after successful update
+            })
+            .catch(error => {
+                console.error('Error updating completed products:', error);
+                res.status(500).send('Internal Server Error');
+            });
+    });
   // Test database connection
   knex.raw("SELECT 1")
     .then(() => {

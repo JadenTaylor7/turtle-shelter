@@ -83,6 +83,7 @@
                     <th>Edit</th>
                     <th>Delete</th>
                     <th>Volunteers</th>
+                    <th>Completed</th>
                 </tr>
             </thead>
             <tbody id="eventTableBody">
@@ -108,6 +109,7 @@
                         </form>
                     </td>
                     <td><a href="/eventvolunteer/<%= event.hostid %>" class="volunteer-button">View</a></td>
+                    <td><a href="/completedproducts/<%= event.hostid %>" class="volunteer-button">Add</a></td>
                 </tr>
                 <% }); %>
             </tbody>
