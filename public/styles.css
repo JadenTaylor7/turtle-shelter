@@ -703,3 +703,19 @@ input[type="checkbox"]:checked {
 .volunteer-button:hover {
     background-color: #0056b3;
 }
+
+.checkbox-group {
+    display: flex;
+    align-items: center; /* Align the checkbox and label vertically */
+    gap: 10px; /* Add spacing between the checkbox and label */
+    margin-bottom: 10px; /* Add spacing below the group */
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin: 0; /* Remove any default margin around the checkbox */
+}
+
+.checkbox-group label {
+    margin: 0; /* Ensure consistent spacing for the label */
+    font-size: 16px; /* Optional: Adjust font size for better readability */
+}

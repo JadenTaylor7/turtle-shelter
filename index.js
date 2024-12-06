@@ -377,6 +377,7 @@ app.post('/volunteer', async (req, res) => {
         const VolEmail = req.body.VolEmail || ''; // Default to empty string if not provided
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
+        const Newsletter = req.body.newsletter === 'true'; 
         const CreateDat = new Date();
 
         // Extract ParticipateEvent as an array; ensure it is always an array for consistency
@@ -394,7 +395,8 @@ app.post('/volunteer', async (req, res) => {
                 volemail: VolEmail,
                 sewinglevel: SewingLevel,
                 referraltype: ReferralType,
-                createdat: CreateDat
+                createdat: CreateDat,
+                newsletter: Newsletter
             })
             .returning('*'); // This returns the inserted volunteer data
 
@@ -637,7 +639,7 @@ app.post('/teammembers/edit-account', async (req, res) => {
     try {
         const {
             memfirstname, memlastname, username, mememail,
-            memohonenumber, memstraddress, memcity, memstate, memzip,
+            memohonenumber, memstraddress, memcity, memstate, memzip, memsewinglevel, memskills, can_teach, event_lead, memhoursmonthly, memvolunteerlocation, referral_type
             // Add other fields
         } = req.body;
 
@@ -660,6 +662,13 @@ app.post('/teammembers/edit-account', async (req, res) => {
                 memcity: memcity,
                 memstate: memstate,
                 memzip: memzip,
+                memsewinglevel: memsewinglevel,
+                memskills: memskills,
+                can_teach: can_teach,
+                event_lead: event_lead,
+                memhoursmonthly: memhoursmonthly,
+                memvolunteerlocation: JSON.stringify(memvolunteerlocation),
+                referral_type: referral_type,
                 // Update other fields if necessary
             });
 
