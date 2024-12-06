@@ -70,7 +70,7 @@ app.get('/jen', (req, res) => {
 });
 
 app.get('/tableaudashboard', (req, res) => {
-     
+
     const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
     
             // Check if the user is logged in
@@ -1461,37 +1461,36 @@ app.post('/editevent/:hostid', (req, res) => {
     });
 
     app.post('/completedproducts/:hostid', (req, res) => {
+    const teammemberid = req.session.teammemberid;
 
-        const teammemberid = req.session.teammemberid;
+    if (!teammemberid) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
 
-        if (!teammemberid) {
-            return res.redirect('/login'); // Redirect to login if not logged in
-        }
-        
-        const hostid = req.params.hostid;
-    
-        // Create an object with the updated fields
-        const updatedProductData = {
-            actualattendance: req.body.actualattendance,
-            pocketsproduced: req.body.pocketsproduced,
-            collarsproduced: req.body.collarsproduced,
-            envelopesproduced: req.body.envelopesproduced,
-            vestsproduced: req.body.vestsproduced,
-            completeproduced: req.body.completeproduced,
-        };
-    
-        // Update the record in the database
-        knex('hosts')
-            .where({ hostid: hostid }) // Find the record by host ID
-            .update(updatedProductData) // Update the fields
-            .then(() => {
-                res.redirect('/maintainevents'); // Redirect after successful update
-            })
-            .catch(error => {
-                console.error('Error updating completed products:', error);
-                res.status(500).send('Internal Server Error');
-            });
-    });
+    const hostid = req.params.hostid;
+
+    // Create an object with the updated fields, allowing null values for empty inputs
+    const updatedProductData = {
+        actualattendance: req.body.actualattendance || null,
+        pocketsproduced: req.body.pocketsproduced || null,
+        collarsproduced: req.body.collarsproduced || null,
+        envelopesproduced: req.body.envelopesproduced || null,
+        vestsproduced: req.body.vestsproduced || null,
+        completeproduced: req.body.completeproduced || null,
+    };
+
+    // Update the record in the database
+    knex('hosts')
+        .where({ hostid: hostid }) // Find the record by host ID
+        .update(updatedProductData) // Update the fields
+        .then(() => {
+            res.redirect('/maintainevents'); // Redirect after successful update
+        })
+        .catch(error => {
+            console.error('Error updating completed products:', error);
+            res.status(500).send('Internal Server Error');
+        });
+});
 
     app.get('/myevents', async (req, res) => {
         try {
