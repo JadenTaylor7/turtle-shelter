@@ -215,8 +215,8 @@ footer {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('/hostEvent.jpg'); /* Move background image here */
-    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-image: url('/hostEvent.jpg'); /* Background image */
+    background-color: rgba(0, 0, 0, 0.8); /* Dark overlay with proper alpha value */
     background-blend-mode: darken;
     margin-top: 0; /* Ensure it starts at the very top */
     padding-top: 0; /* Remove any padding */
@@ -292,7 +292,7 @@ footer {
     background-position: center;
     background-repeat: no-repeat;
     background-image: url('/volunteer.jpeg'); /* Move background image here */
-    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-color: rgba(0, 0, 0, 0.85); /* Dark overlay for better text visibility */
     background-blend-mode: darken;
     margin-top: 0; /* Ensure it starts at the very top */
     padding-top: 0; /* Remove any padding */
