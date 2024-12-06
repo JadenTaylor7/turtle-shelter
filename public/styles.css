@@ -224,7 +224,7 @@ footer {
 
 .tableau-page .hero {
     position: relative;
-    height: 8vh;
+    height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
