@@ -25,6 +25,12 @@
                                 <label for="ApproveEvent-<%= index %>" style="margin-right: 10px;">Approve</label>
                                 <input type="checkbox" id="ApproveEvent-<%= index %>" name="ApproveEvents[]" value="<%= event.hostid %>">
                             </div>
+                            <form method="POST" action="/delete-requested-event" style="margin-left: 15px;">
+                                <input type="hidden" name="hostid" value="<%= event.hostid %>">
+                                <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                    Delete
+                                </button>
+                            </form>
                         </div>
                         <div class="flashcard-details" id="details-<%= index %>" style="margin-top: 15px; display: none;">
                             <p>Time: <%= event.eventstarttime %></p>
@@ -56,6 +62,5 @@
             }
         }
 </script>
-    
 </body>
 </html>

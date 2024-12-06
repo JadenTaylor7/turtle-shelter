@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('partials/navbar') %>
-<body class="event-page">
+<body class="volunteer-page">
 
     <!-- Hero Section -->
     <section class="hero" style="background-color: #f4f4f4; padding: 40px 0; text-align: center;">
@@ -33,38 +33,45 @@
                 <div class="form-group">
                     <label>Sewing Level</label>
                     <div class="radio-option">
-                      <input type="radio" id="none" name="SewingLevel" value="none">
-                      <label for="none">none</label>
+                        <input type="radio" id="none" name="SewingLevel" value="none" required>
+                        <label for="none">none</label>
                     </div>
                     <div class="radio-option">
-                      <input type="radio" id="beginner" name="SewingLevel" value="beginner">
-                      <label for="beginner">beginner</label>
+                        <input type="radio" id="beginner" name="SewingLevel" value="beginner" required>
+                        <label for="beginner">beginner</label>
                     </div>
                     <div class="radio-option">
-                      <input type="radio" id="intermediate" name="SewingLevel" value="intermediate">
-                      <label for="intermediate">intermediate</label>
+                        <input type="radio" id="intermediate" name="SewingLevel" value="intermediate" required>
+                        <label for="intermediate">intermediate</label>
                     </div>
                     <div class="radio-option">
-                        <input type="radio" id="experienced" name="SewingLevel" value="experienced">
+                        <input type="radio" id="experienced" name="SewingLevel" value="experienced" required>
                         <label for="experienced">experienced</label>
                     </div>
-                  </div>
+                </div>
 
                   <div class="form-group">
                     <label for="ReferralType">How did you hear about the opportunity?</label>
                     <select id="ReferralType" name="ReferralType" required>
-                        <option value="Work">Work</option>
+                        <option value="Friend/Family">Friend/Family</option>
                         <option value="Turtle Shell Volunteer">Turtle Shell Volunteer</option>
                         <option value="Search Engine">Search Engine</option>
                         <option value="Social Media">Social Media</option>
-                        <option value="Friend/Family">Friend/Family</option>
+                        <option value="Work">Work</option>
                         <option value="Blog/Article">Blog/Article</option>
                         <option value="News/Media">News/Media</option>
                         <option value="Event/Conference">Event/Conference</option>
                         <option value="Other">Other</option>
                     </select>
-                </div>
                     </div>
+                    
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter" name="newsletter" value="true">
+                        <label for="newsletter" style="margin-left: 20px;">Notify me about upcoming Events</label>
+                    </div>
+                </div>
+
                 </section>
                 <section class="event-display" style="margin-top: 40px; padding: 20px; background-color: #f9f9f9;">
                     <h2>Upcoming Events</h2>
@@ -75,8 +82,9 @@
                                     <div class="flashcard-summary" style="display: flex; justify-content: space-between; align-items: center;">
                                         <div>
                                             <h3 style="margin: 0;"><%= event.eventname %></h3>
-                                            <p style="margin: 5px 0 0;">Date: <%= event.eventdate %></p>
-                                            <p style="margin: 5px 0 0;">Location: <%= event.eventcity %>, <%= event.eventstate %></p>
+                                            <p style="margin: 5px 0 0;">Date: <%= moment(event.eventdate).format('YYYY-MM-DD') %></p>
+                                            <p style="margin: 5px 0 0;">Start Time: <%= moment(event.eventstarttime, 'HH:mm:ss').format('HH:mm') %></p>
+                                            <p style="margin: 5px 0 0;">Location: <%= event.eventstraddress %>, <%= event.eventcity %>, <%= event.eventstate %>, <%= event.eventzip %></p>
                                         </div>
                                         <div class="form-group" style="display: flex; align-items: center;">
                                             <label for="ParticipateEvent-<%= index %>" style="margin-right: 10px;">Participate</label>
@@ -84,7 +92,6 @@
                                         </div>
                                     </div>
                                     <div class="flashcard-details" id="details-<%= index %>" style="margin-top: 15px; display: none;">
-                                        <p>Time: <%= event.eventstarttime %></p>
                                         <p>Description: <%= event.description || "No description available." %></p>
                                     </div>
                                 </div>
@@ -95,23 +102,12 @@
                         </div>
                     </form>
                 </section>
-                
-                <script>
-                    function toggleDetails(index) {
-                        const details = document.getElementById(`details-${index}`);
-                        details.style.display = details.style.display === 'block' ? 'none' : 'block';
-                    }
-
-                    function toggleHiddenInput() {
-                        const checkbox = document.getElementById('ParticipateEvent'); // Match the case exactly with the ID in HTML
-                        const hiddenInput = document.getElementById('hostid');
-                        
-                        if (checkbox.checked) {
-                            hiddenInput.disabled = false; // Enable hidden input when checkbox is checked
-                        } else {
-                            hiddenInput.disabled = true; // Disable hidden input when checkbox is unchecked
-                        }
-                    }
-    </script>
+            <footer>
+                <a href="https://www.facebook.com/turtleshelterproject/" target="_blank" class="footer-link"> 
+                    <img src="facebook-logo.jpg" alt="Facebook" class="footer-img"> </a> 
+                <p>
+                    Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com 
+                </p>
+            </footer>
 </body>
 </html>

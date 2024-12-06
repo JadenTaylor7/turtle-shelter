@@ -16,12 +16,7 @@
             <nav class="settings-nav">
                 <ul>
                     <li><a href="#" class="nav-link active" id="reset-password-link">Reset Password</a></li>
-                    <li><a href="#" class="nav-link" id="admin-key-link">Admin Key</a></li>
                     <li><a href="#" class="nav-link" id="edit-account-details-link">Edit Account Details</a></li>
-                    <% if (user && user.role === 'admin') { %>
-                        <!-- Add Admin Link -->
-                        <li><a href="#" class="nav-link" id="add-admin-link">Add Admin</a></li>
-                    <% } %>
                 </ul>
             </nav>
         </div>
@@ -44,21 +39,6 @@
                         <input type="password" id="confirm-password" name="confirmPassword" required>
                     </div>
                     <button type="submit" class="submit-btn">Change Password</button>
-                </form>
-            </div>
-
-            <div id="admin-key-section" class="settings-section">
-                <h2>Change Admin Key</h2>
-                <form action="/teammembers/change-admin-key" method="POST" class="change-admin-key-form">
-                    <div class="form-group">
-                        <label for="current-admin-key">Current Admin Key</label>
-                        <input type="text" id="current-admin-key" name="currentAdminKey" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="new-admin-key">New Admin Key</label>
-                        <input type="text" id="new-admin-key" name="newAdminKey" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Change Admin Key</button>
                 </form>
             </div>
 
@@ -93,216 +73,197 @@
                         <label for="edit-city">City</label>
                         <input type="text" id="edit-city" name="memcity" value="<%= user?.memcity || '' %>" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="edit-state">State</label>
                         <input type="text" id="edit-state" name="memstate" value="<%= user?.memstate || '' %>" required>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="edit-state">What’s the state of the event?</label>
+                        <select id="edit-state" name="memstate" required>
+                            <option value="" disabled>Select a state</option>
+                            <option value="AL" <%= user?.memstate === 'AL' ? 'selected' : '' %>>Alabama</option>
+                            <option value="AK" <%= user?.memstate === 'AK' ? 'selected' : '' %>>Alaska</option>
+                            <option value="AZ" <%= user?.memstate === 'AZ' ? 'selected' : '' %>>Arizona</option>
+                            <option value="AR" <%= user?.memstate === 'AR' ? 'selected' : '' %>>Arkansas</option>
+                            <option value="CA" <%= user?.memstate === 'CA' ? 'selected' : '' %>>California</option>
+                            <option value="CO" <%= user?.memstate === 'CO' ? 'selected' : '' %>>Colorado</option>
+                            <option value="CT" <%= user?.memstate === 'CT' ? 'selected' : '' %>>Connecticut</option>
+                            <option value="DE" <%= user?.memstate === 'DE' ? 'selected' : '' %>>Delaware</option>
+                            <option value="FL" <%= user?.memstate === 'FL' ? 'selected' : '' %>>Florida</option>
+                            <option value="GA" <%= user?.memstate === 'GA' ? 'selected' : '' %>>Georgia</option>
+                            <option value="HI" <%= user?.memstate === 'HI' ? 'selected' : '' %>>Hawaii</option>
+                            <option value="ID" <%= user?.memstate === 'ID' ? 'selected' : '' %>>Idaho</option>
+                            <option value="IL" <%= user?.memstate === 'IL' ? 'selected' : '' %>>Illinois</option>
+                            <option value="IN" <%= user?.memstate === 'IN' ? 'selected' : '' %>>Indiana</option>
+                            <option value="IA" <%= user?.memstate === 'IA' ? 'selected' : '' %>>Iowa</option>
+                            <option value="KS" <%= user?.memstate === 'KS' ? 'selected' : '' %>>Kansas</option>
+                            <option value="KY" <%= user?.memstate === 'KY' ? 'selected' : '' %>>Kentucky</option>
+                            <option value="LA" <%= user?.memstate === 'LA' ? 'selected' : '' %>>Louisiana</option>
+                            <option value="ME" <%= user?.memstate === 'ME' ? 'selected' : '' %>>Maine</option>
+                            <option value="MD" <%= user?.memstate === 'MD' ? 'selected' : '' %>>Maryland</option>
+                            <option value="MA" <%= user?.memstate === 'MA' ? 'selected' : '' %>>Massachusetts</option>
+                            <option value="MI" <%= user?.memstate === 'MI' ? 'selected' : '' %>>Michigan</option>
+                            <option value="MN" <%= user?.memstate === 'MN' ? 'selected' : '' %>>Minnesota</option>
+                            <option value="MS" <%= user?.memstate === 'MS' ? 'selected' : '' %>>Mississippi</option>
+                            <option value="MO" <%= user?.memstate === 'MO' ? 'selected' : '' %>>Missouri</option>
+                            <option value="MT" <%= user?.memstate === 'MT' ? 'selected' : '' %>>Montana</option>
+                            <option value="NE" <%= user?.memstate === 'NE' ? 'selected' : '' %>>Nebraska</option>
+                            <option value="NV" <%= user?.memstate === 'NV' ? 'selected' : '' %>>Nevada</option>
+                            <option value="NH" <%= user?.memstate === 'NH' ? 'selected' : '' %>>New Hampshire</option>
+                            <option value="NJ" <%= user?.memstate === 'NJ' ? 'selected' : '' %>>New Jersey</option>
+                            <option value="NM" <%= user?.memstate === 'NM' ? 'selected' : '' %>>New Mexico</option>
+                            <option value="NY" <%= user?.memstate === 'NY' ? 'selected' : '' %>>New York</option>
+                            <option value="NC" <%= user?.memstate === 'NC' ? 'selected' : '' %>>North Carolina</option>
+                            <option value="ND" <%= user?.memstate === 'ND' ? 'selected' : '' %>>North Dakota</option>
+                            <option value="OH" <%= user?.memstate === 'OH' ? 'selected' : '' %>>Ohio</option>
+                            <option value="OK" <%= user?.memstate === 'OK' ? 'selected' : '' %>>Oklahoma</option>
+                            <option value="OR" <%= user?.memstate === 'OR' ? 'selected' : '' %>>Oregon</option>
+                            <option value="PA" <%= user?.memstate === 'PA' ? 'selected' : '' %>>Pennsylvania</option>
+                            <option value="RI" <%= user?.memstate === 'RI' ? 'selected' : '' %>>Rhode Island</option>
+                            <option value="SC" <%= user?.memstate === 'SC' ? 'selected' : '' %>>South Carolina</option>
+                            <option value="SD" <%= user?.memstate === 'SD' ? 'selected' : '' %>>South Dakota</option>
+                            <option value="TN" <%= user?.memstate === 'TN' ? 'selected' : '' %>>Tennessee</option>
+                            <option value="TX" <%= user?.memstate === 'TX' ? 'selected' : '' %>>Texas</option>
+                            <option value="UT" <%= user?.memstate === 'UT' ? 'selected' : '' %>>Utah</option>
+                            <option value="VT" <%= user?.memstate === 'VT' ? 'selected' : '' %>>Vermont</option>
+                            <option value="VA" <%= user?.memstate === 'VA' ? 'selected' : '' %>>Virginia</option>
+                            <option value="WA" <%= user?.memstate === 'WA' ? 'selected' : '' %>>Washington</option>
+                            <option value="WV" <%= user?.memstate === 'WV' ? 'selected' : '' %>>West Virginia</option>
+                            <option value="WI" <%= user?.memstate === 'WI' ? 'selected' : '' %>>Wisconsin</option>
+                            <option value="WY" <%= user?.memstate === 'WY' ? 'selected' : '' %>>Wyoming</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="edit-zip">ZIP Code</label>
                         <input type="text" id="edit-zip" name="memzip" value="<%= user?.memzip || '' %>" required>
                     </div>
-                    <button type="submit" class="submit-btn">Save Changes</button>
-                </form>
-            </div>
+                    
+                    <div class="form-group">
+                        <label>Sewing Level</label>
+                        <div class="radio-option">
+                            <input type="radio" id="none" name="memsewinglevel" value="none" <%= user?.memsewinglevel === 'none' ? 'checked' : '' %> required>
+                            <label for="none">none</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="beginner" name="memsewinglevel" value="beginner" <%= user?.memsewinglevel === 'beginner' ? 'checked' : '' %> required>
+                            <label for="beginner">beginner</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="intermediate" name="memsewinglevel" value="intermediate" <%= user?.memsewinglevel === 'intermediate' ? 'checked' : '' %> required>
+                            <label for="intermediate">intermediate</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="experienced" name="memsewinglevel" value="experienced" <%= user?.memsewinglevel === 'experienced' ? 'checked' : '' %> required>
+                            <label for="experienced">experienced</label>
+                        </div>
+                    </div>
 
-            <!-- Add Admin Section -->
-            <div id="add-admin-section" class="settings-section">
-                <h2>Add Admin</h2>
-                <form action="/teammembers/add-admin" method="POST">
-        
-                    <!-- First Name -->
+                    
+
                     <div class="form-group">
-                        <label for="MemFirstName">First Name:</label>
-                        <input type="text" id="MemFirstName" name="MemFirstName" required>
+                        <label for="MemSkills">Skills other than sewing (optional)</label>
+                        <input type="text" id="MemSkills" name="memskills" value="<%= user?.memskills || '' %>">
                     </div>
-            
-                    <!-- Last Name -->
-                    <div class="form-group">
-                        <label for="MemLastName">Last Name:</label>
-                        <input type="text" id="MemLastName" name="MemLastName" required>
-                    </div>
-            
-                    <!-- Username -->
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-            
-                    <!-- Password -->
-                    <div class="form-group">
-                        <label for="VolPassword">Password:</label>
-                        <input type="password" id="VolPassword" name="VolPassword" required>
-                    </div>
-            
-                    <!-- E-Mail -->
-                    <div class="form-group">
-                        <label for="MemEmail">E-Mail:</label>
-                        <input type="email" id="MemEmail" name="MemEmail" required>
-                    </div>
-            
-                    <!-- Phone Number -->
-                    <div class="form-group">
-                        <label for="MemPhoneNumber">Phone Number:</label>
-                        <input type="tel" id="MemPhoneNumber" name="MemPhoneNumber" required>
-                    </div>
-            
-                    <!-- Street Address -->
-                    <div class="form-group">
-                        <label for="MemStrAddress">Street Address:</label>
-                        <input type="text" id="MemStrAddress" name="MemStrAddress" required>
-                    </div>
-            
-                    <!-- City -->
-                    <div class="form-group">
-                        <label for="MemCity">City:</label>
-                        <input type="text" id="MemCity" name="MemCity" required>
-                    </div>
-            
-                    <!-- State -->
-                    <div class="form-group">
-                        <label for="MemState">State:</label>
-                        <input type="text" id="MemState" name="MemState" required>
-                    </div>
-            
-                    <!-- ZIP Code -->
-                    <div class="form-group">
-                        <label for="MemZip">ZIP Code:</label>
-                        <input type="text" id="MemZip" name="MemZip" required>
-                    </div>
-            
-                    <!-- Sewing Level (Radio buttons) -->
-                    <div class="form-group">
-                        <label>Sewing Level:</label>
-                        <div class="radio-option">
-                            <input type="radio" id="none" name="MemSewingLevel" value="none" required>
-                            <label for="none">None</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="beginner" name="MemSewingLevel" value="beginner">
-                            <label for="beginner">Beginner</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="intermediate" name="MemSewingLevel" value="intermediate">
-                            <label for="intermediate">Intermediate</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="experienced" name="MemSewingLevel" value="experienced">
-                            <label for="experienced">Experienced</label>
-                        </div>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="MemSkills">Skills other than sewing (optional):</label>
-                        <input type="text" id="MemSkills" name="MemSkills">
-                    </div>
-            
-                    <!-- Can you teach others to sew? (Radio buttons) -->
+
                     <div class="form-group">
                         <label>Can you teach others to sew?</label>
                         <div class="radio-option">
-                            <input type="radio" id="teachYes" name="CanTeach" value="yes" required>
+                            <input type="radio" id="teachYes" name="can_teach" value="true" <%= user?.can_teach === true ? 'checked' : '' %> required>
                             <label for="teachYes">Yes</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="teachNo" name="CanTeach" value="no">
+                            <input type="radio" id="teachNo" name="can_teach" value="false" <%= user?.can_teach === false ? 'checked' : '' %>>
                             <label for="teachNo">No</label>
                         </div>
                     </div>
-            
-                    <!-- Would you be willing to take the lead at an event? (Radio buttons) -->
+
                     <div class="form-group">
                         <label>Would you be willing to take the lead at an event?</label>
                         <div class="radio-option">
-                            <input type="radio" id="leadYes" name="TakeLead" value="yes" required>
+                            <input type="radio" id="leadYes" name="event_lead" value="yes" <%= user?.event_lead === 'yes' ? 'checked' : '' %> required>
                             <label for="leadYes">Yes</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="leadNo" name="TakeLead" value="no">
+                            <input type="radio" id="leadNo" name="event_lead" value="no" <%= user?.event_lead === 'no' ? 'checked' : '' %>>
                             <label for="leadNo">No</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="leadMaybe" name="TakeLead" value="maybe">
+                            <input type="radio" id="leadMaybe" name="event_lead" value="maybe" <%= user?.event_lead === 'maybe' ? 'checked' : '' %>>
                             <label for="leadMaybe">Maybe</label>
                         </div>
                     </div>
-            
-                    <!-- Volunteer Hours per Month -->
+
                     <div class="form-group">
                         <label for="MemHoursMonthly">Number of hours willing to volunteer per month:</label>
-                        <input type="number" id="MemHoursMonthly" name="MemHoursMonthly" required>
+                        <input type="number" id="MemHoursMonthly" name="memhoursmonthly" value="<%= user?.memhoursmonthly || '' %>" min="0" required>
                     </div>
-            
-                    <!-- Areas of Utah willing to volunteer in -->
+
                     <div class="form-group">
                         <label for="MemVolunteerLocation">What areas of Utah are you willing to volunteer in?</label>
                         <div id="MemVolunteerLocation">
-                            <div>
-                                <input type="checkbox" id="Provo" name="MemVolunteerLocation[]" value="Provo">
+                            <div class="checkbox-group">
                                 <label for="Provo">Provo</label>
+                                <input type="checkbox" id="Provo" name="memvolunteerlocation[]" value="Provo" <%= user?.memvolunteerlocation?.includes('Provo') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="AmericanFork" name="MemVolunteerLocation[]" value="American Fork">
+                            <div class="checkbox-group">
                                 <label for="AmericanFork">American Fork</label>
+                                <input type="checkbox" id="AmericanFork" name="memvolunteerlocation[]" value="American Fork" <%= user?.memvolunteerlocation?.includes('American Fork') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Riverton" name="MemVolunteerLocation[]" value="Riverton">
+                            <div class="checkbox-group">
                                 <label for="Riverton">Riverton</label>
+                                <input type="checkbox" id="Riverton" name="memvolunteerlocation[]" value="Riverton" <%= user?.memvolunteerlocation?.includes('Riverton') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Sandy" name="MemVolunteerLocation[]" value="Sandy">
+                            <div class="checkbox-group">
                                 <label for="Sandy">Sandy</label>
+                                <input type="checkbox" id="Sandy" name="memvolunteerlocation[]" value="Sandy" <%= user?.memvolunteerlocation?.includes('Sandy') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="SaltLakeCity" name="MemVolunteerLocation[]" value="Salt Lake City">
+                            <div class="checkbox-group">
                                 <label for="SaltLakeCity">Salt Lake City</label>
+                                <input type="checkbox" id="SaltLakeCity" name="memvolunteerlocation[]" value="Salt Lake City" <%= user?.memvolunteerlocation?.includes('Salt Lake City') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Bountiful" name="MemVolunteerLocation[]" value="Bountiful">
+                            <div class="checkbox-group">
                                 <label for="Bountiful">Bountiful</label>
+                                <input type="checkbox" id="Bountiful" name="memvolunteerlocation[]" value="Bountiful" <%= user?.memvolunteerlocation?.includes('Bountiful') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Farmington" name="MemVolunteerLocation[]" value="Farmington">
+                            <div class="checkbox-group">
                                 <label for="Farmington">Farmington</label>
+                                <input type="checkbox" id="Farmington" name="memvolunteerlocation[]" value="Farmington" <%= user?.memvolunteerlocation?.includes('Farmington') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Layton" name="MemVolunteerLocation[]" value="Layton">
+                            <div class="checkbox-group">
                                 <label for="Layton">Layton</label>
+                                <input type="checkbox" id="Layton" name="memvolunteerlocation[]" value="Layton" <%= user?.memvolunteerlocation?.includes('Layton') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Ogden" name="MemVolunteerLocation[]" value="Ogden">
+                            <div class="checkbox-group">
                                 <label for="Ogden">Ogden</label>
+                                <input type="checkbox" id="Ogden" name="memvolunteerlocation[]" value="Ogden" <%= user?.memvolunteerlocation?.includes('Ogden') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="BrighamCity" name="MemVolunteerLocation[]" value="Brigham City">
+                            <div class="checkbox-group">
                                 <label for="BrighamCity">Brigham City</label>
+                                <input type="checkbox" id="BrighamCity" name="memvolunteerlocation[]" value="Brigham City" <%= user?.memvolunteerlocation?.includes('Brigham City') ? 'checked' : '' %> >
                             </div>
-                            <div>
-                                <input type="checkbox" id="Logan" name="MemVolunteerLocation[]" value="Logan">
+                            <div class="checkbox-group">
                                 <label for="Logan">Logan</label>
+                                <input type="checkbox" id="Logan" name="memvolunteerlocation[]" value="Logan" <%= user?.memvolunteerlocation?.includes('Logan') ? 'checked' : '' %> >
                             </div>
                         </div>
                     </div>
-            
-                    <!-- Referral Type (How did you hear about the opportunity?) -->
+
                     <div class="form-group">
                         <label for="ReferralType">How did you hear about the opportunity?</label>
-                        <select id="ReferralType" name="ReferralType" required>
-                            <option value="Work">Work</option>
-                            <option value="Turtle Shell Volunteer">Turtle Shell Volunteer</option>
-                            <option value="Search Engine">Search Engine</option>
-                            <option value="Social Media">Social Media</option>
-                            <option value="Friend/Family">Friend/Family</option>
-                            <option value="Blog/Article">Blog/Article</option>
-                            <option value="News/Media">News/Media</option>
-                            <option value="Event/Conference">Event/Conference</option>
-                            <option value="Other">Other</option>
+                        <select id="ReferralType" name="referral_type" required>
+                            <option value="Friend/Family" <%= user?.referral_type === 'Friend/Family' ? 'selected' : '' %>>Friend/Family</option>
+                            <option value="Turtle Shell Volunteer" <%= user?.referral_type === 'Turtle Shell Volunteer' ? 'selected' : '' %>>Turtle Shell Volunteer</option>
+                            <option value="Search Engine" <%= user?.referral_type === 'Search Engine' ? 'selected' : '' %>>Search Engine</option>
+                            <option value="Social Media" <%= user?.referral_type === 'Social Media' ? 'selected' : '' %>>Social Media</option>
+                            <option value="Work" <%= user?.referral_type === 'Work' ? 'selected' : '' %>>Work</option>
+                            <option value="Blog/Article" <%= user?.referral_type === 'Blog/Article' ? 'selected' : '' %>>Blog/Article</option>
+                            <option value="News/Media" <%= user?.referral_type === 'News/Media' ? 'selected' : '' %>>News/Media</option>
+                            <option value="Event/Conference" <%= user?.referral_type === 'Event/Conference' ? 'selected' : '' %>>Event/Conference</option>
+                            <option value="Other" <%= user?.referral_type === 'Other' ? 'selected' : '' %>>Other</option>
                         </select>
                     </div>
-            
-                    <!-- Submit Button -->
-                    <div class="form-group">
-                        <button type="submit">Submit</button>
-                    </div>
+
+                    <button type="submit" class="submit-btn">Save Changes</button>
                 </form>
             </div>
         </section>
@@ -328,7 +289,6 @@
                 });
             });
         });
-    </script>
-    
+    </script>    
 </body>
 </html>

@@ -57,29 +57,38 @@ app.get('/', (req, res) => {
     res.render("index")
 });
 
-// Add these to your existing index.js
-app.get('/admin', (req, res) => { 
-    res.render("admin")
-});
-
 app.get('/register', (req, res) => { 
     res.render("register")
 });
 
 app.get('/login', (req, res) => { 
-    res.render("login")
-});
-
-app.get('/hostForm', (req, res) => { 
-    res.render("hostForm")
+    res.render('login', { errorMessage: null });
 });
 
 app.get('/jen', (req, res) => { 
     res.render("jen")
 });
 
+app.get('/tableaudashboard', (req, res) => {
+     
+    const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+            if (!teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+
+    res.render("tableaudashboard")
+});
+
 app.get('/requested-events', async (req, res) => { 
     try {
+        const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+            if (!teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
         // Fetch all events where approveevent is false or null
         const events = await knex('hosts')
             .select('*')
@@ -91,18 +100,6 @@ app.get('/requested-events', async (req, res) => {
         console.error('Error fetching events:', error);
         res.status(500).send('Error retrieving events from the database');
     }
-});
-
-app.get('/volunteerForm.ejs', (req, res) => { 
-    res.render("volunteerForm.ejs")
-});
-
-app.get('/difference', (req, res) => { 
-    res.render("difference")
-});
-
-app.get('/donate', (req, res) => { 
-    res.render("donate")
 });
 
 app.get('/hostEvent', (req, res) => { 
@@ -219,19 +216,44 @@ app.get('/teammember', (req, res) => {
 });
 
 app.get('/addteammember', (req, res) => { 
+    const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+        // Check if the user is logged in
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
     res.render("addteammember")
 });
 
 app.get('/addevent', (req, res) => { 
+    const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
     res.render("addevent")
 });
 
 app.get('/addadmin', (req, res) => { 
+    const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
     res.render("addadmin")
 });
 
 app.get('/addvolunteer', async (req, res) => {
     try {
+        const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
         // Fetch all events where approveevent is false or null
         const events = await knex('hosts')
             .select('*')
@@ -250,6 +272,11 @@ app.get('/addvolunteer', async (req, res) => {
 app.get('/editteammember/:teammemberid', async (req, res) => {
     try {
         const teammemberid = req.params.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         const member = await knex('teammembers')
             .where('teammemberid', teammemberid)
             .first();
@@ -263,6 +290,12 @@ app.get('/editteammember/:teammemberid', async (req, res) => {
 
 app.get('/editevent/:hostid', async (req, res) => {
     try {
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         const hostid = req.params.hostid;
         const event = await knex('hosts')
             .where('hostid', hostid)
@@ -277,26 +310,25 @@ app.get('/editevent/:hostid', async (req, res) => {
 
 app.get('/volunteer', async (req, res) => {
     try {
-        // Fetch all events where approveevent is false or null
+        const today = moment().startOf('day'); // Today's date at midnight
+
+        // Fetch events with approveevent true and openness public
         const events = await knex('hosts')
             .select('*')
-            .where('approveevent', true) // Filter out events where approveevent is true
+            .where('approveevent', true)
             .andWhere('openness', 'public');
 
-        // Render the EJS template and pass the filtered data
-        res.render('volunteer', { events });
+        // Filter events for today or future dates
+        const upcomingEvents = events.filter(event => 
+            moment(event.eventdate).isSameOrAfter(today)
+        );
+
+        // Render the EJS template with filtered events
+        res.render('volunteer', { events: upcomingEvents, moment });
     } catch (error) {
         console.error('Error fetching events:', error);
         res.status(500).send('Error retrieving events from the database');
     }
-});
-
-app.get('/partner', (req, res) => { 
-    res.render("partner")
-});
-
-app.get('/accomplishments', (req, res) => { 
-    res.render("accomplishments")
 });
 
 app.get('/logout', (req, res) => {
@@ -370,6 +402,7 @@ app.post('/volunteer', async (req, res) => {
         const VolEmail = req.body.VolEmail || ''; // Default to empty string if not provided
         const SewingLevel = req.body.SewingLevel || ''; // Default to empty string if not provided
         const ReferralType = req.body.ReferralType || 'U'; // Default to 'U' for Unknown
+        const Newsletter = req.body.newsletter === 'true'; 
         const CreateDat = new Date();
 
         // Extract ParticipateEvent as an array; ensure it is always an array for consistency
@@ -387,7 +420,8 @@ app.post('/volunteer', async (req, res) => {
                 volemail: VolEmail,
                 sewinglevel: SewingLevel,
                 referraltype: ReferralType,
-                createdat: CreateDat
+                createdat: CreateDat,
+                newsletter: Newsletter
             })
             .returning('*'); // This returns the inserted volunteer data
 
@@ -457,10 +491,10 @@ app.post('/teammembers/login', async (req, res) => {
         // Find the user by username in the database
         const user = await knex('teammembers')
             .where({ username: username })
-            .first(); // Retrieve the first matching row
+            .first();
 
         if (!user) {
-            return res.status(400).send('Cannot find user');
+            return res.render('login', { errorMessage: 'Incorrect username and password' });
         }
 
         // Compare the password entered by the user with the hashed password in the database
@@ -468,8 +502,8 @@ app.post('/teammembers/login', async (req, res) => {
 
         if (isMatch) {
             // If the passwords match, store the user ID and role in the session
-            req.session.teammemberid = user.teammemberid; // Assuming 'id' is the user's primary key
-            req.session.role = user.role; // Store the role in the session
+            req.session.teammemberid = user.teammemberid;
+            req.session.role = user.role;
 
             console.log(`User logged in: ID = ${user.teammemberid}, Role = ${user.role}`);
 
@@ -477,7 +511,7 @@ app.post('/teammembers/login', async (req, res) => {
             return res.redirect('/');
         } else {
             // If the passwords don't match
-            return res.status(400).send('Incorrect password');
+            return res.render('login', { errorMessage: 'Incorrect username and password' });
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -487,15 +521,24 @@ app.post('/teammembers/login', async (req, res) => {
 
 app.post('/requested-events', async (req, res) => {
     try {
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         // Extract the array of approved event IDs from the request
         const approvedEventIds = req.body.ApproveEvents || [];
 
-        if (approvedEventIds.length > 0) {
-            // Update `approveevent` to true for all selected events
-            await knex('hosts')
-                .whereIn('hostid', approvedEventIds)
-                .update({ approveevent: true });
+        // If no events were approved, exit without doing anything
+        if (approvedEventIds.length === 0) {
+            return; // Optionally redirect to the same page
         }
+
+        // Update `approveevent` to true for all selected events
+        await knex('hosts')
+            .whereIn('hostid', approvedEventIds)
+            .update({ approveevent: true });
 
         // Redirect or send a success response
         res.redirect('/');
@@ -505,7 +548,9 @@ app.post('/requested-events', async (req, res) => {
     }
 });
 
+
 app.post('/teammembers/change-password', async (req, res) => {
+
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -630,7 +675,7 @@ app.post('/teammembers/edit-account', async (req, res) => {
     try {
         const {
             memfirstname, memlastname, username, mememail,
-            memohonenumber, memstraddress, memcity, memstate, memzip,
+            memohonenumber, memstraddress, memcity, memstate, memzip, memsewinglevel, memskills, can_teach, event_lead, memhoursmonthly, memvolunteerlocation, referral_type
             // Add other fields
         } = req.body;
 
@@ -653,6 +698,13 @@ app.post('/teammembers/edit-account', async (req, res) => {
                 memcity: memcity,
                 memstate: memstate,
                 memzip: memzip,
+                memsewinglevel: memsewinglevel,
+                memskills: memskills,
+                can_teach: can_teach,
+                event_lead: event_lead,
+                memhoursmonthly: memhoursmonthly,
+                memvolunteerlocation: JSON.stringify(memvolunteerlocation),
+                referral_type: referral_type,
                 // Update other fields if necessary
             });
 
@@ -664,6 +716,12 @@ app.post('/teammembers/edit-account', async (req, res) => {
 });
 
 app.post('/teammembers/add-admin', (req, res) => {
+    const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
     const MemFirstName = req.body.MemFirstName;
     const MemLastName = req.body.MemLastName;
     const username = req.body.username;
@@ -738,6 +796,13 @@ app.post('/teammembers/add-admin', (req, res) => {
 // Updating a team member
 app.post('/update-teammember/:teammemberid', async (req, res) => {
     try {
+
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         const memberId = req.params.teammemberid;
         const {
             memfirstname, memlastname, username, mememail,
@@ -746,16 +811,19 @@ app.post('/update-teammember/:teammemberid', async (req, res) => {
             memhoursmonthly, memvolunteerlocation, referral_type, role
         } = req.body;
 
-        // Convert memvolunteerlocation to a JSON array if it's a string
-        const volunteerLocations = Array.isArray(memvolunteerlocation) 
-            ? memvolunteerlocation  // If it's already an array, use it as is
-            : memvolunteerlocation.split(',').map(location => location.trim()); // Convert CSV string to array
+        // Handle memvolunteerlocation to avoid issues with null or undefined
+        const volunteerLocations = 
+            (memvolunteerlocation && Array.isArray(memvolunteerlocation))  // If it's already an array and not null
+            ? memvolunteerlocation
+            : (memvolunteerlocation && typeof memvolunteerlocation === 'string') 
+                ? memvolunteerlocation.split(',').map(location => location.trim())  // If it's a string, convert to array
+                : []; // If it's null or undefined, default to an empty array
 
         const updatedData = {
             memfirstname, memlastname, username, mememail,
             memphone, memstraddress, memcity, memstate, memzip,
             memsewinglevel, memskills, can_teach, event_lead,
-            memhoursmonthly, memvolunteerlocation: JSON.stringify(volunteerLocations), // Make sure to stringify
+            memhoursmonthly, memvolunteerlocation: JSON.stringify(volunteerLocations), // Ensure to stringify
             referral_type, role
         };
 
@@ -774,13 +842,25 @@ app.post('/update-teammember/:teammemberid', async (req, res) => {
 // Deleting a team member
 app.post('/deleteteammember/:teammemberid', async (req, res) => {
     try {
+        // Retrieve the teammemberid from the request parameters first
         const teammemberid = req.params.teammemberid;
-            knex('teammembers')
-            .where('teammemberid', teammemberid)
+
+        // Check if teammemberid exists in the session
+        if (!teammemberid || !req.session.teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in or ID not found
+        }
+
+        // Use the teammemberid from the session to delete the record
+        knex('teammembers')
+            .where('teammemberid', req.params.teammemberid)
             .del() // Deletes the record with the specified ID
             .then(() => {
-        res.redirect('/maintainteammembers'); // Redirect to the Planets list after deletion
-      })  // Redirect back to the user settings page
+                res.redirect('/maintainteammembers'); // Redirect after deletion
+            })
+            .catch((error) => {
+                console.error('Error deleting team member:', error);
+                res.status(500).send('Error deleting the team member');
+            });
     } catch (error) {
         console.error('Error deleting team member:', error);
         res.status(500).send('Error deleting the team member');
@@ -788,6 +868,13 @@ app.post('/deleteteammember/:teammemberid', async (req, res) => {
 });
 
 app.post('/addteammember', (req, res) => {
+
+    const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
     const MemFirstName = req.body.MemFirstName;
     const MemLastName = req.body.MemLastName;
     const VolUsername = req.body.VolUsername;
@@ -840,7 +927,7 @@ app.post('/addteammember', (req, res) => {
                     role: role,
                 })
                 .then(() => {
-                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                    res.redirect('/maintainteammembers'); // Redirect to a thank you or confirmation page after submission
                 })
                 .catch((error) => {
                     console.error('Error adding Volunteer:', error);
@@ -860,6 +947,13 @@ app.post('/addteammember', (req, res) => {
 });
 
 app.post('/addadmin', (req, res) => {
+
+    const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
     const MemFirstName = req.body.MemFirstName;
     const MemLastName = req.body.MemLastName;
     const VolUsername = req.body.VolUsername;
@@ -912,7 +1006,7 @@ app.post('/addadmin', (req, res) => {
                     role: role,
                 })
                 .then(() => {
-                    res.redirect('/'); // Redirect to a thank you or confirmation page after submission
+                    res.redirect('/maintainteammembers'); // Redirect to a thank you or confirmation page after submission
                 })
                 .catch((error) => {
                     console.error('Error adding Volunteer:', error);
@@ -932,6 +1026,13 @@ app.post('/addadmin', (req, res) => {
 });
 
 app.post('/editevent/:hostid', (req, res) => {
+
+    const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+        
     const hostid = req.params.hostid;
     const updatedEventData = {
         hostfirstname: req.body.HostFirstName,
@@ -948,7 +1049,7 @@ app.post('/editevent/:hostid', (req, res) => {
         groupage: req.body.GroupAge,
         eventname: req.body.EventName,
         hostphone: req.body.HostPhone,
-        jensharestory: req.body.JenShareStory ? 'Yes' : 'No',
+        jensharestory: req.body.JenShareStory === 'true', // Convert to boolean
         openness: req.body.Openness,
     };
 
@@ -966,6 +1067,13 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.post('/deleteevent/:hostid', async (req, res) => {
         try {
+
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
             const hostid = req.params.hostid;  // Retrieve the hostid from the route parameter
             knex('hosts')                      // Query the 'hosts' table
                 .where('hostid', hostid)       // Specify the hostid to delete
@@ -984,6 +1092,13 @@ app.post('/editevent/:hostid', (req, res) => {
     });
 
     app.post('/addevent', (req, res) => {
+
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         const HostFirstName = req.body.HostFirstName; // Default to empty string if not provided
       const HostLastName = req.body.HostLastName; // Convert to integer
       const HostEmail = req.body.HostEmail; // Default to today
@@ -1035,18 +1150,61 @@ app.post('/editevent/:hostid', (req, res) => {
     });
 
     app.get('/maintainevents', (req, res) => {
+
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         const today = moment().startOf('day'); // Today's date at midnight
     
         // Fetch events from the 'hosts' table
         knex('hosts')
             .select('*')
             .then(events => {
-                console.log(events); // Log the events to check if eventid is there
-                const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
-                const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
+                // Fetch volunteer counts separately for each event
+                const volunteerCountsQuery = knex('event_volunteers')
+                    .leftJoin('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid') // Join with volunteers to count distinct volunteers
+                    .select('event_volunteers.hostid', knex.raw('COUNT(DISTINCT volunteers.volunteerid) as volunteer_count'))
+                    .groupBy('event_volunteers.hostid');  // Group by hostid
     
-                // Render the maintain events page with upcoming and past events
-                res.render('maintainevents', { upcomingEvents, pastEvents, moment });
+                // Fetch team member counts separately for each event
+                const teamMemberCountsQuery = knex('event_team_members')
+                    .leftJoin('teammembers', 'event_team_members.teammemberid', '=', 'teammembers.teammemberid') // Join with teammembers to count distinct team members
+                    .select('event_team_members.hostid', knex.raw('COUNT(DISTINCT event_team_members.teammemberid) as teammember_count'))
+                    .groupBy('event_team_members.hostid');  // Group by hostid
+    
+                // Execute both queries in parallel
+                Promise.all([volunteerCountsQuery, teamMemberCountsQuery])
+                    .then(([volunteerCounts, teamMemberCounts]) => {
+                        // Add the volunteer and team member counts to each event
+                        events = events.map(event => {
+                            // Find the volunteer count for the current event
+                            const volunteerCount = volunteerCounts.find(v => v.hostid === event.hostid);
+                            const teamMemberCount = teamMemberCounts.find(t => t.hostid === event.hostid);
+    
+                            // Add the counts to the event object
+                            event.volunteer_count = volunteerCount ? volunteerCount.volunteer_count : 0;
+                            event.teammember_count = teamMemberCount ? teamMemberCount.teammember_count : 0;
+    
+                            return event;
+                        });
+    
+                        // Filter events into upcoming and past
+                        const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today))
+                            .sort((a, b) => moment(a.eventdate).isBefore(moment(b.eventdate)) ? 1 : -1);  // Sort upcoming events by closest date first
+    
+                        const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today))
+                            .sort((a, b) => moment(a.eventdate).isBefore(moment(b.eventdate)) ? 1 : -1);  // Sort past events by closest date first
+    
+                        // Render the maintain events page with upcoming and past events, and counts
+                        res.render('maintainevents', { upcomingEvents, pastEvents, moment });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching volunteer or team member counts:', error);
+                        res.status(500).send('Internal Server Error');
+                    });
             })
             .catch(error => {
                 console.error('Error fetching events:', error);
@@ -1056,6 +1214,12 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/maintainvolunteers', async (req, res) => {
         try {
+
+            const teammemberid = req.session.teammemberid;
+
+                if (!teammemberid) {
+                    return res.redirect('/login'); // Redirect to login if not logged in
+        }
             // Fetch all volunteers data from the 'volunteers' table
             const volunteers = await knex('volunteers').select(
                 'volunteerid', 'volfirstname', 'vollastname', 'volemail', 'volphone',
@@ -1076,6 +1240,13 @@ app.post('/editevent/:hostid', (req, res) => {
     });
 
     app.post('/editvolunteer/:volunteerid', (req, res) => {
+
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+
         const volunteerid = req.params.volunteerid;
         const updatedVolunteerData = {
             firstname: req.body.FirstName,
@@ -1101,6 +1272,13 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/editvolunteer/:volunteerid', async (req, res) => {
         try {
+
+            const teammemberid = req.session.teammemberid;
+
+                if (!teammemberid) {
+                    return res.redirect('/login'); // Redirect to login if not logged in
+                }
+
             const volunteerid = req.params.volunteerid; // Extract the volunteer ID from the route parameter
             const volunteer = await knex('volunteers') // Replace 'volunteers' with your table name if different
                 .where('volunteerid', volunteerid) // Fetch the volunteer's data based on the volunteer ID
@@ -1119,6 +1297,13 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.post('/deletevolunteer/:volunteerid', async (req, res) => {
         try {
+
+            const teammemberid = req.session.teammemberid;
+
+                if (!teammemberid) {
+                    return res.redirect('/login'); // Redirect to login if not logged in
+                }
+
             const volunteerid = req.params.volunteerid;  // Retrieve the volunteerid from the route parameter
             knex('volunteers')                           // Query the 'volunteers' table
                 .where('volunteerid', volunteerid)       // Specify the volunteerid to delete
@@ -1133,6 +1318,303 @@ app.post('/editevent/:hostid', (req, res) => {
         } catch (error) {
             console.error('Error deleting volunteer:', error); // Log any errors that occur outside the query
             res.status(500).send('Error deleting the volunteer');
+        }
+    });
+
+    app.get('/eventvolunteer/:hostid', async (req, res) => {
+        try {
+
+            const teammemberid = req.session.teammemberid;
+
+                if (!teammemberid) {
+                    return res.redirect('/login'); // Redirect to login if not logged in
+                }
+
+            const hostid = req.params.hostid; // Get the hostid (event ID) from the URL
+            
+            // Fetch volunteers for the given event (hostid) by joining 'event_volunteers' with 'volunteers'
+            const volunteers = await knex('event_volunteers')
+                .join('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid')
+                .where('event_volunteers.hostid', hostid)  // Filter by the event ID (hostid)
+                .select(
+                    'volunteers.volfirstname',
+                    'volunteers.vollastname',
+                    'volunteers.volemail',
+                    'volunteers.sewinglevel',
+                    'volunteers.referraltype',
+                    'volunteers.createdat',
+                    'volunteers.volunteerid'
+                );
+
+            const host = await knex('hosts')
+            .where('hostid', hostid)
+            .first();
+            
+            // Render the template with the filtered list of volunteers
+            res.render('eventvolunteer', { volunteers, hostid, moment, host });
+        } catch (error) {
+            console.error('Error fetching volunteers:', error);
+            res.status(500).send('Error retrieving volunteers from the database');
+        }
+    });
+
+    app.get('/helpatevent', async (req, res) => {
+        try {
+                
+            const today = moment().startOf('day'); // Today's date at midnight
+    
+            // Fetch events with approveevent true and openness public
+            const events = await knex('hosts')
+                .select('*')
+                .where('approveevent', true)
+                .andWhere('openness', 'public');
+    
+            // Filter events for today or future dates
+            const upcomingEvents = events.filter(event => 
+                moment(event.eventdate).isSameOrAfter(today)
+            );
+    
+            // Check if a team member is logged in
+            if (!req.session.teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+    
+            // Render the EJS template with filtered events and team member ID
+            res.render('helpatevent', { 
+                events: upcomingEvents, 
+                moment,
+                teammemberid: req.session.teammemberid
+            });
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            res.status(500).send('Error retrieving events from the database');
+        }
+    });
+
+    app.post('/helpatevent', async (req, res) => {
+        try {
+            const teammemberid = req.session.teammemberid;
+            if (!teammemberid) {
+                return res.status(403).send('You must be logged in to participate.');
+            }
+    
+            // Extract event participation details
+            const participateEvents = Array.isArray(req.body.ParticipateEvent)
+                ? req.body.ParticipateEvent
+                : req.body.ParticipateEvent
+                ? [req.body.ParticipateEvent]
+                : [];
+    
+            if (participateEvents.length > 0) {
+                // Fetch existing event-team member pairs
+                const existingParticipations = await knex('event_team_members')
+                    .select('hostid')
+                    .whereIn('hostid', participateEvents.map(Number))
+                    .andWhere('teammemberid', teammemberid);
+    
+                // Extract host IDs from existing participations
+                const existingHostIds = new Set(existingParticipations.map(entry => entry.hostid));
+    
+                // Filter out events already registered
+                const newParticipations = participateEvents
+                    .map(Number) // Ensure all IDs are numbers
+                    .filter(hostid => !existingHostIds.has(hostid));
+    
+                if (newParticipations.length > 0) {
+                    // Prepare and insert new participation entries
+                    const eventVolunteers = newParticipations.map(hostid => ({
+                        teammemberid: teammemberid,
+                        hostid: hostid
+                    }));
+    
+                    await knex('event_team_members').insert(eventVolunteers);
+                }
+            }
+    
+            // Redirect to the same page after success
+            res.redirect('/');
+        } catch (error) {
+            console.error('Error processing event participation:', error);
+            res.status(500).send('Error processing your participation at the event.');
+        }
+    });
+
+    app.get('/completedproducts/:hostid', async (req, res) => {
+        try {
+
+            const teammemberid = req.session.teammemberid;
+
+                if (!teammemberid) {
+                    return res.redirect('/login'); // Redirect to login if not logged in
+                }
+
+            const hostid = req.params.hostid;
+            const event = await knex('hosts')
+                .where('hostid', hostid)
+                .first();
+    
+            res.render('completedproducts', { event, hostid });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error loading the edit page');
+        }
+    });
+
+    app.post('/completedproducts/:hostid', (req, res) => {
+
+        const teammemberid = req.session.teammemberid;
+
+        if (!teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in
+        }
+        
+        const hostid = req.params.hostid;
+    
+        // Create an object with the updated fields
+        const updatedProductData = {
+            actualattendance: req.body.actualattendance,
+            pocketsproduced: req.body.pocketsproduced,
+            collarsproduced: req.body.collarsproduced,
+            envelopesproduced: req.body.envelopesproduced,
+            vestsproduced: req.body.vestsproduced,
+            completeproduced: req.body.completeproduced,
+        };
+    
+        // Update the record in the database
+        knex('hosts')
+            .where({ hostid: hostid }) // Find the record by host ID
+            .update(updatedProductData) // Update the fields
+            .then(() => {
+                res.redirect('/maintainevents'); // Redirect after successful update
+            })
+            .catch(error => {
+                console.error('Error updating completed products:', error);
+                res.status(500).send('Internal Server Error');
+            });
+    });
+
+    app.get('/myevents', async (req, res) => {
+        try {
+            const teammemberid = req.session.teammemberid; // Get the logged-in teammemberid
+    
+            // Check if the user is logged in
+            if (!teammemberid) {
+                return res.redirect('/login'); // Redirect to login if not logged in
+            }
+    
+            // Get all the events that the logged-in team member is associated with
+            const events = await knex('event_team_members')
+                .join('hosts', 'hosts.hostid', '=', 'event_team_members.hostid') // Join the events table (hosts)
+                .select('hosts.*') // Get all host columns
+                .where('event_team_members.teammemberid', teammemberid); // Filter by logged-in team member ID
+            
+            res.render('myevents', { 
+                events, 
+                moment,
+                teammemberid
+            });
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            res.status(500).send('Error retrieving events from the database');
+        }
+    });
+    
+    app.post('/deleteevent', async (req, res) => {
+        try {
+            const { DeleteEvent } = req.body;  // Array of hostids
+            const teammemberid = req.session.teammemberid; // The logged-in user’s ID
+    
+            if (!teammemberid) {
+                return res.redirect('/login'); // Ensure the user is logged in
+            }
+    
+            if (!DeleteEvent || DeleteEvent.length === 0) {
+                // Do nothing if no events are selected
+                return;
+            }
+    
+            // Loop through the selected events and delete them
+            for (const hostid of DeleteEvent) {
+                await knex('event_team_members')
+                    .where('hostid', hostid)
+                    .andWhere('teammemberid', teammemberid)
+                    .del();
+            }
+    
+            res.redirect('/myevents'); // Redirect after unsubscribing
+        } catch (error) {
+            console.error('Error unsubscribing from event:', error);
+            res.status(500).send('Error unsubscribing from event');
+        }
+    });
+
+    app.get('/eventteammembers/:hostid', async (req, res) => {
+        try {
+
+            const teammemberid = req.session.teammemberid;
+
+                if (!teammemberid) {
+                    return res.redirect('/login'); // Redirect to login if not logged in
+                }
+
+            const hostid = req.params.hostid; // Get the hostid (event ID) from the URL
+        
+            // Fetch members for the given event (hostid)
+            const members = await knex('event_team_members')
+                .join('teammembers', 'event_team_members.teammemberid', '=', 'teammembers.teammemberid')
+                .where('event_team_members.hostid', hostid)  // Filter by the event ID (hostid)
+                .select(
+                    'teammembers.memfirstname',
+                    'teammembers.memlastname',
+                    'teammembers.username',
+                    'teammembers.mememail',
+                    'teammembers.memphone',
+                    'teammembers.memstraddress',
+                    'teammembers.memcity',
+                    'teammembers.memstate',
+                    'teammembers.memzip',
+                    'teammembers.memskills',
+                    'teammembers.can_teach',
+                    'teammembers.event_lead',
+                    'teammembers.memcity',
+                    'teammembers.memhoursmonthly',
+                    'teammembers.memvolunteerlocation',
+                    'teammembers.referral_type',
+                    'teammembers.role',
+                );
+        
+            // Fetch host details for the event
+            const host = await knex('hosts')
+                .where('hostid', hostid)
+                .first();
+        
+            // Render the template with the filtered list of members
+            res.render('eventteammembers', { members, hostid, moment, host });
+        } catch (error) {
+            console.error('Error fetching members:', error);
+            res.status(500).send('Error retrieving members from the database');
+        }
+    });
+
+    app.post('/delete-requessted-event', async (req, res) => {
+        try {
+            const { hostid } = req.body; // Get the hostid from the form
+    
+            // Check if the hostid is provided
+            if (!hostid) {
+                return res.status(400).send('Host ID is required.');
+            }
+    
+            // Delete the event from the database
+            await knex('hosts')
+                .where('hostid', hostid)
+                .del();
+    
+            // Redirect back to the events page or send a success response
+            res.redirect('/requested-events');
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            res.status(500).send('Error processing your request.');
         }
     });
   // Test database connection

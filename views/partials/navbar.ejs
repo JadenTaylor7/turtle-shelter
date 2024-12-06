@@ -21,9 +21,14 @@
                 <div class="dropdown">
                     <button class="dropbtn">How you can help</button>
                     <div class="dropdown-content">
-                        <a href="/volunteer">Volunteer at an event</a>
-                        <a href="/teammember">Become a Team Member</a>
-                        <a href="/partner">Become a partner or sponsor</a>
+                        <% if (session && session.teammemberid) { %>
+                            <a href="/helpatevent">Help at an Event</a>
+                        <% } else { %>
+                            <a href="/volunteer">Volunteer at an event</a>
+                        <% } %>
+                        <% if (!session || !session.teammemberid) { %>
+                            <a href="/teammember">Become a Team Member</a>
+                        <% } %>
                         <a href="/hostEvent">Host your own event</a>
                         <!-- <a href="/accomplishments">What has been accomplished</a> -->
                     </div>
@@ -91,6 +96,10 @@
                 <% } %>
 
                 <% if (session && session.teammemberid) { %>
+                    <a href="/myevents" class="nav-link">My Events</a>
+                <% } %>
+
+                <% if (session && session.teammemberid) { %>
                     <a href="/teammembersettings" class="nav-link">Settings</a>
                 <% } %>
 
@@ -106,11 +115,16 @@
                     </div>
                 <% } %>
 
+                <% if (session && session.teammemberid && session.role === 'admin') { %>
+                    <a href="/tableaudashboard" class="nav-link">Dashboard</a>
+                <% } %>
+
                 <% if (session && session.teammemberid) { %>
                     <a href="/logout" class="nav-link">Logout</a>
                 <% } %>
             </div>
         </div>
     </nav>
+
 </body>
 </html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>User Settings</title>
+</head>
+<body class="usersettings-page maintain-tm-teammembers-page">
+    <section class="hero"></section>
+
+    <section class="form-section" style="padding: 40px 0;">
+        <div class="form-container" style="max-width: 900px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2>Event Details</h2>
+            <form action="/completedproducts/<%= hostid %>" method="POST">
+
+                <div class="form-group">
+                    <label for="actualattendance">Actual Attendance:</label>
+                    <input type="number" id="actualattendance" name="actualattendance" value="<%= event.actualattendance %>" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="pocketsproduced">Pockets Produced:</label>
+                    <input type="number" id="pocketsproduced" name="pocketsproduced" value="<%= event.pocketsproduced %>" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="collarsproduced">Collars Produced:</label>
+                    <input type="number" id="collarsproduced" name="collarsproduced" value="<%= event.collarsproduced %>" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="envelopesproduced">Envelopes Produced:</label>
+                    <input type="number" id="envelopesproduced" name="envelopesproduced" value="<%= event.envelopesproduced %>" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="vestsproduced">Vests Produced:</label>
+                    <input type="number" id="vestsproduced" name="vestsproduced" value="<%= event.vestsproduced %>" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="completeproduced">Completed Vests:</label>
+                    <input type="number" id="completeproduced" name="completeproduced" value="<%= event.completeproduced %>" min="0">
+                </div>
+
+                <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">
+                    Update
+                </button>
+            </section>
+    </body>
+</html>

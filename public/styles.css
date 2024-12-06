@@ -6,10 +6,47 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'proxima-nova', Arial, sans-serif;
-    line-height: 1.6;
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%; /* Ensure the page takes the full viewport height */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
 }
+
+body {
+    flex-grow: 1; /* Allow body to grow to fill available space */
+}
+
+main {
+    flex-grow: 1; /* Main content area expands to fill the space */
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+.footer-img {
+    height: 44px;
+    width: auto;              
+    border-radius: 100%; 
+    transition: transform 0.3s, filter 0.3s; /* Smooth transition for hover effect */
+    margin-right: 10px;
+}
+
+.footer-img:hover {
+    transform: scale(1.1);       /* Slightly increase the size on hover */
+    filter: brightness(1.5);     /* Lighten the image on hover */
+}
+/* end footer styling */
+
 
 /* Navbar Styling */
 .navbar {
@@ -166,6 +203,44 @@ body {
     width: 100%; /* Ensure it takes up full width */
 }
 
+.hostevent-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/hostEvent.jpg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
+.tableau-page .hero {
+    position: relative;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/black.jpg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
 .event-page .hero {
     position: relative;
     height: 100vh;
@@ -178,12 +253,51 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('/hostEvent.jpeg'); /* Move background image here */
+    background-image: url('/hostEvent.jpg'); /* Move background image here */
     background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
     background-blend-mode: darken;
     margin-top: 0; /* Ensure it starts at the very top */
     padding-top: 0; /* Remove any padding */
 }
+
+.teammember-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/teammember.png'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
+.volunteer-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/volunteer.jpeg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
 
 .requested-events-page .hero {
     position: relative;
@@ -266,6 +380,58 @@ body {
 .hero-btn:hover {
     background-color: #0056b3;
 }
+
+/* styling for index.ejs */
+.landing-section {
+    padding: 50px 5%;
+    background-color: #f4f4f4;
+}
+
+.landing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row; /* Arrange items horizontally */
+    align-items: flex-start; /* Align items to the top */
+    gap: 40px; /* Add spacing between image and text */
+}
+
+.landing-item {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-direction: column;
+}
+
+.landing-item img {
+    height: auto;
+    border-radius: 10px;
+    max-width: 100%; 
+    width: 400px; 
+    margin-bottom: 20px; 
+}
+
+.landing-text {
+    flex: 1;
+    max-width: 700px; 
+    margin-left: 50px; 
+}
+
+.landing-text h2 {
+    margin-bottom: 15px;
+    color: #333;
+    position: relative;
+    top: 15px; 
+}
+
+.landing-text p {
+    color: #666;
+    line-height: 1.6;
+    position: relative;
+    top: 13px;
+}
+/* end styling for index.ejs */
 
 
 
@@ -595,23 +761,33 @@ input[type="checkbox"]:checked {
     max-width: 200px;
   }
 
-  /* Tab navigation */
 .tab {
     display: flex;
     width: 100%;
     border: 1px solid #ccc;
-    background-color: #f1f1f1;
+    background-color: #F1F1F1;
+    margin-top: 20px; /* Add spacing above the tab */
+    min-height: 50px; /* Ensure it has enough height */
+    border-radius: 4px; /* Optional: add rounded corners for a modern look */
+    overflow: hidden; /* Prevents content overflow */
 }
 
 .tab button {
     flex: 1;
-    border: none;
+    border: 1px solid #ccc; /* Add individual borders to buttons */
+    border-left: none; /* Remove left border to avoid double borders */
     outline: none;
     cursor: pointer;
     padding: 14px 0;
     transition: 0.3s;
     font-size: 17px;
     text-align: center;
+    background-color: #F1F1F1;
+}
+
+
+.tab button:first-child {
+    border-left: 1px solid #ccc; /* Add left border to the first button */
 }
 
 .tab button:hover {
@@ -620,26 +796,38 @@ input[type="checkbox"]:checked {
 
 .tab button.active {
     background-color: #ccc;
+    font-weight: bold; /* Optional: make the active tab stand out */
+}
+
+/* Add Event Button Styling */
+.add-button-container {
+    display: flex; /* Center button */
+    justify-content: center;
+    margin: 20px 0; /* Add space above and below */
 }
 
 .add-button {
-    margin: 10px 0;
-    padding: 10px 20px;
-    background-color: #4CAF50;
+    padding: 15px 30px;
+    background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .add-button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
-.add-button-container {
-    display: none;
+.events-section {
+    display: block; /* Ensure sections are visible */
+    margin-top: 20px; /* Add spacing between sections */
 }
-
 /* Table styling to match the tab styling */
 .events-table {
     width: 100%;
@@ -668,6 +856,8 @@ input[type="checkbox"]:checked {
 }
 
 .edit-button,
+.volunteer-button,
+.completed-button,
 .delete-button {
     padding: 8px 16px;
     border: none;
@@ -692,4 +882,39 @@ input[type="checkbox"]:checked {
 
 .delete-button:hover {
     background-color: #e53935;
+}
+
+.volunteer-button {
+    background-color: #0056b3;
+    color: white;
+}
+
+.volunteer-button:hover {
+    background-color: #0056b3;
+}
+
+.completed-button {
+    background-color: black;
+    color: white;
+}
+
+.completed-button:hover {
+    background-color: black;
+    color: white;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center; /* Align the checkbox and label vertically */
+    gap: 10px; /* Add spacing between the checkbox and label */
+    margin-bottom: 10px; /* Add spacing below the group */
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin: 0; /* Remove any default margin around the checkbox */
+}
+
+.checkbox-group label {
+    margin: 0; /* Ensure consistent spacing for the label */
+    font-size: 16px; /* Optional: Adjust font size for better readability */
 }

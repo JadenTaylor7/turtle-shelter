@@ -10,14 +10,14 @@
 <body class="usersettings-page">
     <section class="hero"></section>
 
+    <div class="add-button-container">
+        <a href="/addevent" class="add-button">Add Event</a>
+    </div>
+
     <!-- Tab navigation -->
     <div class="tab">
         <button class="tablinks active" onclick="filterEvents('upcoming')">Upcoming Events</button>
         <button class="tablinks" onclick="filterEvents('past')">Past Events</button>
-    </div>
-
-    <div>
-        <a href="/addevent" class="add-button">Add Event</a>
     </div>
 
     <!-- Upcoming Events Section -->
@@ -31,7 +31,11 @@
                     <th>Host Name</th>
                     <th>Address</th>
                     <th>Service Type</th>
-                    <th>Attendance</th>
+                    <th>Expected Attendance</th>
+                    <th>Volunteers Count</th>
+                    <th>Volunteers</th>
+                    <th>Teammembers Count</th>
+                    <th>Teammembers</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -51,6 +55,10 @@
                     </td>
                     <td><%= event.servicetype %></td>
                     <td><%= event.attendance %></td>
+                    <td><%= event.volunteer_count %></td>
+                    <td><a href="/eventvolunteer/<%= event.hostid %>" class="volunteer-button">View</a></td>
+                    <td><%= event.teammember_count %></td>
+                    <td><a href="/eventteammembers/<%= event.hostid %>" class="volunteer-button">View</a></td>
                     <td><a href="/editevent/<%= event.hostid %>" class="edit-button">Edit</a></td>
                     <td>
                         <form action="/deleteevent/<%= event.hostid %>" method="POST" class="delete-form">
@@ -74,7 +82,12 @@
                     <th>Host Name</th>
                     <th>Address</th>
                     <th>Service Type</th>
-                    <th>Attendance</th>
+                    <th>Expected Attendance</th>
+                    <th>Volunteers Count</th>
+                    <th>Volunteers</th>
+                    <th>Teammembers Count</th>
+                    <th>Teammembers</th>
+                    <th>Completed</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -94,6 +107,11 @@
                     </td>
                     <td><%= event.servicetype %></td>
                     <td><%= event.attendance %></td>
+                    <td><%= event.volunteer_count %></td>  <!-- Display the count of volunteers -->
+                    <td><a href="/eventvolunteer/<%= event.hostid %>" class="volunteer-button">View</a></td>
+                    <td><%= event.teammember_count %></td>
+                    <td><a href="/eventteammembers/<%= event.hostid %>" class="volunteer-button">View</a></td>
+                    <td><a href="/completedproducts/<%= event.hostid %>" class="completed-button">Add</a></td>
                     <td><a href="/editevent/<%= event.hostid %>" class="edit-button">Edit</a></td>
                     <td>
                         <form action="/deleteevent/<%= event.hostid %>" method="POST" class="delete-form">
