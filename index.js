@@ -278,7 +278,7 @@ app.get('/editteammember/:teammemberid', async (req, res) => {
 
 app.get('/editevent/:hostid', async (req, res) => {
     try {
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -509,7 +509,7 @@ app.post('/teammembers/login', async (req, res) => {
 
 app.post('/requested-events', async (req, res) => {
     try {
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -700,7 +700,7 @@ app.post('/teammembers/edit-account', async (req, res) => {
 });
 
 app.post('/teammembers/add-admin', (req, res) => {
-    const teammemberid = req.params.teammemberid;
+    const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -781,7 +781,7 @@ app.post('/teammembers/add-admin', (req, res) => {
 app.post('/update-teammember/:teammemberid', async (req, res) => {
     try {
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -828,7 +828,7 @@ app.post('/deleteteammember/:teammemberid', async (req, res) => {
             return res.redirect('/login'); // Redirect to login if not logged in
         }
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -848,7 +848,7 @@ app.post('/deleteteammember/:teammemberid', async (req, res) => {
 
 app.post('/addteammember', (req, res) => {
 
-    const teammemberid = req.params.teammemberid;
+    const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -927,7 +927,7 @@ app.post('/addteammember', (req, res) => {
 
 app.post('/addadmin', (req, res) => {
 
-    const teammemberid = req.params.teammemberid;
+    const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1006,7 +1006,7 @@ app.post('/addadmin', (req, res) => {
 
 app.post('/editevent/:hostid', (req, res) => {
 
-    const teammemberid = req.params.teammemberid;
+    const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1047,7 +1047,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.post('/deleteevent/:hostid', async (req, res) => {
         try {
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1072,7 +1072,7 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.post('/addevent', (req, res) => {
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1130,7 +1130,7 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/maintainevents', (req, res) => {
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1194,7 +1194,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.get('/maintainvolunteers', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
@@ -1220,7 +1220,7 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.post('/editvolunteer/:volunteerid', (req, res) => {
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1252,7 +1252,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.get('/editvolunteer/:volunteerid', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
@@ -1277,7 +1277,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.post('/deletevolunteer/:volunteerid', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
@@ -1303,7 +1303,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.get('/eventvolunteer/:hostid', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
@@ -1340,7 +1340,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.get('/helpatevent', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
@@ -1427,7 +1427,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.get('/completedproducts/:hostid', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
@@ -1447,7 +1447,7 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.post('/completedproducts/:hostid', (req, res) => {
 
-        const teammemberid = req.params.teammemberid;
+        const teammemberid = req.session.teammemberid;
 
         if (!teammemberid) {
             return res.redirect('/login'); // Redirect to login if not logged in
@@ -1535,7 +1535,7 @@ app.post('/editevent/:hostid', (req, res) => {
     app.get('/eventteammembers/:hostid', async (req, res) => {
         try {
 
-            const teammemberid = req.params.teammemberid;
+            const teammemberid = req.session.teammemberid;
 
                 if (!teammemberid) {
                     return res.redirect('/login'); // Redirect to login if not logged in
