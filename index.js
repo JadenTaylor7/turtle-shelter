@@ -1339,12 +1339,6 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/helpatevent', async (req, res) => {
         try {
-
-            const teammemberid = req.session.teammemberid;
-
-                if (!teammemberid) {
-                    return res.redirect('/login'); // Redirect to login if not logged in
-                }
                 
             const today = moment().startOf('day'); // Today's date at midnight
     
@@ -1417,7 +1411,7 @@ app.post('/editevent/:hostid', (req, res) => {
             }
     
             // Redirect to the same page after success
-            res.redirect('/helpatevent');
+            res.redirect('/');
         } catch (error) {
             console.error('Error processing event participation:', error);
             res.status(500).send('Error processing your participation at the event.');
