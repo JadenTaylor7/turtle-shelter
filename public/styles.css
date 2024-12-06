@@ -800,11 +800,11 @@ input[type="checkbox"]:checked {
 }
 
 /* Add Event Button Styling */
-.add-button-container {
-    display: flex; /* Center button */
+/* .add-button-container {
+    display: flex;
     justify-content: center;
-    margin: 20px 0; /* Add space above and below */
-}
+    margin: 20px 0;
+} */
 
 .add-button {
     padding: 15px 30px;
