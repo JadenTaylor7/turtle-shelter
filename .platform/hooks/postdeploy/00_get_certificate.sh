@@ -2,7 +2,7 @@
 
 # Add your domains here
 DOMAINS=(
-  "turtleshelterprojectdev.com"
+  "turt.us-east-1.elasticbeanstalk.com"
   "turtleshelterprojectdev.com"
 )
 
@@ -14,8 +14,3 @@ done
 
 # Run certbot with the constructed domain arguments and --expand flag
 sudo certbot -n --nginx $DOMAIN_ARGS --expand --agree-tos --email turnerklippel@gmail.com
-
-
-#!/bin/bash
-
-sudo certbot -n -d  --nginx --agree-tos --email turnerklippel@gmail.com
