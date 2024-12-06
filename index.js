@@ -1043,21 +1043,27 @@ app.post('/editevent/:hostid', (req, res) => {
 
     app.get('/maintainevents', (req, res) => {
         const today = moment().startOf('day'); // Today's date at midnight
-    
-        // Fetch events from the 'hosts' table
+     
+        // Fetch events from the 'hosts' table and join with the 'event_volunteers' table to count volunteers
         knex('hosts')
-            .select('*')
+            .leftJoin('event_volunteers', 'hosts.hostid', '=', 'event_volunteers.hostid')  // Join with event_volunteers to count volunteers
+            .leftJoin('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid') // Join with volunteers
+            .select(
+                'hosts.*',
+                knex.raw('COUNT(volunteers.volunteerid) as volunteer_count')  // Count the volunteers for each event
+            )
+            .groupBy('hosts.hostid')  // Group by event to get the volunteer count per event
             .then(events => {
-                console.log(events); // Log the events to check if eventid is there
+                // Filter events into upcoming and past
                 const upcomingEvents = events.filter(event => moment(event.eventdate).isSameOrAfter(today));
                 const pastEvents = events.filter(event => moment(event.eventdate).isBefore(today));
-    
-                // Render the maintain events page with upcoming and past events
+     
+                // Render the maintain events page with upcoming and past events and volunteer count
                 res.render('maintainevents', { upcomingEvents, pastEvents, moment });
             })
             .catch(error => {
-                console.error('Error fetching events:', error);
-                res.status(500).send('Internal Server Error');
+                console.error('Error fetching events:', error); // Log the error
+                res.status(500).send('Internal Server Error'); // Send a 500 response on error
             });
     });
 
@@ -1140,6 +1146,36 @@ app.post('/editevent/:hostid', (req, res) => {
         } catch (error) {
             console.error('Error deleting volunteer:', error); // Log any errors that occur outside the query
             res.status(500).send('Error deleting the volunteer');
+        }
+    });
+
+    app.get('/eventvolunteer/:hostid', async (req, res) => {
+        try {
+            const hostid = req.params.hostid; // Get the hostid (event ID) from the URL
+            
+            // Fetch volunteers for the given event (hostid) by joining 'event_volunteers' with 'volunteers'
+            const volunteers = await knex('event_volunteers')
+                .join('volunteers', 'event_volunteers.volunteerid', '=', 'volunteers.volunteerid')
+                .where('event_volunteers.hostid', hostid)  // Filter by the event ID (hostid)
+                .select(
+                    'volunteers.volfirstname',
+                    'volunteers.vollastname',
+                    'volunteers.volemail',
+                    'volunteers.sewinglevel',
+                    'volunteers.referraltype',
+                    'volunteers.createdat',
+                    'volunteers.volunteerid'
+                );
+
+            const host = await knex('hosts')
+            .where('hostid', hostid)
+            .first();
+            
+            // Render the template with the filtered list of volunteers
+            res.render('eventvolunteer', { volunteers, hostid, moment, host });
+        } catch (error) {
+            console.error('Error fetching volunteers:', error);
+            res.status(500).send('Error retrieving volunteers from the database');
         }
     });
   // Test database connection

@@ -668,6 +668,7 @@ input[type="checkbox"]:checked {
 }
 
 .edit-button,
+.volunteer-button,
 .delete-button {
     padding: 8px 16px;
     border: none;
@@ -692,4 +693,13 @@ input[type="checkbox"]:checked {
 
 .delete-button:hover {
     background-color: #e53935;
+}
+
+.volunteer-button {
+    background-color: #0056b3;
+    color: white;
+}
+
+.volunteer-button:hover {
+    background-color: #0056b3;
 }

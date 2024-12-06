@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Event Volunteers</title>
+</head>
+<body class="usersettings-page">
+    <section class="hero"></section>
+
+    <h1>Volunteers for Event <%= host.eventname %></h1>
+
+    <!-- Volunteers Table -->
+    <section class="maintain-tm-hero">
+        <table class="events-table volunteers-table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Sewing Level</th>
+                    <th>Referral Type</th>
+                    <th>Date Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% volunteers.forEach(function(volunteer) { %>
+                <tr>
+                    <td><%= volunteer.volfirstname %></td>
+                    <td><%= volunteer.vollastname %></td>
+                    <td><%= volunteer.volemail %></td>
+                    <td><%= volunteer.sewinglevel %></td>
+                    <td><%= volunteer.referraltype %></td>
+                    <td><%= moment(volunteer.createdat).format('YYYY-MM-DD') %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>
