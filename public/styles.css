@@ -575,12 +575,14 @@ select {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.3s, filter 0.3s;
     width: 100%;
 }
 
 .submit-btn:hover {
     background-color: #0056b3;
+    transform: scale(1.03);       /* Slightly increase the size on hover */
+    filter: brightness(1.5); 
 }
 
 input[type="checkbox"] {
