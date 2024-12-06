@@ -518,12 +518,15 @@ app.post('/requested-events', async (req, res) => {
         // Extract the array of approved event IDs from the request
         const approvedEventIds = req.body.ApproveEvents || [];
 
-        if (approvedEventIds.length > 0) {
-            // Update `approveevent` to true for all selected events
-            await knex('hosts')
-                .whereIn('hostid', approvedEventIds)
-                .update({ approveevent: true });
+        // If no events were approved, exit without doing anything
+        if (approvedEventIds.length === 0) {
+            return; // Optionally redirect to the same page
         }
+
+        // Update `approveevent` to true for all selected events
+        await knex('hosts')
+            .whereIn('hostid', approvedEventIds)
+            .update({ approveevent: true });
 
         // Redirect or send a success response
         res.redirect('/');
@@ -532,6 +535,7 @@ app.post('/requested-events', async (req, res) => {
         res.status(500).send('Error processing your request.');
     }
 });
+
 
 app.post('/teammembers/change-password', async (req, res) => {
 
@@ -795,16 +799,19 @@ app.post('/update-teammember/:teammemberid', async (req, res) => {
             memhoursmonthly, memvolunteerlocation, referral_type, role
         } = req.body;
 
-        // Convert memvolunteerlocation to a JSON array if it's a string
-        const volunteerLocations = Array.isArray(memvolunteerlocation) 
-            ? memvolunteerlocation  // If it's already an array, use it as is
-            : memvolunteerlocation.split(',').map(location => location.trim()); // Convert CSV string to array
+        // Handle memvolunteerlocation to avoid issues with null or undefined
+        const volunteerLocations = 
+            (memvolunteerlocation && Array.isArray(memvolunteerlocation))  // If it's already an array and not null
+            ? memvolunteerlocation
+            : (memvolunteerlocation && typeof memvolunteerlocation === 'string') 
+                ? memvolunteerlocation.split(',').map(location => location.trim())  // If it's a string, convert to array
+                : []; // If it's null or undefined, default to an empty array
 
         const updatedData = {
             memfirstname, memlastname, username, mememail,
             memphone, memstraddress, memcity, memstate, memzip,
             memsewinglevel, memskills, can_teach, event_lead,
-            memhoursmonthly, memvolunteerlocation: JSON.stringify(volunteerLocations), // Make sure to stringify
+            memhoursmonthly, memvolunteerlocation: JSON.stringify(volunteerLocations), // Ensure to stringify
             referral_type, role
         };
 
@@ -823,23 +830,25 @@ app.post('/update-teammember/:teammemberid', async (req, res) => {
 // Deleting a team member
 app.post('/deleteteammember/:teammemberid', async (req, res) => {
     try {
+        // Retrieve the teammemberid from the request parameters first
+        const teammemberid = req.params.teammemberid;
 
-        if (!teammemberid) {
-            return res.redirect('/login'); // Redirect to login if not logged in
+        // Check if teammemberid exists in the session
+        if (!teammemberid || !req.session.teammemberid) {
+            return res.redirect('/login'); // Redirect to login if not logged in or ID not found
         }
 
-        const teammemberid = req.session.teammemberid;
-
-        if (!teammemberid) {
-            return res.redirect('/login'); // Redirect to login if not logged in
-        }
-
-            knex('teammembers')
-            .where('teammemberid', teammemberid)
+        // Use the teammemberid from the session to delete the record
+        knex('teammembers')
+            .where('teammemberid', req.params.teammemberid)
             .del() // Deletes the record with the specified ID
             .then(() => {
-        res.redirect('/maintainteammembers'); // Redirect to the Planets list after deletion
-      })  // Redirect back to the user settings page
+                res.redirect('/maintainteammembers'); // Redirect after deletion
+            })
+            .catch((error) => {
+                console.error('Error deleting team member:', error);
+                res.status(500).send('Error deleting the team member');
+            });
     } catch (error) {
         console.error('Error deleting team member:', error);
         res.status(500).send('Error deleting the team member');
@@ -1508,7 +1517,8 @@ app.post('/editevent/:hostid', (req, res) => {
             }
     
             if (!DeleteEvent || DeleteEvent.length === 0) {
-                return res.status(400).send('No events selected to unsubscribe.');
+                // Do nothing if no events are selected
+                return;
             }
     
             // Loop through the selected events and delete them
@@ -1571,6 +1581,28 @@ app.post('/editevent/:hostid', (req, res) => {
         } catch (error) {
             console.error('Error fetching members:', error);
             res.status(500).send('Error retrieving members from the database');
+        }
+    });
+
+    app.post('/delete-requessted-event', async (req, res) => {
+        try {
+            const { hostid } = req.body; // Get the hostid from the form
+    
+            // Check if the hostid is provided
+            if (!hostid) {
+                return res.status(400).send('Host ID is required.');
+            }
+    
+            // Delete the event from the database
+            await knex('hosts')
+                .where('hostid', hostid)
+                .del();
+    
+            // Redirect back to the events page or send a success response
+            res.redirect('/requested-events');
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            res.status(500).send('Error processing your request.');
         }
     });
   // Test database connection

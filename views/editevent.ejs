@@ -79,7 +79,7 @@
 
                 <div class="form-group">
                     <label for="Attendance">Estimated Attendance:</label>
-                    <input type="number" id="Attendance" name="Attendance" value="<%= event.attendance %>" required>
+                    <input type="number" id="Attendance" name="Attendance" value="<%= event.attendance %>" min="0" required>
                 </div>
 
                 <div class="form-group">
@@ -118,17 +118,11 @@
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn">Update Event</button>
+                <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">
+                    Unsubscribe
+                </button>
             </form>
         </div>
     </section>
-
-    <footer>
-        <a href="https://www.facebook.com/turtleshelterproject/" target="_blank" class="footer-link"> 
-            <img src="facebook-logo.jpg" alt="Facebook" class="footer-img"> </a> 
-        <p>
-            Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com 
-        </p>
-    </footer>
 </body>
 </html>

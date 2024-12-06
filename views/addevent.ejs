@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label for="EventStartTime">What time do you want the event to start and how long would you like it to go?</label>
                     <input type="time" id="EventStartTime" name="EventStartTime" required>
-                    <input type="number" id="EventDurationHours" name="EventDurationHours" placeholder="Duration in hours" required>
+                    <input type="number" id="EventDurationHours" name="EventDurationHours" placeholder="Duration in hours" min="0" required>
                 </div>
 
                 <div class="form-group">
@@ -130,7 +130,7 @@
 
                 <div class="form-group">
                     <label for="Attendance">How many people will be there? (Estimate):</label>
-                    <input type="number" id="Attendance" name="Attendance" required>
+                    <input type="number" id="Attendance" name="Attendance" min="0" required>
                 </div>
 
                 <div class="form-group">
@@ -174,13 +174,5 @@
             </form>
         </div>
     </section>
-
-    <footer>
-        <a href="https://www.facebook.com/turtleshelterproject/" target="_blank" class="footer-link"> 
-            <img src="facebook-logo.jpg" alt="Facebook" class="footer-img"> </a> 
-        <p>
-            Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com 
-        </p>
-    </footer>
 </body>
 </html>

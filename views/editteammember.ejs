@@ -114,54 +114,65 @@
 
                 <div class="form-group">
                     <label for="memhoursmonthly">Number of hours willing to volunteer per month:</label>
-                    <input type="number" id="memhoursmonthly" name="memhoursmonthly" value="<%= member.memhoursmonthly %>" required>
+                    <input type="number" id="memhoursmonthly" name="memhoursmonthly" value="<%= member.memhoursmonthly %>" min="0" required>
                 </div>
 
                 <div class="form-group">
                     <label for="memvolunteerlocation">What areas of Utah are you willing to volunteer in?</label>
                     <div id="memvolunteerlocation">
                         <div>
-                            <input type="checkbox" id="Provo" name="memvolunteerlocation[]" value="Provo" <%= member.memvolunteerlocation.includes('Provo') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Provo" name="memvolunteerlocation[]" value="Provo" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Provo') ? 'checked' : '' %> >
                             <label for="Provo">Provo</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="AmericanFork" name="memvolunteerlocation[]" value="American Fork" <%= member.memvolunteerlocation.includes('American Fork') ? 'checked' : '' %> >
+                            <input type="checkbox" id="AmericanFork" name="memvolunteerlocation[]" value="American Fork" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('American Fork') ? 'checked' : '' %> >
                             <label for="AmericanFork">American Fork</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Riverton" name="memvolunteerlocation[]" value="Riverton" <%= member.memvolunteerlocation.includes('Riverton') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Riverton" name="memvolunteerlocation[]" value="Riverton" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Riverton') ? 'checked' : '' %> >
                             <label for="Riverton">Riverton</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Sandy" name="memvolunteerlocation[]" value="Sandy" <%= member.memvolunteerlocation.includes('Sandy') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Sandy" name="memvolunteerlocation[]" value="Sandy" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Sandy') ? 'checked' : '' %> >
                             <label for="Sandy">Sandy</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="SaltLakeCity" name="memvolunteerlocation[]" value="Salt Lake City" <%= member.memvolunteerlocation.includes('Salt Lake City') ? 'checked' : '' %> >
+                            <input type="checkbox" id="SaltLakeCity" name="memvolunteerlocation[]" value="Salt Lake City" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Salt Lake City') ? 'checked' : '' %> >
                             <label for="SaltLakeCity">Salt Lake City</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Bountiful" name="memvolunteerlocation[]" value="Bountiful" <%= member.memvolunteerlocation.includes('Bountiful') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Bountiful" name="memvolunteerlocation[]" value="Bountiful" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Bountiful') ? 'checked' : '' %> >
                             <label for="Bountiful">Bountiful</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Farmington" name="memvolunteerlocation[]" value="Farmington" <%= member.memvolunteerlocation.includes('Farmington') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Farmington" name="memvolunteerlocation[]" value="Farmington" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Farmington') ? 'checked' : '' %> >
                             <label for="Farmington">Farmington</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Layton" name="memvolunteerlocation[]" value="Layton" <%= member.memvolunteerlocation.includes('Layton') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Layton" name="memvolunteerlocation[]" value="Layton" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Layton') ? 'checked' : '' %> >
                             <label for="Layton">Layton</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Ogden" name="memvolunteerlocation[]" value="Ogden" <%= member.memvolunteerlocation.includes('Ogden') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Ogden" name="memvolunteerlocation[]" value="Ogden" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Ogden') ? 'checked' : '' %> >
                             <label for="Ogden">Ogden</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="BrighamCity" name="memvolunteerlocation[]" value="Brigham City" <%= member.memvolunteerlocation.includes('Brigham City') ? 'checked' : '' %> >
+                            <input type="checkbox" id="BrighamCity" name="memvolunteerlocation[]" value="Brigham City" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Brigham City') ? 'checked' : '' %> >
                             <label for="BrighamCity">Brigham City</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="Logan" name="memvolunteerlocation[]" value="Logan" <%= member.memvolunteerlocation.includes('Logan') ? 'checked' : '' %> >
+                            <input type="checkbox" id="Logan" name="memvolunteerlocation[]" value="Logan" 
+                                <%= Array.isArray(member.memvolunteerlocation) && member.memvolunteerlocation.includes('Logan') ? 'checked' : '' %> >
                             <label for="Logan">Logan</label>
                         </div>
                     </div>
@@ -190,17 +201,11 @@
                     </select>
                 </div>
 
-                <button type="submit" class="maintain-tm-submit-button">Update</button>
+                <button type="submit" class="submit-btn" style="width: 100%; max-width: 900px; padding: 15px; background-color: rgb(88, 88, 255); color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 1rem;">
+                    Update Teammember
+                </button>
             </form>
         </div>
     </section>
-
-    <footer>
-        <a href="https://www.facebook.com/turtleshelterproject/" target="_blank" class="footer-link"> 
-            <img src="facebook-logo.jpg" alt="Facebook" class="footer-img"> </a> 
-        <p>
-            Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com 
-        </p>
-    </footer>
 </body>
 </html>
