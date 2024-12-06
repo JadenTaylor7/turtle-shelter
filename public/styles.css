@@ -744,6 +744,7 @@ input[type="checkbox"]:checked {
 
 .edit-button,
 .volunteer-button,
+.completed-button,
 .delete-button {
     padding: 8px 16px;
     border: none;
@@ -777,6 +778,16 @@ input[type="checkbox"]:checked {
 
 .volunteer-button:hover {
     background-color: #0056b3;
+}
+
+.completed-button {
+    background-color: black;
+    color: white;
+}
+
+.completed-button:hover {
+    background-color: black;
+    color: white;
 }
 
 .checkbox-group {

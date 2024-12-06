@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Members Information</title>
+</head>
+<body class="usersettings-page">
+    <section class="hero"></section>
+
+    <h1>Members Information</h1>
+
+    <!-- Members Table -->
+    <section class="maintain-tm-hero">
+        <table class="events-table members-table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Street Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip Code</th>
+                    <th>Skills</th>
+                    <th>Sewing Level</th>
+                    <th>Can Teach</th>
+                    <th>Event Lead</th>
+                    <th>Monthly Hours</th>
+                    <th>Volunteer Location</th>
+                    <th>Referral Type</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% members.forEach(function(member) { %>
+                <tr>
+                    <td><%= member.memfirstname %></td>
+                    <td><%= member.memlastname %></td>
+                    <td><%= member.username %></td>
+                    <td><%= member.mememail %></td>
+                    <td><%= member.memphone %></td>
+                    <td><%= member.memstraddress %></td>
+                    <td><%= member.memcity %></td>
+                    <td><%= member.memstate %></td>
+                    <td><%= member.memzip %></td>
+                    <td><%= member.memskills %></td>
+                    <td><%= member.memsewinglevel %></td>
+                    <td><%= member.can_teach ? 'Yes' : 'No' %></td>
+                    <td><%= member.event_lead ? 'Yes' : 'No' %></td>
+                    <td><%= member.memhoursmonthly %></td>
+                    <td><%= (member.memvolunteerlocation || []).join(', ') %></td>
+                    <td><%= member.referral_type %></td>
+                    <td><%= member.role %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>
