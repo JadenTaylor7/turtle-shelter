@@ -203,6 +203,25 @@ footer {
     width: 100%; /* Ensure it takes up full width */
 }
 
+.hostevent-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/hostEvent.jpg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
 .event-page .hero {
     position: relative;
     height: 100vh;
@@ -215,7 +234,45 @@ footer {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('/hostEvent.jpeg'); /* Move background image here */
+    background-image: url('/hostEvent.jpg'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
+.teammember-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/teammember.png'); /* Move background image here */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
+    background-blend-mode: darken;
+    margin-top: 0; /* Ensure it starts at the very top */
+    padding-top: 0; /* Remove any padding */
+}
+
+.volunteer-page .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/volunteer.jpeg'); /* Move background image here */
     background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for better text visibility */
     background-blend-mode: darken;
     margin-top: 0; /* Ensure it starts at the very top */
