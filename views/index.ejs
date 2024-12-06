@@ -17,11 +17,11 @@
     </section>
     
     <!-- Footer Section -->
-<footer class="footer">
+<!-- <footer class="footer">
     <p>Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com</p>
-</footer>
+</footer> -->
 
-<style>
+<!-- <style>
     /* Footer Styles */
     .footer {
         background-color: #333; /* Dark gray background */
@@ -38,110 +38,73 @@
         margin: 0; /* Remove default margin from paragraph */
         font-size: 14px; /* Set font size */
     }
+</style> -->
+
+
+<style>
+    /* Button Group Styling */
+    .button-group {
+        display: flex;
+        gap: 10px; /* Spacing between buttons */
+        justify-content: center; /* Center the buttons */
+    }
+
+    /* Learn More Button Styling */
+    .learn-more-btn {
+        background-color: #4a90e2; /* Softer blue */
+        color: black; /* Default black text */
+        padding: 10px 20px; /* Padding for better size */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners */
+        font-weight: bold; /* Bold text */
+        border: none; /* No border initially */
+    }
+
+    /* Learn More Button Hover Effect */
+    .learn-more-btn:hover {
+        background-color: #428bca; /* Slightly darker blue on hover */
+        color: white; /* Make text turn white */
+        border: 2px solid white; /* Add a white border on hover */
+    }
+
+    /* Donate Button Styling */
+    .donate-btn {
+        background-color: #f9dc5c; /* Softer yellow */
+        color: black; /* Black text for contrast */
+        padding: 10px 20px; /* Padding for better size */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners */
+        font-weight: bold; /* Bold text */
+        border: 2px solid black; /* Add a black border for emphasis */
+    }
+
+    /* Donate Button Hover Effect */
+    .donate-btn:hover {
+        background-color: #f7c846; /* Slightly darker yellow on hover */
+        color: white; /* White text on hover */
+        border-color: white; /* Change border color on hover */
+    }
 </style>
-
-
-    <style>
-        /* General layout for About Section */
-        .about-container {
-            display: flex;
-            flex-direction: row; /* Arrange items horizontally */
-            align-items: flex-start; /* Align items to the top */
-            gap: 40px; /* Add spacing between image and text */
-        }
-
-        .about-item {
-            display: flex;
-            flex-direction: column; /* Stack images vertically */
-            align-items: center; /* Center images horizontally */
-        }
-
-        /* Styling for Images */
-        .about-item img {
-            max-width: 100%; /* Ensure images are responsive */
-            width: 400px; /* Increase image size */
-            margin-bottom: 20px; /* Add spacing between images */
-        }
-
-        /* Styling for Text Content */
-        .about-text {
-            max-width: 700px; /* Limit width of text area */
-            margin-left: 50px; /* Move text further to the right */
-        }
-
-        .about-text h2 {
-            position: relative;
-            top: 15px; /* Shift down "Our Mission" h2 tag by 15px */
-        }
-
-        .about-text p:first-of-type {
-            position: relative;
-            top: 13px; /* Shift down the first paragraph by 13px */
-        }
-
-        /* Button Group Styling */
-        .button-group {
-            display: flex;
-            gap: 10px; /* Spacing between buttons */
-            justify-content: center; /* Center the buttons */
-        }
-
-        /* Learn More Button Styling */
-        .learn-more-btn {
-            background-color: #4a90e2; /* Softer blue */
-            color: black; /* Default black text */
-            padding: 10px 20px; /* Padding for better size */
-            text-decoration: none; /* Remove underline */
-            border-radius: 5px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-            border: none; /* No border initially */
-        }
-
-        /* Learn More Button Hover Effect */
-        .learn-more-btn:hover {
-            background-color: #428bca; /* Slightly darker blue on hover */
-            color: white; /* Make text turn white */
-            border: 2px solid white; /* Add a white border on hover */
-        }
-
-        /* Donate Button Styling */
-        .donate-btn {
-            background-color: #f9dc5c; /* Softer yellow */
-            color: black; /* Black text for contrast */
-            padding: 10px 20px; /* Padding for better size */
-            text-decoration: none; /* Remove underline */
-            border-radius: 5px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-            border: 2px solid black; /* Add a black border for emphasis */
-        }
-
-        /* Donate Button Hover Effect */
-        .donate-btn:hover {
-            background-color: #f7c846; /* Slightly darker yellow on hover */
-            color: white; /* White text on hover */
-            border-color: white; /* Change border color on hover */
-        }
-    </style>
 
     
 
-    <section id="about" class="about-section">
-        <div class="about-container">
+    <section id="landing" class="landing-section">
+        <div class="landing-container">
             <!-- Image Section -->
-            <div class="about-item">
+            <div class="landing-item">
                 <img src="/vest.png" alt="Turtle Shelter Project Mission">
                 <img src="/vest2.png" alt="Turtle Shelter Project Mission">
             </div>
             <!-- Text Section -->
-            <div class="about-text">
+            <div class="landing-text">
                 <h2>Our Mission</h2>
                 <p>Warming lives, one vest at a time. The Turtle Shelter Project is devoted to spreading
                     warmth and preventing hypothermia for the homeless that do not have the option to stay warm.
                     We make high tech polyurethane foam vests from the ground up and distribute them in Northern Utah,
                     with plans already in effect to one day distribute vests all over the world! We have a goal to turn 
-                    the number of homeless individuals that freeze to death every year from 700 to 0.With these vests, 
-                    and the help of donations and service minded people, we will reach that goal! Every day is
-                    is a day to help others and make a difference.<br><br></p>
+                    the number of homeless individuals that freeze to death every year from 700 to 0. With these vests
+                    and the help of donations and service-minded people, we will reach that goal! Every day is
+                    a day to help others and make a difference.<br><br></p>
                        
                 <h2><b>Our Tech</b></h2>
                 <p>Foam clothing technology was invented by outdoor survival expert Jim Phillips. He has done
@@ -178,5 +141,15 @@
             </div>
         </div>
     </section>
+
+    <footer>
+        <a href="https://www.facebook.com/turtleshelterproject/" target="_blank" class="footer-link"> 
+            <img src="facebook-logo.jpg" alt="Facebook" class="footer-img"> </a> 
+        <p>
+            Turtle Shelter Project, PO Box 382, Kaysville, UT 84037 &nbsp; | &nbsp; 801-872-3190 &nbsp; | &nbsp; turtleshelterproject@gmail.com 
+        </p>
+    </footer>
+
 </body>
+
 </html>
